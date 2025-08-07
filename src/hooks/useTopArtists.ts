@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { fetchTopArtists } from '@/core/api/queries/top-artists';
-import { useAuth } from '@/app/providers/auth-provider';
+import { useAuth } from '@/core/auth';
 
 export const useTopArtists = () => {
   const { accessToken } = useAuth();

@@ -1,22 +1,15 @@
 import {
   createContext,
-  useContext,
   useEffect,
   useState,
   ReactNode,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { spotifyClient } from '@/core/api/client/spotify-client';
+import { AuthContextData } from '../types/auth';
 import axios from 'axios';
 
-interface AuthContextData {
-  isAuthenticated: boolean
-  accessToken: string | null
-  authenticate: (code: string) => Promise<void>
-  logout: () => void
-}
-
-const AuthContext = createContext<AuthContextData | undefined>(undefined);
+export const AuthContext = createContext<AuthContextData | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [accessToken, setAccessToken] = useState<string | null>(
@@ -60,12 +53,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = (): AuthContextData => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth deve estar dentro de AuthProvider');
-  }
-  return context;
-};
+}; 

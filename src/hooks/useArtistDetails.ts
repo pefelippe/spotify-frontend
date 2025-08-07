@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchArtistDetails } from '@/core/api/queries/artist-details';
-import { useAuth } from '@/app/providers/auth-provider';
+import { useAuth } from '@/core/auth';
 
 export const useArtistDetails = (artistId: string) => {
   const { accessToken } = useAuth();

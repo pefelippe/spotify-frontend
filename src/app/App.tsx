@@ -1,4 +1,4 @@
-import { useAuth } from '@/app/providers/auth-provider';
+import { useAuth } from '@/core/auth';
 import { PlayerProvider } from '@/app/providers/player-provider';
 import { LikedTracksProvider } from '@/app/providers/liked-tracks-provider';
 import { MusicPlayer } from '@/components/MusicPlayer';

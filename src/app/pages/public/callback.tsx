@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-import { useAuth } from '../../../app/providers/auth-provider';
+import { useAuth } from '@/core/auth';
 
 export const Callback = () => {
   const { authenticate } = useAuth();

@@ -2,7 +2,7 @@
 
 import { CustomButton } from '../../../components/CustomButton';
 import { useUserProfile } from '../../../hooks/useUserProfile';
-import { useAuth } from '../../../app/providers/auth-provider';
+import { useAuth } from '@/core/auth';
 
 const Perfil = () => {
   const { logout } = useAuth();
