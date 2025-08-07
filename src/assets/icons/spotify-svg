@@ -1,0 +1,15 @@
+export const SpotifySvg = () => (
+  <svg width="164" height="50" viewBox="0 0 164 50" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+    <rect y="0.0389938" width="164" height="49.0616" fill="url(#pattern0_1_1947)"/>
+    <rect y="0.0389938" width="164" height="49.0616" fill="url(#pattern1_1_1947)"/>
+    <defs>
+      <pattern id="pattern0_1_1947" patternContentUnits="objectBoundingBox" width="1" height="1">
+        <use xlinkHref="#image0_1_1947" transform="matrix(0.00042337 0 0 0.00141521 0 -0.00098556)"/>
+      </pattern>
+      <pattern id="pattern1_1_1947" patternContentUnits="objectBoundingBox" width="1" height="1">
+        <use xlinkHref="#image0_1_1947" transform="matrix(0.00042337 0 0 0.00141521 0 -0.00098556)"/>
+      </pattern>
+      <image id="image0_1_1947" width="2362" height="708" preserveAspectRatio="none" xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAACToAAALECAYAAAAi8R3tAAAACXBIWXMAAC4jAAAuIwF4pT92AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAqrtJREFUeNrs3e1129bSBtBxVv5LtwIxFUipQHQFViowXUGUCsxUYKUC0xVErsB0BZErCFXBK1WgF3MBXtGyvkWQAM7ea50l23FkcQCCB8CDOa+urq4CAAAAAAAAAACgy35SAgAAAAAAAAAAoOsEnQAAAAAAAAAAgM4TdAIAAAAAAAAAADpP0AkAAAAAAAAAAOi8n5UAoDWjZqwa3/F3D6qx29LPMb/jz8+qcbHy+4vmzwAAAAAAAACgc15dXV2pAsDjjJuvGUg6aH49iuswU/75/oBe73k1Fs2vV0NQi5U/vxmWAgAAAAAAAIBWCDoB1MY3vi47LI2qsac8D7qM6yDUvPm6DEEJQwEAAAAAAADwYoJOQCmWXZhGzVgGmQ6VZmO+RR14mje/n4fl8gAAAAAAAAB4JEEnYGiWYaaDEGbqk9UQ1KIZc2UBAAAAAAAAYEnQCeirUVyHmZbhpn1lGZzzuA495dez0AEKAAAAAAAAoEiCTkAfHNwydpSlaNkB6mxlzJUEAAAAAAAAYNgEnYCuuRlosuwcjyX8BAAAAAAAADBggk7ANu1GHWYaN0OnJtbta1yHnvLrQkkAAAAAAAAA+knQCdikUVwHmvLrvpKwYedxHXyaN78GAAAAAAAAoAcEnYA2jeK6W1OOPSWhYy7jOvSUQ/AJAAAAAAAAoKMEnYB1yqXojkKwif4SfAIAAAAAAADoKEEn4KXGcR1ushQdQ5NL3c2bcVqNCyUBAAAAAAAA2A5BJ+CpRnEdbHqjHBTmW9SBpxy6PQEAAAAAAABskKAT8BjjqMNNOSxHB7Vc5i4DT/PQ7QkAAAAAAACgdYJOwG1247prU37dURJ40Ne47va0UA4AAAAAAACA9RJ0ApZGcR1ssiQdvIwl7gAAAAAAAADWTNAJyjaKOtg0qca+ckArzqMOPM1C6AkAAAAAAADg2QSdoDyjEG6CbRF6AgA...(line too long; chars omitted)
+    </defs>
+  </svg>
+);
