@@ -1,6 +1,6 @@
 import { NavigationButton } from './NavigationButton';
 import { DownloadIcon } from './SpotifyIcons';
-import { usePWA } from '../hooks/usePWA';
+import { usePWA } from '@/hooks/usePWA';
 import { SidebarItems } from './Sidebar';
 
 export const BottomNavigation = () => {

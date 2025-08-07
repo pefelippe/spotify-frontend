@@ -3,7 +3,7 @@ import { CustomButton } from './CustomButton';
 import { Logo } from './Logo';
 import { NavigationButton } from './NavigationButton';
 import { HomeIcon, ArtistIcon, PlaylistIcon, UserIcon, DownloadIcon } from './SpotifyIcons';
-import { usePWA } from '../hooks/usePWA';
+import { usePWA } from '@/hooks/usePWA';
 
 export const SidebarItems = [
   { name: 'Home', path: '/', icon: HomeIcon },

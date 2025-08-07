@@ -1,11 +1,11 @@
-import { useAuth } from './providers/auth-provider';
-import { PlayerProvider } from './providers/player-provider';
-import { LikedTracksProvider } from './providers/liked-tracks-provider';
-import { MusicPlayer } from '../components/MusicPlayer';
-import { PremiumWarning } from '../components/PremiumWarning';
+import { useAuth } from '@/app/providers/auth-provider';
+import { PlayerProvider } from '@/app/providers/player-provider';
+import { LikedTracksProvider } from '@/app/providers/liked-tracks-provider';
+import { MusicPlayer } from '@/components/MusicPlayer';
+import { PremiumWarning } from '@/components/PremiumWarning';
 
-import { PrivateRoutes } from './routes/private-routes';
-import { PublicRoutes } from './routes/public-routes';
+import { PrivateRoutes } from '@/app/routes/private-routes';
+import { PublicRoutes } from '@/app/routes/public-routes';
 
 function App() {
   const { isAuthenticated } = useAuth();

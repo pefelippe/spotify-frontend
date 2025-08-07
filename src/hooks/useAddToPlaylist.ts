@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addTrackToPlaylist } from '../core/api/queries/add-to-playlist';
-import { useAuth } from '../app/providers/auth-provider';
+import { addTrackToPlaylist } from '@/core/api/queries/add-to-playlist';
+import { useAuth } from '@/app/providers/auth-provider';
 
 export const useAddToPlaylist = () => {
   const { accessToken } = useAuth();

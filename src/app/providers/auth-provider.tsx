@@ -6,7 +6,7 @@ import {
   ReactNode,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { spotifyClient } from '../../core/api/client/spotify-client';
+import { spotifyClient } from '@/core/api/client/spotify-client';
 import axios from 'axios';
 
 interface AuthContextData {

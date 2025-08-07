@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { Login } from '../pages/public/login';
-import { Callback } from '../pages/public/callback';
+import { Login } from '@/app/pages/public/login';
+import { Callback } from '@/app/pages/public/callback';
 
 interface RouteConfig {
   path: string;

@@ -1,17 +1,17 @@
 import { Routes, Route } from 'react-router-dom';
 
-import { Sidebar } from '../../components/Sidebar';
-import { MobileHeader } from '../../components/MobileHeader';
-import { BottomNavigation } from '../../components/BottomNavigation';
+import { Sidebar } from '@/components/Sidebar';
+import { MobileHeader } from '@/components/MobileHeader';
+import { BottomNavigation } from '@/components/BottomNavigation';
 
-import Home from '../pages/private/home';
-import Perfil from '../pages/private/profile';
-import Artistas from '../pages/private/artists';
-import Playlists from '../pages/private/playlist';
-import UserProfile from '../pages/private/user-profile';
-import AlbumDetalhes from '../pages/private/album-details';
-import ArtistaDetalhes from '../pages/private/artists-details';
-import PlaylistDetalhes from '../pages/private/playlist-details';
+import Home from '@/app/pages/private/home';
+import Perfil from '@/app/pages/private/profile';
+import Artistas from '@/app/pages/private/artists';
+import Playlists from '@/app/pages/private/playlist';
+import UserProfile from '@/app/pages/private/user-profile';
+import AlbumDetalhes from '@/app/pages/private/album-details';
+import ArtistaDetalhes from '@/app/pages/private/artists-details';
+import PlaylistDetalhes from '@/app/pages/private/playlist-details';
 
 interface ProtectedRouteConfig {
     path: string;

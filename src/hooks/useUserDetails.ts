@@ -1,13 +1,13 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { fetchUserProfile, fetchUserPlaylists } from '../core/api/queries/user-details';
-import { useAuth } from '../app/providers/auth-provider';
+import { fetchUserProfile, fetchUserPlaylists } from '@/core/api/queries/user-details';
+import { useAuth } from '@/app/providers/auth-provider';
 
 export const useUserDetails = (userId: string) => {
   const { accessToken } = useAuth();
 
   return useQuery({
     queryKey: ['userProfile', userId],
-    queryFn: () => fetchUserProfile(userId, accessToken!),
+    queryFn: () => fetchUserProfile(userId),
     enabled: !!accessToken && !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,
@@ -19,7 +19,7 @@ export const useUserPublicPlaylists = (userId: string) => {
 
   return useInfiniteQuery({
     queryKey: ['userPlaylists', userId],
-    queryFn: ({ pageParam = 0 }) => fetchUserPlaylists(userId, accessToken!, 20, pageParam),
+    queryFn: ({ pageParam = 0 }) => fetchUserPlaylists(userId, 20, pageParam),
     enabled: !!accessToken && !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false,

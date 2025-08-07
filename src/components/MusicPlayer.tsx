@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePlayer } from '../app/providers/player-provider';
-import { useLikedTracks } from '../app/providers/liked-tracks-provider';
-import { AddToPlaylistModal } from './AddToPlaylistModal';
+import { usePlayer } from '@/app/providers/player-provider';
+import { useLikedTracks } from '@/app/providers/liked-tracks-provider';
+import { AddToPlaylistModal } from '@/components/AddToPlaylistModal';
 import {
   PlayIcon,
   PauseIcon,

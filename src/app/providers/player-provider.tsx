@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { useAuth } from './auth-provider';
+import { useAuth } from '@/app/providers/auth-provider';
 
 interface PlayerContextData {
   player: SpotifyPlayer | null;
