@@ -28,7 +28,7 @@
       "@/routes/*": ["src/app/routes/*"],
       "@/core/*": ["src/core/*"],
       "@/api/*": ["src/core/api/*"],
-      "@/types/*": ["src/types/*"],
+      "@/types/*": ["src/app/types/*"],
       "@/assets/*": ["src/assets/*"],
       "@/shared/*": ["src/shared/*"],
       "@/features/*": ["src/features/*"]

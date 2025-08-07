@@ -5,4 +5,4 @@ export * from './client/spotify-client';
 export * from './endpoints';
 
 // Type exports
-export * from './types/spotify'; 
+export * from './types/spotify';

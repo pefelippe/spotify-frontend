@@ -1,15 +1,7 @@
 import { useState, useEffect } from 'react';
+import { BeforeInstallPromptEvent, PWAHookReturn } from '../types/pwa';
 
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[];
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed';
-    platform: string;
-  }>;
-  prompt(): Promise<void>;
-}
-
-export const usePWA = () => {
+export const usePWA = (): PWAHookReturn => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
@@ -21,16 +13,20 @@ export const usePWA = () => {
       setIsInstallable(true);
     };
 
+    // Check if already installed
     if (window.matchMedia('(display-mode: standalone)').matches) {
       setIsInstalled(true);
     }
 
+    // Enable in dev mode for testing
     if (import.meta.env.DEV) {
       setIsInstallable(true);
     }
 
+    // Listen for install prompt
     window.addEventListener('beforeinstallprompt', handler);
 
+    // Listen for successful installation
     window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
       setIsInstallable(false);
@@ -42,7 +38,7 @@ export const usePWA = () => {
     };
   }, []);
 
-  const installApp = async () => {
+  const installApp = async (): Promise<boolean> => {
     if (!deferredPrompt && !import.meta.env.DEV) {
       return false;
     }
@@ -65,7 +61,7 @@ export const usePWA = () => {
       } else {
         return false;
       }
-    } catch {
+    } catch (error) {
       return false;
     }
   };

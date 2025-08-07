@@ -1,26 +1,8 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useEffect, useState, ReactNode } from 'react';
 import { useAuth } from '@/core/auth';
+import { PlayerContextData } from '../types/player';
 
-interface PlayerContextData {
-  player: SpotifyPlayer | null;
-  isReady: boolean;
-  currentTrack: SpotifyTrack | null;
-  isPlaying: boolean;
-  position: number;
-  duration: number;
-  deviceId: string | null;
-  isPremiumRequired: boolean;
-  resetPremiumWarning: () => void;
-  playTrack: (uri: string, contextUri?: string) => Promise<void>;
-  pauseTrack: () => Promise<void>;
-  resumeTrack: () => Promise<void>;
-  nextTrack: () => Promise<void>;
-  previousTrack: () => Promise<void>;
-  seekToPosition: (position: number) => Promise<void>;
-  setVolume: (volume: number) => Promise<void>;
-}
-
-const PlayerContext = createContext<PlayerContextData | undefined>(undefined);
+export const PlayerContext = createContext<PlayerContextData | undefined>(undefined);
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const { accessToken } = useAuth();
@@ -32,6 +14,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [duration, setDuration] = useState(0);
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [isPremiumRequired, setIsPremiumRequired] = useState(false);
+  const [userInteracted, setUserInteracted] = useState(false);
 
   useEffect(() => {
     if (!accessToken) {
@@ -69,10 +52,19 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           return;
         }
 
+        // Sempre atualizar as informações da música
         setCurrentTrack(state.track_window.current_track);
-        setIsPlaying(!state.paused);
         setPosition(state.position);
         setDuration(state.track_window.current_track.duration_ms);
+
+        // Sempre espelhar o estado de reprodução do Spotify
+        // Se a música está tocando externamente, também tocar no clone
+        setIsPlaying(!state.paused);
+
+        // Se há uma nova música tocando, resetar a interação
+        if (!currentTrack || currentTrack.id !== state.track_window.current_track.id) {
+          setUserInteracted(false);
+        }
       });
 
       spotifyPlayer.addListener('ready', ({ device_id }) => {
@@ -94,7 +86,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
     // Define the callback function immediately
     window.onSpotifyWebPlaybackSDKReady = initializePlayer;
-    
+
     // If SDK is already loaded, initialize immediately
     if (window.Spotify) {
       initializePlayer();
@@ -116,6 +108,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
+    setUserInteracted(true);
+
     let body: any;
 
     if (contextUri) {
@@ -130,8 +124,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       body = { uris: [uri] };
     }
 
-
-
     try {
       const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
         method: 'PUT',
@@ -143,7 +135,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (!response.ok) {
-        if (response.status === 403) {
+        if (response.status === 401) {
+          console.error('❌ Erro 401: Token expirado ou inválido');
+          // The auth provider will handle the logout automatically
+          return;
+        } else if (response.status === 403) {
           console.error('❌ Erro 403: Você precisa ter Spotify Premium para usar o Web Playback SDK');
           setIsPremiumRequired(true);
         }
@@ -161,36 +157,42 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   const pauseTrack = async () => {
     if (player) {
+      setUserInteracted(true);
       await player.pause();
     }
   };
 
   const resumeTrack = async () => {
     if (player) {
+      setUserInteracted(true);
       await player.resume();
     }
   };
 
   const nextTrack = async () => {
     if (player) {
+      setUserInteracted(true);
       await player.nextTrack();
     }
   };
 
   const previousTrack = async () => {
     if (player) {
+      setUserInteracted(true);
       await player.previousTrack();
     }
   };
 
   const seekToPosition = async (position: number) => {
     if (player) {
+      setUserInteracted(true);
       await player.seek(position);
     }
   };
 
   const setVolume = async (volume: number) => {
     if (player) {
+      setUserInteracted(true);
       await player.setVolume(volume);
     }
   };
@@ -206,6 +208,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         duration,
         deviceId,
         isPremiumRequired,
+        userInteracted,
         resetPremiumWarning,
         playTrack,
         pauseTrack,
@@ -219,12 +222,4 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </PlayerContext.Provider>
   );
-};
-
-export const usePlayer = (): PlayerContextData => {
-  const context = useContext(PlayerContext);
-  if (!context) {
-    throw new Error('usePlayer deve estar dentro de PlayerProvider');
-  }
-  return context;
 };

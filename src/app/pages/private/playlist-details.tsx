@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { BackButton } from '../../../components/BackButton';
-import { QueryState } from '../../../components/QueryState';
-import { TrackList } from '../../../components/TrackList';
-import { UserAvatar } from '../../../components/UserAvatar';
-import { usePlaylistDetails, usePlaylistTracks } from '../../../hooks/usePlaylistDetails';
+import { BackButton } from '@/app/components/BackButton';
+import { QueryState } from '@/app/components/QueryState';
+import { TrackList } from '@/app/components/TrackList';
+import { UserAvatar } from '@/app/components/UserAvatar';
+import { usePlaylistDetails, usePlaylistTracks } from '@/app/hooks/usePlaylistDetails';
 
 const PlaylistDetalhes = () => {
   const { playlistId } = useParams();

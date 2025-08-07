@@ -7,9 +7,9 @@ export const fetchUserProfile = async (userId: string): Promise<SpotifyUser> => 
 };
 
 export const fetchUserPlaylists = async (
-  userId: string, 
-  limit = 20, 
-  offset = 0
+  userId: string,
+  limit = 20,
+  offset = 0,
 ): Promise<SpotifyPagedResponse<SpotifyPlaylist>> => {
   return spotifyClient.get<SpotifyPagedResponse<SpotifyPlaylist>>(
     userEndpoints.userPlaylists(userId),
@@ -18,7 +18,7 @@ export const fetchUserPlaylists = async (
         limit,
         offset,
       },
-    }
+    },
   );
 };
 
@@ -28,7 +28,7 @@ export const fetchCurrentUserProfile = async (): Promise<SpotifyUser> => {
 
 export const fetchCurrentUserPlaylists = async (
   limit = 20,
-  offset = 0
+  offset = 0,
 ): Promise<SpotifyPagedResponse<SpotifyPlaylist>> => {
   return spotifyClient.get<SpotifyPagedResponse<SpotifyPlaylist>>(
     userEndpoints.myPlaylists(),
@@ -37,6 +37,6 @@ export const fetchCurrentUserPlaylists = async (
         limit,
         offset,
       },
-    }
+    },
   );
 };

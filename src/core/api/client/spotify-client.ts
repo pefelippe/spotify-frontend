@@ -8,12 +8,38 @@ export interface SpotifyApiConfig {
 export class SpotifyClient {
   private client: AxiosInstance;
   private token: string | null = null;
+  private onUnauthorized: (() => void) | null = null;
 
   constructor(config: SpotifyApiConfig = { baseURL: 'https://api.spotify.com/v1' }) {
     this.client = axios.create({
       baseURL: config.baseURL,
       timeout: config.timeout || 10000,
     });
+
+    this.client.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          console.warn(' 401 Unauthorized - Token expired or invalid');
+          this.handleUnauthorized();
+        }
+        return Promise.reject(error);
+      },
+    );
+  }
+
+  setOnUnauthorized(callback: (() => void) | null): void {
+    this.onUnauthorized = callback;
+  }
+
+  clearOnUnauthorized(): void {
+    this.onUnauthorized = null;
+  }
+
+  private handleUnauthorized(): void {
+    if (this.onUnauthorized) {
+      this.onUnauthorized();
+    }
   }
 
   setToken(token: string): void {
@@ -56,4 +82,4 @@ export const spotifyClient = new SpotifyClient();
 
 // Legacy exports for backward compatibility
 export const setSpotifyToken = (token: string) => spotifyClient.setToken(token);
-export default spotifyClient; 
+export default spotifyClient;

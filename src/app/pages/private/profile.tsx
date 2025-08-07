@@ -1,7 +1,7 @@
 
 
-import { CustomButton } from '../../../components/CustomButton';
-import { useUserProfile } from '../../../hooks/useUserProfile';
+import { CustomButton } from '@/app/components/CustomButton';
+import { useUserProfile } from '@/app/hooks/useUserProfile';
 import { useAuth } from '@/core/auth';
 
 const Perfil = () => {

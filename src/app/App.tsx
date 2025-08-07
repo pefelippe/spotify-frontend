@@ -1,8 +1,9 @@
 import { useAuth } from '@/core/auth';
-import { PlayerProvider } from '@/app/providers/player-provider';
+import { PlayerProvider } from '@/features/player';
 import { LikedTracksProvider } from '@/app/providers/liked-tracks-provider';
-import { MusicPlayer } from '@/components/MusicPlayer';
-import { PremiumWarning } from '@/components/PremiumWarning';
+import { MusicPlayer } from '@/app/components/MusicPlayer';
+
+import { PremiumWarning } from '@/app/components/PremiumWarning';
 
 import { PrivateRoutes } from '@/app/routes/private-routes';
 import { PublicRoutes } from '@/app/routes/public-routes';

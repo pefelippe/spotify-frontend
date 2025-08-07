@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 
-import { Sidebar } from '@/components/Sidebar';
-import { MobileHeader } from '@/components/MobileHeader';
-import { BottomNavigation } from '@/components/BottomNavigation';
+import { Sidebar } from '@/app/components/Sidebar';
+import { MobileHeader } from '@/app/components/MobileHeader';
+import { BottomNavigation } from '@/app/components/BottomNavigation';
 
 import Home from '@/app/pages/private/home';
 import Perfil from '@/app/pages/private/profile';

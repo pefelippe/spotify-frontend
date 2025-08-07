@@ -3,7 +3,7 @@ import { CustomButton } from './CustomButton';
 import { Logo } from './Logo';
 import { NavigationButton } from './NavigationButton';
 import { HomeIcon, ArtistIcon, PlaylistIcon, UserIcon, DownloadIcon } from './SpotifyIcons';
-import { usePWA } from '@/hooks/usePWA';
+import { usePWA } from '@/features/pwa';
 
 export const SidebarItems = [
   { name: 'Home', path: '/', icon: HomeIcon },
@@ -13,7 +13,7 @@ export const SidebarItems = [
 ];
 
 export const Sidebar = () => {
-  const { installApp } = usePWA();
+  const { installApp, isInstallable, isInstalled } = usePWA();
 
   const handleInstallClick = async () => {
     await installApp();
@@ -42,13 +42,15 @@ export const Sidebar = () => {
       </div>
 
       <div className="p-6 border-t border-gray-800/30">
-        <CustomButton
-          label="Instalar PWA"
-          icon={<DownloadIcon size={18} />}
-          onClick={handleInstallClick}
-          variant="pwa"
-          className="w-full justify-start"
-        />
+        {isInstallable && !isInstalled && (
+          <CustomButton
+            label="Instalar PWA"
+            icon={<DownloadIcon size={18} />}
+            onClick={handleInstallClick}
+            variant="pwa"
+            className="w-full justify-start"
+          />
+        )}
       </div>
     </div>
   );

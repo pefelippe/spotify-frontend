@@ -20,8 +20,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (accessToken) {
       spotifyClient.setToken(accessToken);
+      // Set up unauthorized callback to logout user when token expires
+      spotifyClient.setOnUnauthorized(() => {
+        console.log('🔄 Token expired, logging out user...');
+        logout();
+      });
+
+      // Set up global callback for axios 401 errors
+      window.spotifyUnauthorizedCallback = () => {
+        console.log('🔄 Axios 401 detected, logging out user...');
+        logout();
+      };
     }
   }, [accessToken]);
+
+  // Listen for unauthorized events
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      console.log('🔄 Unauthorized event received, logging out user...');
+      logout();
+    };
+
+    window.addEventListener('spotify-unauthorized', handleUnauthorized);
+
+    return () => {
+      window.removeEventListener('spotify-unauthorized', handleUnauthorized);
+    };
+  }, []);
 
   const authenticate = async (code: string) => {
     try {
@@ -43,6 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.removeItem('spotify_token');
     setAccessToken(null);
     spotifyClient.clearToken();
+    spotifyClient.clearOnUnauthorized(); // Clear the unauthorized callback
     navigate('/login');
   };
 
@@ -53,4 +79,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-}; 
+};

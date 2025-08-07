@@ -2,12 +2,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 
-import Album from '../../../components/Album';
-import { PageHeader } from '../../../components/layout/PageHeader';
-import { PageWithQueryState } from '../../../components/PageWithQueryState';
-import { InfiniteScrollList } from '../../../components/InfiniteScrollList';
+import Album from '@/app/components/Album';
+import { PageHeader } from '@/app/layout/PageHeader';
+import { PageWithQueryState } from '@/app/components/PageWithQueryState';
+import { InfiniteScrollList } from '@/app/components/InfiniteScrollList';
 
-import { useTopArtists } from '../../../hooks/useTopArtists';
+import { useTopArtists } from '@/app/hooks/useTopArtists';
 
 const Artistas = () => {
   const navigate = useNavigate();

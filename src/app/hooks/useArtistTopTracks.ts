@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchArtistTopTracks } from '../core/api/queries/artist-top-tracks';
+import { fetchArtistTopTracks } from '@/core/api/queries/artist-top-tracks';
 import { useAuth } from '@/core/auth';
 
 export const useArtistTopTracks = (artistId: string) => {

@@ -8,4 +8,4 @@ export const useAuth = (): AuthContextData => {
     throw new Error('useAuth deve estar dentro de AuthProvider');
   }
   return context;
-}; 
+};

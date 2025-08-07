@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchRecentlyPlayed } from '../core/api/queries/recently-played';
+import { fetchRecentlyPlayed } from '@/core/api/queries/recently-played';
 import { useAuth } from '@/core/auth';
 
 export const useRecentlyPlayed = () => {

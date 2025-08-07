@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axiosInstance from '../client/axios-config';
 
 export const fetchLikedSongs = async (accessToken: string, limit = 20, offset = 0) => {
   try {
-    const response = await axios.get('https://api.spotify.com/v1/me/tracks', {
+    const response = await axiosInstance.get('https://api.spotify.com/v1/me/tracks', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -20,7 +20,7 @@ export const fetchLikedSongs = async (accessToken: string, limit = 20, offset = 
 
 export const addToLikedSongs = async (accessToken: string, trackIds: string[]) => {
   try {
-    const response = await axios.put('https://api.spotify.com/v1/me/tracks', null, {
+    const response = await axiosInstance.put('https://api.spotify.com/v1/me/tracks', null, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export const addToLikedSongs = async (accessToken: string, trackIds: string[]) =
 
 export const removeFromLikedSongs = async (accessToken: string, trackIds: string[]) => {
   try {
-    const response = await axios.delete('https://api.spotify.com/v1/me/tracks', {
+    const response = await axiosInstance.delete('https://api.spotify.com/v1/me/tracks', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',

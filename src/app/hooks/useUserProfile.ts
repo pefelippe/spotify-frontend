@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchUserProfile } from '../core/api/queries/user-profile';
+import { fetchUserProfile } from '@/core/api/queries/user-profile';
 import { useAuth } from '@/core/auth';
 
 export const useUserProfile = () => {
