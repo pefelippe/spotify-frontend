@@ -1,0 +1,42 @@
+import { NavigationButton } from './NavigationButton';
+import { DownloadIcon } from './SpotifyIcons';
+import { usePWA } from '../hooks/usePWA';
+import { SidebarItems } from './Sidebar';
+
+export const BottomNavigation = () => {
+  const { installApp } = usePWA();
+
+  const handleInstallClick = async () => {
+    await installApp();
+  };
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-black-bg border-t border-gray-800/50 lg:hidden z-40 backdrop-blur-md">
+      <div className="flex justify-around items-center py-2 px-4">
+        {SidebarItems.map((item) => (
+          <div key={item.name} className="flex flex-col items-center min-w-[60px]">
+            <NavigationButton
+              name=""
+              path={item.path}
+              icon={item.icon}
+              baseClassName="flex flex-col items-center justify-center p-2.5 rounded-lg transition-all duration-200 cursor-pointer"
+              activeClassName="text-white-text bg-gray-800/40"
+              inactiveClassName="text-gray-400 hover:text-white-text"
+            />
+            <span className="text-xs text-gray-400 mt-1 font-medium">{item.name}</span>
+          </div>
+        ))}
+        <div className="flex flex-col items-center min-w-[60px]">
+          <button
+            onClick={handleInstallClick}
+            className="flex flex-col items-center justify-center p-2.5 rounded-lg transition-all duration-200 cursor-pointer text-gray-400 hover:text-white-text hover:bg-gray-800/40"
+            aria-label="Instalar PWA"
+          >
+            <DownloadIcon size={20} />
+          </button>
+          <span className="text-xs text-gray-400 mt-1 font-medium">PWA</span>
+        </div>
+      </div>
+    </div>
+  );
+};
