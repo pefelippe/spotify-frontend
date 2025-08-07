@@ -1,14 +1,14 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { BackButton } from '../../components/BackButton';
-import { QueryState } from '../../components/QueryState';
-import { TrackList } from '../../components/TrackList';
-import { UserAvatar } from '../../components/UserAvatar';
-import { usePlaylistDetails, usePlaylistTracks } from '../../hooks/usePlaylistDetails';
+import { BackButton } from '../../../components/BackButton';
+import { QueryState } from '../../../components/QueryState';
+import { TrackList } from '../../../components/TrackList';
+import { UserAvatar } from '../../../components/UserAvatar';
+import { useAlbumDetails, useAlbumTracks } from '../../../hooks/useAlbumDetails';
 
-const PlaylistDetalhes = () => {
-  const { playlistId } = useParams();
+const AlbumDetalhes = () => {
+  const { albumId } = useParams();
   const navigate = useNavigate();
-  const { data: playlistDetails, isLoading: isLoadingDetails, error: detailsError } = usePlaylistDetails(playlistId!);
+  const { data: albumDetails, isLoading: isLoadingDetails, error: detailsError } = useAlbumDetails(albumId!);
   const {
     data: tracksData,
     isLoading: isLoadingTracks,
@@ -16,18 +16,14 @@ const PlaylistDetalhes = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = usePlaylistTracks(playlistId!);
+  } = useAlbumTracks(albumId!);
 
-  const handleOwnerClick = (ownerId: string) => {
-    navigate(`/user/${ownerId}`);
-  };
-
-  if (!playlistId) {
+  if (!albumId) {
     return (
       <div className="w-full p-6">
         <div className="flex items-center space-x-4 mb-8">
-          <BackButton artistName="Playlist não encontrada" />
-          <h1 className="text-2xl font-bold text-white-text">Playlist não encontrada</h1>
+          <BackButton artistName="Álbum não encontrado" />
+          <h1 className="text-2xl font-bold text-white-text">Álbum não encontrado</h1>
         </div>
       </div>
     );
@@ -39,7 +35,7 @@ const PlaylistDetalhes = () => {
         <div className="flex items-center space-x-4 mb-8">
           <BackButton artistName={isLoadingDetails ? 'Carregando...' : 'Erro'} />
           <h1 className="text-2xl font-bold text-white-text">
-            {isLoadingDetails ? 'Carregando playlist...' : 'Erro ao carregar playlist'}
+            {isLoadingDetails ? 'Carregando álbum...' : 'Erro ao carregar álbum'}
           </h1>
         </div>
         <QueryState
@@ -52,6 +48,10 @@ const PlaylistDetalhes = () => {
       </div>
     );
   }
+
+  const handleArtistClick = (artistId: string) => {
+    navigate(`/artist/${artistId}`);
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -69,7 +69,7 @@ const PlaylistDetalhes = () => {
 
     const totalMs = tracks.pages.reduce((total: number, page: any) => {
       return total + page.items.reduce((pageTotal: number, item: any) => {
-        return pageTotal + (item.track?.duration_ms || 0);
+        return pageTotal + (item.duration_ms || 0);
       }, 0);
     }, 0);
 
@@ -85,50 +85,43 @@ const PlaylistDetalhes = () => {
   return (
     <div className="w-full p-6">
       <div className="flex items-center space-x-4 mb-8">
-        <BackButton artistName={playlistDetails.name} />
+        <BackButton artistName={albumDetails.name} />
       </div>
 
-      {/* Playlist Header */}
+      {/* Album Header */}
       <div className="flex flex-col md:flex-row items-start md:items-end space-y-6 md:space-y-0 md:space-x-6 mb-8">
         <img
-          src={playlistDetails.images?.[0]?.url || 'https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36'}
-          alt={playlistDetails.name}
+          src={albumDetails.images?.[0]?.url || ''}
+          alt={albumDetails.name}
           className="w-48 h-48 rounded-lg object-cover shadow-2xl"
         />
         <div className="flex-1">
           <p className="text-gray-400 text-sm font-medium uppercase tracking-wide">
-            Playlist
+            {albumDetails.album_type === 'album' ? 'Álbum' :
+             albumDetails.album_type === 'single' ? 'Single' :
+             albumDetails.album_type}
           </p>
           <h1 className="text-4xl md:text-6xl font-bold text-white-text mb-4">
-            {playlistDetails.name}
+            {albumDetails.name}
           </h1>
-          {playlistDetails.description && (
-            <p className="text-gray-400 text-sm mb-4 max-w-2xl">
-              {playlistDetails.description}
-            </p>
-          )}
           <div className="flex flex-wrap items-center text-gray-400 text-sm space-x-1">
             <div className="flex items-center space-x-2">
               <UserAvatar
-                userId={playlistDetails.owner?.id || ''}
-                displayName={playlistDetails.owner?.display_name || ''}
+                userId={albumDetails.artists?.[0]?.id || ''}
+                displayName={albumDetails.artists?.[0]?.name || ''}
                 size="md"
               />
               <span
                 className="font-medium text-white-text hover:underline cursor-pointer hover:text-green-500"
-                onClick={() => handleOwnerClick(playlistDetails.owner?.id)}
+                onClick={() => handleArtistClick(albumDetails.artists?.[0]?.id)}
               >
-                {playlistDetails.owner?.display_name}
+                {albumDetails.artists?.[0]?.name}
               </span>
             </div>
-            {playlistDetails.followers?.total && (
-              <>
-                <span>•</span>
-                <span>{playlistDetails.followers.total.toLocaleString()} seguidores</span>
-              </>
-            )}
             <span>•</span>
-            <span>{playlistDetails.tracks?.total} músicas</span>
+            <span>{formatDate(albumDetails.release_date)}</span>
+            <span>•</span>
+            <span>{albumDetails.total_tracks} músicas</span>
             {tracksData && (
               <>
                 <span>•</span>
@@ -159,8 +152,8 @@ const PlaylistDetalhes = () => {
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
             fetchNextPage={fetchNextPage}
-            isPlaylist={true}
-            contextUri={`spotify:playlist:${playlistId}`}
+            isPlaylist={false}
+            contextUri={`spotify:album:${albumId}`}
           />
         )}
       </div>
@@ -168,4 +161,4 @@ const PlaylistDetalhes = () => {
   );
 };
 
-export default PlaylistDetalhes;
+export default AlbumDetalhes;

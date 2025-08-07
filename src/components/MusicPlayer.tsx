@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePlayer } from '../providers/player-provider';
-import { useLikedTracks } from '../providers/liked-tracks-provider';
+import { usePlayer } from '../app/providers/player-provider';
+import { useLikedTracks } from '../app/providers/liked-tracks-provider';
 import { AddToPlaylistModal } from './AddToPlaylistModal';
 import {
   PlayIcon,

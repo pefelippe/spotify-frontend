@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchRecentlyPlayed } from '../api/queries/recently-played';
-import { useAuth } from '../providers/auth-provider';
+import { fetchRecentlyPlayed } from '../core/api/queries/recently-played';
+import { useAuth } from '../app/providers/auth-provider';
 
 export const useRecentlyPlayed = () => {
   const { accessToken } = useAuth();

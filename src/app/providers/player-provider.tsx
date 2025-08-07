@@ -92,15 +92,21 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       setPlayer(spotifyPlayer);
     };
 
+    // Define the callback function immediately
+    window.onSpotifyWebPlaybackSDKReady = initializePlayer;
+    
+    // If SDK is already loaded, initialize immediately
     if (window.Spotify) {
       initializePlayer();
-    } else {
-      window.onSpotifyWebPlaybackSDKReady = initializePlayer;
     }
 
     return () => {
       if (player) {
         player.disconnect();
+      }
+      // Clean up the global callback
+      if (window.onSpotifyWebPlaybackSDKReady === initializePlayer) {
+        window.onSpotifyWebPlaybackSDKReady = () => {};
       }
     };
   }, [accessToken]);

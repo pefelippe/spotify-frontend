@@ -10,6 +10,13 @@
   <body class="bg-black-bg min-h-screen">
     <div id="root">
     </div>
+    <script>
+      // Global callback for Spotify Web Playback SDK
+      window.onSpotifyWebPlaybackSDKReady = () => {
+        // This will be overridden by the PlayerProvider
+        console.log('Spotify Web Playback SDK is ready');
+      };
+    </script>
     <script src="https://sdk.scdn.co/spotify-player.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -1,18 +1,18 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { CustomButton } from '../../components/CustomButton';
-import { Modal } from '../../components/CustomModal';
-import { PageHeader } from '../../components/layout/PageHeader';
-import { PageWithQueryState } from '../../components/PageWithQueryState';
-import { InfiniteScrollList } from '../../components/InfiniteScrollList';
-import { useUserPlaylists } from '../../hooks/useUserPlaylists';
-import { useLikedSongs } from '../../hooks/useLikedSongs';
-import { useUserProfile } from '../../hooks/useUserProfile';
-import { usePlayer } from '../../providers/player-provider';
-import PlaylistItem from '../../components/PlaylistItem';
-import { HeartIcon } from '../../components/SpotifyIcons';
-import { TrackList } from '../../components/TrackList';
+import { CustomButton } from '../../../components/CustomButton';
+import { Modal } from '../../../components/CustomModal';
+import { PageHeader } from '../../../components/layout/PageHeader';
+import { PageWithQueryState } from '../../../components/PageWithQueryState';
+import { InfiniteScrollList } from '../../../components/InfiniteScrollList';
+import { useUserPlaylists } from '../../../hooks/useUserPlaylists';
+import { useLikedSongs } from '../../../hooks/useLikedSongs';
+import { useUserProfile } from '../../../hooks/useUserProfile';
+import { usePlayer } from '../../../app/providers/player-provider';
+import PlaylistItem from '../../../components/PlaylistItem';
+import { HeartIcon } from '../../../components/SpotifyIcons';
+import { TrackList } from '../../../components/TrackList';
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { useUserPlaylists } from '../../hooks/useUserPlaylists';
-import { useLikedSongs } from '../../hooks/useLikedSongs';
-import { usePlayer } from '../../providers/player-provider';
-import { PlayIcon, HeartIcon } from '../../components/SpotifyIcons';
+import { useUserPlaylists } from '../../../hooks/useUserPlaylists';
+import { useLikedSongs } from '../../../hooks/useLikedSongs';
+import { usePlayer } from '../../../app/providers/player-provider';
+import { PlayIcon, HeartIcon } from '../../../components/SpotifyIcons';
 
 const Home = () => {
   const navigate = useNavigate();

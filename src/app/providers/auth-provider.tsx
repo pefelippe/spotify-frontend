@@ -6,8 +6,7 @@ import {
   ReactNode,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setSpotifyToken } from '../api/spotify';
-import api from '../api/spotify';
+import { spotifyClient } from '../../core/api/client/spotify-client';
 import axios from 'axios';
 
 interface AuthContextData {
@@ -27,7 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (accessToken) {
-      setSpotifyToken(accessToken);
+      spotifyClient.setToken(accessToken);
     }
   }, [accessToken]);
 
@@ -39,7 +38,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const token = response.data.access_token;
       sessionStorage.setItem('spotify_token', token);
       setAccessToken(token);
-      setSpotifyToken(token);
+      spotifyClient.setToken(token);
       navigate('/');
     } catch (error) {
       console.error('Erro ao autenticar:', error);
@@ -50,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     sessionStorage.removeItem('spotify_token');
     setAccessToken(null);
-    delete api.defaults.headers.common['Authorization'];
+    spotifyClient.clearToken();
     navigate('/login');
   };
 

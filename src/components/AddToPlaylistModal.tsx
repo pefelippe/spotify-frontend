@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useUserPlaylists } from '../hooks/useUserPlaylists';
 import { useAddToPlaylist } from '../hooks/useAddToPlaylist';
-import { useLikedTracks } from '../providers/liked-tracks-provider';
+import { useLikedTracks } from '../app/providers/liked-tracks-provider';
 import { PlusIcon, HeartIcon } from './SpotifyIcons';
 
 interface AddToPlaylistModalProps {

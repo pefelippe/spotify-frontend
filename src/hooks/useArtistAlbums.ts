@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { fetchArtistAlbums } from '../api/queries/artist-albums';
-import { useAuth } from '../providers/auth-provider';
+import { fetchArtistAlbums } from '../core/api/queries/artist-albums';
+import { useAuth } from '../app/providers/auth-provider';
 
 export const useArtistDiscography = (artistId: string) => {
   const { accessToken } = useAuth();

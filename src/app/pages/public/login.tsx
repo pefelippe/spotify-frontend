@@ -1,5 +1,5 @@
-import { CustomButton } from '../../components/CustomButton';
-import { Logo } from '../../components/Logo';
+import { CustomButton } from '../../../components/CustomButton';
+import { Logo } from '../../../components/Logo';
 
 export const Login = () => {
 

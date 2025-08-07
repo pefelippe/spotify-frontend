@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { fetchUserPlaylists } from '../api/queries/user-playlists';
-import { useAuth } from '../providers/auth-provider';
+import { fetchUserPlaylists } from '../core/api/queries/user-playlists';
+import { useAuth } from '../app/providers/auth-provider';
 
 export const useUserPlaylists = () => {
   const { accessToken } = useAuth();

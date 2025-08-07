@@ -2,15 +2,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 
-import ArtistAlbum from '../../components/ArtistAlbum';
-import { BackButton } from '../../components/BackButton';
-import { QueryState } from '../../components/QueryState';
-import { InfiniteScrollList } from '../../components/InfiniteScrollList';
-import { TrackList } from '../../components/TrackList';
-import { useArtistDiscography, useArtistCollaborations } from '../../hooks/useArtistAlbums';
-import { useArtistDetails } from '../../hooks/useArtistDetails';
-import { useArtistTopTracks } from '../../hooks/useArtistTopTracks';
-import { usePlayer } from '../../providers/player-provider';
+import ArtistAlbum from '../../../components/ArtistAlbum';
+import { BackButton } from '../../../components/BackButton';
+import { QueryState } from '../../../components/QueryState';
+import { InfiniteScrollList } from '../../../components/InfiniteScrollList';
+import { TrackList } from '../../../components/TrackList';
+import { useArtistDiscography, useArtistCollaborations } from '../../../hooks/useArtistAlbums';
+import { useArtistDetails } from '../../../hooks/useArtistDetails';
+import { useArtistTopTracks } from '../../../hooks/useArtistTopTracks';
+import { usePlayer } from '../../../app/providers/player-provider';
 
 type DiscographyFilter = 'populares' | 'albuns' | 'singles' | 'eps';
 
