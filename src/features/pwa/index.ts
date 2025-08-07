@@ -1,2 +1,2 @@
-export { usePWA } from './hooks/usePWA';
-export type { BeforeInstallPromptEvent, PWAHookReturn } from './types/pwa';
+export { usePWA } from './usePWA';
+export type { BeforeInstallPromptEvent, PWAHookReturn } from './pwa';

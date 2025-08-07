@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { InfiniteScrollList } from './InfiniteScrollList';
 import { usePlayer } from '@/features/player';
 import { useLikedTracks } from '@/app/providers/liked-tracks-provider';
-import { useAddToLikedSongs, useRemoveFromLikedSongs } from '@/app/hooks/useLikedSongs';
-import { AddToPlaylistModal } from './AddToPlaylistModal';
+import { useAddToLikedSongs, useRemoveFromLikedSongs } from '@/features/liked-songs/useLikedSongs';
+import { AddToPlaylistModal } from '@/features/playlist/AddToPlaylistModal';
 import { PlayIcon, HeartIcon, PlayingIcon, TimeIcon } from './SpotifyIcons';
 
 interface Track {
@@ -89,18 +89,20 @@ export const TrackList = ({
 
   const allTracks = useMemo(() => {
     if (isPlaylist) {
-      const tracks = data?.pages.flatMap(page =>
-        page.items.map((item: any) => ({
-          ...item.track,
-          added_at: item.added_at,
-        })).filter(Boolean),
+      const tracks = (data?.pages as Array<any> | undefined)?.flatMap((page: any) =>
+        page.items
+          .map((item: any) => ({
+            ...item.track,
+            added_at: item.added_at,
+          }))
+          .filter(Boolean),
       ) || [];
       return tracks;
     }
 
-    const tracks = data?.pages.flatMap(page => page.items) || [];
+    const tracks = (data?.pages as Array<any> | undefined)?.flatMap((page: any) => page.items) || [];
 
-    const validTracks = tracks.filter(track => {
+    const validTracks = (tracks as Array<any>).filter((track: any) => {
       if (!track || !track.id || !track.name) {
         return false;
       }

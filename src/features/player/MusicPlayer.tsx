@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '@/features/player';
 import { useLikedTracks } from '@/app/providers/liked-tracks-provider';
-import { AddToPlaylistModal } from '@/app/components/AddToPlaylistModal';
+import { AddToPlaylistModal } from '@/features/playlist/AddToPlaylistModal';
 import {
   PlayIcon,
   PauseIcon,
@@ -14,7 +14,7 @@ import {
   VolumeMuteIcon,
   HeartIcon,
   ChevronDownIcon,
-} from './SpotifyIcons';
+} from '../../app/components/SpotifyIcons';
 
 const formatTime = (ms: number) => {
   const minutes = Math.floor(ms / 60000);

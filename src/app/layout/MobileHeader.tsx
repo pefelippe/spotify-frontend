@@ -1,4 +1,4 @@
-import { Logo } from './Logo';
+import { Logo } from '@/app/components/Logo';
 
 export const MobileHeader = () => {
   return (

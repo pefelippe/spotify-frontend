@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { useUserPlaylists } from '@/app/hooks/useUserPlaylists';
-import { useLikedSongs } from '@/app/hooks/useLikedSongs';
+import { useUserPlaylists } from '@/features/user/useUserPlaylists';
+import { useLikedSongs } from '@/features/liked-songs/useLikedSongs';
 import { usePlayer } from '@/features/player';
 import { PlayIcon, HeartIcon } from '@/app/components/SpotifyIcons';
 

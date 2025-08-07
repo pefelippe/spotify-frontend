@@ -1,7 +1,7 @@
 
 
 import { CustomButton } from '@/app/components/CustomButton';
-import { useUserProfile } from '@/app/hooks/useUserProfile';
+import { useUserProfile } from '@/features/user/useUserProfile';
 import { useAuth } from '@/core/auth';
 
 const Perfil = () => {

@@ -1,7 +1,7 @@
 import { useAuth } from '@/core/auth';
 import { PlayerProvider } from '@/features/player';
 import { LikedTracksProvider } from '@/app/providers/liked-tracks-provider';
-import { MusicPlayer } from '@/app/components/MusicPlayer';
+import { MusicPlayer } from '@/features/player/MusicPlayer';
 
 import { PremiumWarning } from '@/app/components/PremiumWarning';
 

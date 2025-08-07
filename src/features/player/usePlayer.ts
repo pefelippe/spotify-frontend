@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { PlayerContext } from '@/features/player/providers/player-provider';
-import { PlayerContextData } from '@/features/player/types/player';
+import { PlayerContext } from '@/features/player/player-provider';
+import { PlayerContextData } from '@/features/player/player';
 
 export const usePlayer = (): PlayerContextData => {
   const context = useContext(PlayerContext);

@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
-import { BackButton } from '@/app/components/BackButton';
+import { BackButton } from '@/app/layout/BackButton';
 import { CenteredLayout } from '@/app/layout/CenteredLayout';
 import { QueryState } from '@/app/components/QueryState';
-import { useUserDetails } from '@/app/hooks/useUserDetails';
+import { useUserDetails } from '@/features/user/useUserDetails';
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();

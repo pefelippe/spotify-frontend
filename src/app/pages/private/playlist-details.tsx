@@ -1,9 +1,9 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { BackButton } from '@/app/components/BackButton';
+import { BackButton } from '@/app/layout/BackButton';
 import { QueryState } from '@/app/components/QueryState';
 import { TrackList } from '@/app/components/TrackList';
 import { UserAvatar } from '@/app/components/UserAvatar';
-import { usePlaylistDetails, usePlaylistTracks } from '@/app/hooks/usePlaylistDetails';
+import { usePlaylistDetails, usePlaylistTracks } from '@/features/playlist/usePlaylistDetails';
 
 const PlaylistDetalhes = () => {
   const { playlistId } = useParams();

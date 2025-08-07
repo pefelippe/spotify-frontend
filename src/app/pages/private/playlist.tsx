@@ -6,11 +6,11 @@ import { Modal } from '@/app/components/CustomModal';
 import { PageHeader } from '@/app/layout/PageHeader';
 import { PageWithQueryState } from '@/app/components/PageWithQueryState';
 import { InfiniteScrollList } from '@/app/components/InfiniteScrollList';
-import { useUserPlaylists } from '@/app/hooks/useUserPlaylists';
-import { useLikedSongs } from '@/app/hooks/useLikedSongs';
-import { useUserProfile } from '@/app/hooks/useUserProfile';
+import { useUserPlaylists } from '@/features/user/useUserPlaylists';
+import { useLikedSongs } from '@/features/liked-songs/useLikedSongs';
+import { useUserProfile } from '@/features/user/useUserProfile';
 import { usePlayer } from '@/features/player';
-import PlaylistItem from '@/app/components/PlaylistItem';
+import PlaylistItem from '@/features/playlist/PlaylistItem';
 import { HeartIcon } from '@/app/components/SpotifyIcons';
 import { TrackList } from '@/app/components/TrackList';
 

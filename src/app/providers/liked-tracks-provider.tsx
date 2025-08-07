@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useLikedSongs } from '@/app/hooks/useLikedSongs';
+import { useLikedSongs } from '@/features/liked-songs/useLikedSongs';
 
 interface LikedTracksContextData {
   likedTracks: Set<string>;
