@@ -14,7 +14,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
   isLiked = false,
   onArtistClick,
   onLikeToggle,
-  size = 'small'
+  size = 'small',
 }) => {
   if (!track) {
     return (
@@ -46,8 +46,8 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
     </span>
   ));
 
-  const imageSize = size === 'small' 
-    ? 'w-10 h-10 lg:w-12 lg:h-12 rounded-md' 
+  const imageSize = size === 'small'
+    ? 'w-10 h-10 lg:w-12 lg:h-12 rounded-md'
     : 'w-full h-full rounded-lg shadow-2xl object-cover animate-fade-in-scale';
 
   return (

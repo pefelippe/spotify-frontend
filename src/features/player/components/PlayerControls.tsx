@@ -31,7 +31,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
   onShuffle,
   onRepeat,
   size = 'small',
-  fullWidthOnMobile = false
+  fullWidthOnMobile = false,
 }) => {
   const iconSizes = {
     small: {
@@ -39,15 +39,15 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
       skipPrev: 18,
       playPause: 14,
       skipNext: 18,
-      repeat: 16
+      repeat: 16,
     },
     large: {
       shuffle: 24,
       skipPrev: 28,
       playPause: 24,
       skipNext: 28,
-      repeat: 24
-    }
+      repeat: 24,
+    },
   };
 
   const currentSizes = iconSizes[size];
@@ -101,9 +101,9 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           {isPlaying ? (
             <PauseIcon size={currentSizes.playPause} />
           ) : (
-            <PlayIcon 
-              size={currentSizes.playPause} 
-              className={size === 'small' ? 'ml-0.5' : 'ml-1'} 
+            <PlayIcon
+              size={currentSizes.playPause}
+              className={size === 'small' ? 'ml-0.5' : 'ml-1'}
             />
           )}
         </button>

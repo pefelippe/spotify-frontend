@@ -162,24 +162,24 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               'Authorization': `Bearer ${accessToken}`,
             },
           });
-          
+
           if (!likedTracksResponse.ok) {
             console.error('Failed to fetch liked tracks');
             return;
           }
-          
+
           const likedTracksData = await likedTracksResponse.json();
           const trackUris = likedTracksData.items.map((item: any) => item.track.uri);
-          
+
           // If a specific track URI is provided, find its index
           if (uri) {
             const trackIndex = trackUris.findIndex((trackUri: string) => trackUri === uri);
-            
+
             if (trackIndex !== -1) {
               // Play the specific track with the list of track URIs
-              body = { 
+              body = {
                 uris: trackUris,
-                offset: { position: trackIndex }
+                offset: { position: trackIndex },
               };
             } else {
               // If the track is not found, play from the beginning
@@ -220,7 +220,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           requestBody: body,
           deviceId,
           uri,
-          contextUri
+          contextUri,
         });
 
         if (response.status === 401) {
@@ -259,7 +259,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         if (trackId) {
           newSet.add(trackId);
         }
-        
+
         // Limit to last 10 tracks to prevent memory growth
         if (newSet.size > 10) {
           const oldestTrack = Array.from(newSet)[0];
@@ -343,7 +343,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         console.error('Failed to pause track:', {
           status: response.status,
           statusText: response.statusText,
-          body: errorText
+          body: errorText,
         });
         return;
       }
@@ -442,7 +442,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         console.error('Failed to set repeat state', {
           status: response.status,
           statusText: response.statusText,
-          body: errorText
+          body: errorText,
         });
         return;
       }
@@ -450,7 +450,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       // Update local state to reflect repeat status
       setUserInteracted(true);
       setRepeatMode(mode);
-      
+
       // Fetch current playback state to confirm repeat mode
       const stateResponse = await fetch('https://api.spotify.com/v1/me/player', {
         headers: {

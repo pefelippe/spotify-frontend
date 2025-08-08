@@ -73,9 +73,9 @@ export const MusicPlayer = () => {
         const deviceButton = document.querySelector('[aria-label="Devices"]');
         const devicesModal = document.querySelector('.devices-modal');
         if (
-          deviceButton && 
-          !deviceButton.contains(e.target as Node) && 
-          devicesModal && 
+          deviceButton &&
+          !deviceButton.contains(e.target as Node) &&
+          devicesModal &&
           !devicesModal.contains(e.target as Node)
         ) {
           setShowDevices(false);
@@ -206,4 +206,4 @@ export const MusicPlayer = () => {
       )}
     </>
   );
-}
+};

@@ -7,7 +7,7 @@ export const usePlayer = (): PlayerContextData => {
   if (!context) {
     console.error('PlayerContext is undefined', {
       PlayerContext,
-      contextValue: useContext(PlayerContext)
+      contextValue: useContext(PlayerContext),
     });
     throw new Error('usePlayer deve estar dentro de PlayerProvider');
   }

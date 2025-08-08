@@ -62,7 +62,10 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
 }) => {
   return (
     <div
-      className={`fixed bottom-[65px] bg-[#a7a7a7a4] rounded-2xl  lg:bg-[#000000]  lg:bottom-0 left-0 lg:left-[250px] right-0 border-t border-gray-700/30 z-50 shadow-2xl transform transition-transform duration-300 ease-out ${isEntering ? 'translate-y-0' : 'translate-y-full'}`}
+      className={`fixed bottom-[70px] border border-gray-300/20 rounded-2xl bg-[#000000] max-lg:mx-2  
+        lg:bottom-0 left-0 lg:left-[250px] right-0 lg:border-t lg:border-gray-700/30 z-50 
+        shadow-2xl transform transition-transform duration-300 ease-out 
+        ${isEntering ? 'translate-y-0' : 'translate-y-full'}`}
       onClick={(e) => {
         // On screens smaller than lg, any click on the player should expand,
         // except when clicking interactive buttons
@@ -78,15 +81,15 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
     >
       <div className="flex flex-col">
         <div className="flex items-center justify-between h-16 lg:h-24 px-3 lg:px-5 py-2 lg:py-3 hover:bg-gray-900/20 transition-colors duration-200">
-          <TrackInfo 
-            track={currentTrack} 
+          <TrackInfo
+            track={currentTrack}
             isLiked={isCurrentTrackLiked}
             onArtistClick={onArtistClick}
             onLikeToggle={onToggleLike}
           />
 
           <div className="hidden lg:flex flex-col items-center justify-center flex-1 max-w-[40%] lg:max-w-[50%] pt-2">
-            <PlayerControls 
+            <PlayerControls
               isPlaying={isPlaying}
               shuffle={shuffle}
               repeat={repeat}
@@ -97,9 +100,9 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
               onRepeat={onRepeatCycle}
             />
 
-            <ProgressBar 
-              currentPosition={currentPosition} 
-              duration={duration} 
+            <ProgressBar
+              currentPosition={currentPosition}
+              duration={duration}
               onSeek={(e) => onSeek(Number(e.currentTarget.value))}
             />
           </div>
@@ -140,8 +143,8 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
                 <DevicesIcon size={16} />
               </button>
               {showDevices && (
-                <DevicesModal 
-                  devices={availableDevices} 
+                <DevicesModal
+                  devices={availableDevices}
                   onDeviceSelect={onDeviceSelect}
                   onClose={onToggleDevices}
                 />
@@ -152,4 +155,4 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
       </div>
     </div>
   );
-}
+};

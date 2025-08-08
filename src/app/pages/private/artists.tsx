@@ -3,11 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 
 import Album from '@/features/artists/Album';
-import { PageHeader } from '@/app/layout/PageHeader';
-import { PageWithQueryState } from '@/app/components/PageWithQueryState';
 import { InfiniteScrollList } from '@/app/components/InfiniteScrollList';
 
 import { useTopArtists } from '@/features/user/useTopArtists';
+import { DefaultPage } from '@/app/layout/DefaultPage';
 
 const Artistas = () => {
   const navigate = useNavigate();
@@ -28,25 +27,6 @@ const Artistas = () => {
     navigate(`/artist/${artistId}`);
   };
 
-  const pageHeader = (
-    <PageHeader
-      title="Top Artistas"
-      subtitle="Aqui você encontra seus artistas preferidos"
-    />
-  );
-
-  if (isLoading || error) {
-    return (
-      <PageWithQueryState
-        isLoading={isLoading}
-        error={error}
-        loadingMessage="Carregando artistas..."
-        errorMessage="Erro ao carregar artistas. Tente novamente."
-        headerContent={pageHeader}
-      />
-    );
-  }
-
   const renderArtistItem = (artist: any) => (
     <div
       onClick={() => handleArtistClick(artist.id)}
@@ -66,19 +46,21 @@ const Artistas = () => {
   );
 
   return (
-    <div className="w-full p-6">
-      {pageHeader}
-
+    <DefaultPage
+      title="Top Artistas"
+      subtitle="Aqui você encontra seus artistas preferidos"
+      isLoading={isLoading} error={error} loadingMessage="Carregando artistas..."
+      errorMessage="Erro ao carregar artistas. Tente novamente." >
       <InfiniteScrollList
         items={allArtists}
         renderItem={renderArtistItem}
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         fetchNextPage={fetchNextPage}
-        className="flex flex-col "
+        className="flex flex-col pt-6"
         emptyComponent={<></>}
       />
-    </div>
+    </DefaultPage>
   );
 };
 

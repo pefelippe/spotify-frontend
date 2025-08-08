@@ -39,17 +39,13 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
       />
 
       {/* Modal Content */}
-      <div className="relative bg-gray-900 rounded-lg p-6 w-full max-w-md mx-4">
+      <div className="relative bg-gray-900 rounded-lg p-8 w-full max-w-md mx-4 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white-text">{title}</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-white-text transition-colors cursor-pointer"
-          >
-            ✕
-          </button>
-        </div>
+        {title && (
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-white-text">{title}</h2>
+          </div>
+        )}
 
         {/* Content */}
         <div className="text-white-text">

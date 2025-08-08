@@ -17,12 +17,12 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   currentPosition,
   duration,
   onSeek,
-  size = 'small'
+  size = 'small',
 }) => {
   const progressPercent = duration > 0 ? (currentPosition / duration) * 100 : 0;
 
-  const barHeight = size === 'small' 
-    ? 'h-1 lg:h-1.5' 
+  const barHeight = size === 'small'
+    ? 'h-1 lg:h-1.5'
     : 'h-2';
 
   return (
@@ -39,7 +39,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           onChange={(e) => onSeek && onSeek(e as unknown as React.MouseEvent<HTMLInputElement>)}
           className={`flex-1 appearance-none bg-gray-600 rounded-full cursor-pointer ${barHeight} progress-slider`}
           style={{
-            background: `linear-gradient(to right, #22c55e 0%, #22c55e ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`
+            background: `linear-gradient(to right, #22c55e 0%, #22c55e ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`,
           }}
         />
         <span className={`${size === 'small' ? 'text-[10px] lg:text-xs' : 'text-sm'} text-gray-400 w-8 text-right`}>

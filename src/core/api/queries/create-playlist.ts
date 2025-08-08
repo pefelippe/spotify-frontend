@@ -5,18 +5,33 @@ export const createPlaylist = async (
   name: string,
   accessToken: string,
 ) => {
-  const response = await axios.post(
-    `https://api.spotify.com/v1/users/${userId}/playlists`,
-    {
-      name,
-      public: false,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+  try {
+    console.log('Creating playlist with:', { userId, name });
+    
+    const response = await axios.post(
+      `https://api.spotify.com/v1/users/${userId}/playlists`,
+      {
+        name,
+        public: false,
       },
-    },
-  );
-  return response.data;
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+    
+    console.log('Playlist created successfully:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error creating playlist:', error);
+    console.error('Error details:', {
+      status: error?.response?.status,
+      message: error?.response?.data,
+      userId,
+      name,
+    });
+    throw error;
+  }
 };

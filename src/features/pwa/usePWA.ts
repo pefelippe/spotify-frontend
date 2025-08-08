@@ -11,7 +11,7 @@ export const usePWA = (): PWAHookReturn => {
     console.log('[PWA] Window support:', 'beforeinstallprompt' in window);
     console.log('[PWA] Service Worker support:', 'serviceWorker' in navigator);
     console.log('[PWA] Standalone mode:', window.matchMedia('(display-mode: standalone)').matches);
-    
+
     const handler = (e: Event) => {
       e.preventDefault();
       console.log('[PWA] beforeinstallprompt event details:', {

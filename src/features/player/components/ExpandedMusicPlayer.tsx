@@ -130,7 +130,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
                 onSeek(seekTime);
               }}
               size="large"
-            />   
+            />
             <PlayerControls
               isPlaying={isPlaying}
               shuffle={shuffle}
@@ -149,4 +149,4 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
       </div>
     </div>
   );
-}
+};
