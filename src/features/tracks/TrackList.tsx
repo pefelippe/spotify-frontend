@@ -19,6 +19,7 @@ interface Track {
     name: string;
     id: string;
     uri?: string;
+    images?: Array<{ url: string }>;
   };
 }
 
@@ -114,7 +115,19 @@ export const TrackList = ({
 
   const handlePlayTrack = (track: Track) => {
     const trackUri = track.uri || `spotify:track:${track.id}`;
-    playTrack(trackUri, contextUri);
+    console.log('Playing track:', {
+      trackUri,
+      contextUri,
+      trackName: track.name,
+      trackArtists: track.artists.map(a => a.name)
+    });
+    
+    // If contextUri is for liked songs, pass the specific track URI as offset
+    if (contextUri === 'spotify:user:collection:tracks') {
+      playTrack(trackUri, contextUri);
+    } else {
+      playTrack(trackUri, contextUri);
+    }
   };
 
   const handleLikeTrack = (trackId: string) => {
@@ -145,6 +158,7 @@ export const TrackList = ({
     }
 
     const trackNumber = isPlaylist ? index + 1 : (track.track_number || index + 1);
+    const trackImage = track.album?.images?.[0]?.url || 'https://via.placeholder.com/64x64/333/fff?text=♪';
 
     return (
       <div
@@ -173,6 +187,14 @@ export const TrackList = ({
               {trackNumber}
             </span>
           )}
+        </div>
+
+        <div className="w-12 h-12 mr-4 flex-shrink-0">
+          <img 
+            src={trackImage} 
+            alt={track.name} 
+            className="w-full h-full object-cover rounded" 
+          />
         </div>
 
         <div className="flex-1 min-w-0 mr-4">
@@ -206,21 +228,17 @@ export const TrackList = ({
           </div>
         </div>
 
-        {isPlaylist && (
-          <div className="w-48 mr-4 min-w-0">
-            <div className="text-gray-400 text-sm truncate hover:underline hover:text-white cursor-pointer">
-              {track.album?.name || 'Álbum desconhecido'}
-            </div>
+        <div className="w-48 mr-4 min-w-0">
+          <div className="text-gray-400 text-sm truncate hover:underline hover:text-white cursor-pointer">
+            {track.album?.name || 'Álbum desconhecido'}
           </div>
-        )}
+        </div>
 
-        {isPlaylist && (
-          <div className="w-32 mr-4">
-            <div className="text-gray-400 text-sm">
-              {(track as any).added_at ? formatAddedDate((track as any).added_at) : 'Data desconhecida'}
-            </div>
+        <div className="w-32 mr-4">
+          <div className="text-gray-400 text-sm">
+            {(track as any).added_at ? formatAddedDate((track as any).added_at) : 'Data desconhecida'}
           </div>
-        )}
+        </div>
 
         <div className="w-8 flex justify-center mr-4">
           <button
@@ -251,13 +269,10 @@ export const TrackList = ({
     <div>
       <div className="flex items-center px-4 py-2 border-b border-gray-800 text-gray-400 text-sm font-normal mb-4">
         <div className="w-4 mr-4 text-center">#</div>
+        <div className="w-12 mr-4">Imagem</div>
         <div className="flex-1 mr-4">Título</div>
-        {isPlaylist && (
-          <>
-            <div className="w-48 mr-4">Álbum</div>
-            <div className="w-32 mr-4">Adicionado em</div>
-          </>
-        )}
+        <div className="w-48 mr-4">Álbum</div>
+        <div className="w-32 mr-4">Adicionado em</div>
         <div className="w-8 mr-4"></div>
         <div className="w-16 flex justify-end pr-2">
           <TimeIcon size={16} className="opacity-50" />

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useLikedSongs } from '@/features/liked-songs/useLikedSongs';
+import { useLikedSongs, useAddToLikedSongs, useRemoveFromLikedSongs } from '@/features/liked-songs/useLikedSongs';
 
 interface LikedTracksContextData {
   likedTracks: Set<string>;
@@ -14,6 +14,8 @@ const LikedTracksContext = createContext<LikedTracksContextData | undefined>(und
 export const LikedTracksProvider = ({ children }: { children: ReactNode }) => {
   const [likedTracks, setLikedTracks] = useState<Set<string>>(new Set());
   const { data: likedSongsData } = useLikedSongs();
+  const addToLikedSongsMutation = useAddToLikedSongs();
+  const removeFromLikedSongsMutation = useRemoveFromLikedSongs();
 
   useEffect(() => {
     if (likedSongsData) {
@@ -34,18 +36,27 @@ export const LikedTracksProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const toggleLikeTrack = (trackId: string) => {
-    setLikedTracks(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(trackId)) {
+    if (likedTracks.has(trackId)) {
+      // Remove from liked songs
+      removeFromLikedSongsMutation.mutate([trackId]);
+      setLikedTracks(prev => {
+        const newSet = new Set(prev);
         newSet.delete(trackId);
-      } else {
+        return newSet;
+      });
+    } else {
+      // Add to liked songs
+      addToLikedSongsMutation.mutate([trackId]);
+      setLikedTracks(prev => {
+        const newSet = new Set(prev);
         newSet.add(trackId);
-      }
-      return newSet;
-    });
+        return newSet;
+      });
+    }
   };
 
   const addLikedTrack = (trackId: string) => {
+    addToLikedSongsMutation.mutate([trackId]);
     setLikedTracks(prev => {
       const newSet = new Set(prev);
       newSet.add(trackId);
@@ -54,6 +65,7 @@ export const LikedTracksProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeLikedTrack = (trackId: string) => {
+    removeFromLikedSongsMutation.mutate([trackId]);
     setLikedTracks(prev => {
       const newSet = new Set(prev);
       newSet.delete(trackId);

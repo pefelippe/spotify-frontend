@@ -13,6 +13,7 @@ import { usePlayer } from '@/features/player';
 import PlaylistItem from '@/features/playlist/PlaylistItem';
 import { HeartIcon } from '@/app/components/SpotifyIcons';
 import { TrackList } from '@/features/tracks/TrackList';
+import { PlayIcon } from '@/app/components/SpotifyIcons';
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -71,12 +72,7 @@ const Playlists = () => {
     playTrack('', contextUri);
   };
 
-  const pageHeader = isLikedSongsPage ? (
-    <PageHeader
-      title="Músicas Curtidas"
-      subtitle="Suas músicas favoritas"
-    />
-  ) : (
+  const pageHeader = isLikedSongsPage ? null : (
     <PageHeader
       title="Minhas Playlists"
       subtitle="Sua coleção pessoal de playlists"
@@ -136,15 +132,15 @@ const Playlists = () => {
                </div>
             </div>
 
-            <button
-              onClick={handleLikedSongsPlay}
-              className="px-8 py-3 bg-green-spotify hover:bg-green-600 text-black font-bold rounded-full transition-colors flex items-center space-x-2"
-            >
-              <svg width="20" height="20" viewBox="0 0 16 16" fill="black">
-                <path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.287V1.713z"/>
-              </svg>
-              <span>Tocar</span>
-            </button>
+            <div className="flex items-center space-x-4 mt-4">
+              <button 
+                onClick={handleLikedSongsPlay}
+                className="bg-green-500 text-black px-6 py-3 rounded-full hover:scale-105 transition-transform cursor-pointer flex items-center justify-center"
+              >
+                <PlayIcon size={24} className="ml-0.5" />
+                <span className="ml-2">Reproduzir</span>
+              </button>
+            </div>
           </div>
         </div>
 

@@ -13,17 +13,17 @@ const Perfil = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center pb-32">
-      <div className="text-center">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 lg:pt-0 pb-[96px] lg:pb-12">
+      <div className="w-full max-w-screen-sm text-center">
         <div className="mb-8">
           <img
             src={userProfile?.images?.[0]?.url || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'}
             alt={userProfile?.display_name || 'User'}
-            className="w-40 h-40 rounded-full mx-auto object-cover border-4 border-gray-700 shadow-xl"
+            className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full mx-auto object-cover border-4 border-gray-700 shadow-xl"
           />
         </div>
 
-        <h1 className="text-4xl font-bold text-white mb-8">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 break-words">
           {userProfile?.display_name || 'Usuário'}
         </h1>
 
@@ -31,7 +31,7 @@ const Perfil = () => {
           label="Sair"
           onClick={logout}
           variant="spotify"
-          customClassName="w-[250px] mx-auto justify-center"
+          customClassName="w-full sm:w-64 mx-auto justify-center"
         />
       </div>
     </div>

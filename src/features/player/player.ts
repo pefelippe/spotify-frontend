@@ -20,6 +20,10 @@ export interface PlayerContextData {
   setVolume: (volume: number) => Promise<void>;
   refreshDevices: () => Promise<void>;
   transferPlayback: (deviceId: string, play?: boolean) => Promise<void>;
+  hasTrack: boolean;
+  // Add new methods for shuffle and repeat
+  setShuffle: (shuffleState: boolean) => Promise<void>;
+  setRepeat: (repeatMode: 'track' | 'context' | 'off') => Promise<void>;
 }
 
 export interface SpotifyDevice {

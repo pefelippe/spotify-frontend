@@ -8,7 +8,7 @@ interface PageHeaderProps {
 
 export const PageHeader = ({ title, subtitle, children }: PageHeaderProps) => {
   return (
-    <div className="my-6 mx-4">
+    <div className="">
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <h1 className="text-4xl font-bold text-white-text mb-2">

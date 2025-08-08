@@ -141,3 +141,7 @@ export interface SpotifyError {
     message: string;
   };
 }
+
+export interface SpotifyDevice {
+
+}

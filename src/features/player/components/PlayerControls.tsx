@@ -1,47 +1,146 @@
 import React from 'react';
-import { PauseIcon, PlayIcon, RepeatIcon, ShuffleIcon, SkipNextIcon, SkipPrevIcon } from '@/app/components/SpotifyIcons';
+import {
+  PlayIcon,
+  PauseIcon,
+  SkipNextIcon,
+  SkipPrevIcon,
+  ShuffleIcon,
+  RepeatIcon,
+} from '../../../app/components/SpotifyIcons';
 
-type PlayerControlsProps = {
+interface PlayerControlsProps {
   isPlaying: boolean;
   shuffle: boolean;
   repeat: number;
-  onPlayPause: (e: React.MouseEvent) => void;
-  onPrev: (e: React.MouseEvent) => void;
-  onNext: (e: React.MouseEvent) => void;
-  onShuffle: (e: React.MouseEvent) => void;
-  onRepeat: (e: React.MouseEvent) => void;
-};
+  onPlayPause: () => void;
+  onPrevious: () => void;
+  onNext: () => void;
+  onShuffle: () => void;
+  onRepeat: () => void;
+  size?: 'small' | 'large';
+  fullWidthOnMobile?: boolean;
+}
 
 export const PlayerControls: React.FC<PlayerControlsProps> = ({
   isPlaying,
   shuffle,
   repeat,
   onPlayPause,
-  onPrev,
+  onPrevious,
   onNext,
   onShuffle,
   onRepeat,
+  size = 'small',
+  fullWidthOnMobile = false
 }) => {
+  const iconSizes = {
+    small: {
+      shuffle: 16,
+      skipPrev: 18,
+      playPause: 14,
+      skipNext: 18,
+      repeat: 16
+    },
+    large: {
+      shuffle: 24,
+      skipPrev: 28,
+      playPause: 24,
+      skipNext: 28,
+      repeat: 24
+    }
+  };
+
+  const currentSizes = iconSizes[size];
+
+  const wrapperClass = fullWidthOnMobile
+    ? 'max-lg:w-full flex items-center justify-between lg:justify-center mb-2 relative lg:gap-4 max-w-md'
+    : 'flex items-center justify-center space-x-1.5 lg:space-x-3 mb-2 relative';
+
   return (
-    <div className="flex items-center justify-center space-x-2 lg:space-x-4 mb-4">
-      <button onClick={onShuffle} className={`p-2 rounded-full transition-all duration-200 cursor-pointer hidden lg:flex items-center justify-center hover:bg-white/10 hover:scale-105 ${shuffle ? 'text-green-500 hover:text-green-400' : 'text-gray-300 hover:text-white'}`}>
-        <ShuffleIcon size={16} />
-      </button>
-      <button onClick={onPrev} className="text-gray-300 hover:text-white transition-all duration-200 p-2 cursor-pointer hover:bg-white/10 rounded-full hover:scale-105">
-        <SkipPrevIcon size={20} />
-      </button>
-      <button onClick={onPlayPause} className="bg-white text-black rounded-full p-2 lg:p-2.5 hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:bg-gray-100 shadow-lg cursor-pointer flex items-center justify-center">
-        {isPlaying ? <PauseIcon size={16} /> : <PlayIcon size={16} className="ml-0.5" />}
-      </button>
-      <button onClick={onNext} className="text-gray-300 hover:text-white transition-all duration-200 p-2 cursor-pointer hover:bg-white/10 rounded-full hover:scale-105">
-        <SkipNextIcon size={20} />
-      </button>
-      <button onClick={onRepeat} className={`p-2 rounded-full transition-all duration-200 cursor-pointer hidden lg:flex items-center justify-center hover:bg-white/10 hover:scale-105 ${repeat > 0 ? 'text-green-500 hover:text-green-400' : 'text-gray-300 hover:text-white'}`}>
-        <RepeatIcon size={16} />
-      </button>
+    <div className={wrapperClass}>
+      <div className="group relative">
+        <button
+          onClick={onShuffle}
+          className={`p-2 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center hover:bg-white/10 hover:scale-105 ${
+            shuffle
+              ? 'text-green-500 hover:text-green-400'
+              : 'text-gray-300 hover:text-white'
+          } ${size === 'small' ? 'text-sm' : ''}`}
+          title="Shuffle"
+        >
+          <ShuffleIcon size={currentSizes.shuffle} />
+        </button>
+        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+          {shuffle ? 'Shuffle On' : 'Shuffle Off'}
+        </span>
+      </div>
+
+      <div className="group relative">
+        <button
+          onClick={onPrevious}
+          className={`${size === 'small' ? 'cursor-pointer text-gray-300 hover:text-white p-1.5 hover:bg-white/10 rounded-full' : 'text-gray-300 hover:text-white transition-all duration-200 p-3 cursor-pointer hover:scale-110'}`}
+          title="Previous"
+        >
+          <SkipPrevIcon size={currentSizes.skipPrev} />
+        </button>
+        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+          Previous
+        </span>
+      </div>
+
+      <div className="group relative">
+        <button
+          onClick={onPlayPause}
+          className={`${
+            size === 'small'
+              ? 'bg-white text-black rounded-full p-1.5 lg:p-2 hover:scale-105 active:scale-95'
+              : 'bg-white text-black rounded-full p-4 lg:p-5 hover:scale-105 active:scale-95'
+          } transition-all duration-200 ease-out hover:bg-gray-100 shadow-lg cursor-pointer flex items-center justify-center`}
+          title={isPlaying ? 'Pause' : 'Play'}
+        >
+          {isPlaying ? (
+            <PauseIcon size={currentSizes.playPause} />
+          ) : (
+            <PlayIcon 
+              size={currentSizes.playPause} 
+              className={size === 'small' ? 'ml-0.5' : 'ml-1'} 
+            />
+          )}
+        </button>
+        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+          {isPlaying ? 'Pause' : 'Play'}
+        </span>
+      </div>
+
+      <div className="group relative">
+        <button
+          onClick={onNext}
+          className={`${size === 'small' ? 'cursor-pointer text-gray-300 hover:text-white p-1.5 hover:bg-white/10 rounded-full' : 'text-gray-300 hover:text-white transition-all duration-200 p-3 cursor-pointer hover:scale-110'}`}
+          title="Next"
+        >
+          <SkipNextIcon size={currentSizes.skipNext} />
+        </button>
+        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+          Next
+        </span>
+      </div>
+
+      <div className="group relative">
+        <button
+          onClick={onRepeat}
+          className={`p-2 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center hover:bg-white/10 hover:scale-105 ${
+            repeat > 0
+              ? 'text-green-500 hover:text-green-400'
+              : 'text-gray-300 hover:text-white'
+          } ${size === 'small' ? 'text-sm' : ''}`}
+          title="Repeat"
+        >
+          <RepeatIcon size={currentSizes.repeat} />
+        </button>
+        <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+          {repeat === 0 ? 'Repeat Off' : repeat === 1 ? 'Repeat Context' : 'Repeat Track'}
+        </span>
+      </div>
     </div>
   );
 };
-
-export default PlayerControls;
-

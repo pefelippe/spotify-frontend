@@ -1,53 +1,51 @@
 import React from 'react';
 
-type ProgressBarProps = {
-  progressPercent: number;
-  currentPositionMs: number;
-  durationMs: number;
-  onSeek: (e: React.MouseEvent<HTMLDivElement>) => void;
-  barClassName?: string;
-  timeClassName?: string;
-};
-
 const formatTime = (ms: number) => {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
+interface ProgressBarProps {
+  currentPosition: number;
+  duration: number;
+  onSeek?: (e: React.MouseEvent<HTMLInputElement>) => void;
+  size?: 'small' | 'large';
+}
+
 export const ProgressBar: React.FC<ProgressBarProps> = ({
-  progressPercent,
-  currentPositionMs,
-  durationMs,
+  currentPosition,
+  duration,
   onSeek,
-  barClassName = 'group relative w-full h-1 bg-gray-600 rounded-full cursor-pointer',
-  timeClassName = 'flex justify-between text-[10px] lg:text-xs text-gray-400 mt-1',
+  size = 'small'
 }) => {
+  const progressPercent = duration > 0 ? (currentPosition / duration) * 100 : 0;
+
+  const barHeight = size === 'small' 
+    ? 'h-1 lg:h-1.5' 
+    : 'h-2';
+
   return (
-    <div>
-      <div
-        className={barClassName}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSeek(e);
-        }}
-      >
-        <div
-          className="h-full bg-white rounded-full transition-all duration-200 group-hover:bg-green-500"
-          style={{ width: `${progressPercent}%` }}
+    <div className="w-full lg:max-w-[360px]">
+      <div className="flex items-center gap-2">
+        <span className={`${size === 'small' ? 'text-[10px] lg:text-xs' : 'text-sm'} text-gray-400 w-8 text-left`}>
+          {formatTime(currentPosition)}
+        </span>
+        <input
+          type="range"
+          min="0"
+          max={duration}
+          value={currentPosition}
+          onChange={(e) => onSeek && onSeek(e as unknown as React.MouseEvent<HTMLInputElement>)}
+          className={`flex-1 appearance-none bg-gray-600 rounded-full cursor-pointer ${barHeight} progress-slider`}
+          style={{
+            background: `linear-gradient(to right, #22c55e 0%, #22c55e ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`
+          }}
         />
-        <div
-          className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-[var(--progress-left)] h-2.5 w-2.5 lg:h-3 lg:w-3 rounded-full bg-white shadow-md opacity-0 scale-75 transition-all duration-150 group-hover:opacity-100 group-hover:scale-100"
-          style={{ left: `${progressPercent}%` }}
-        />
-      </div>
-      <div className={timeClassName}>
-        <span>{formatTime(currentPositionMs)}</span>
-        <span>{formatTime(durationMs)}</span>
+        <span className={`${size === 'small' ? 'text-[10px] lg:text-xs' : 'text-sm'} text-gray-400 w-8 text-right`}>
+          {formatTime(duration)}
+        </span>
       </div>
     </div>
   );
 };
-
-export default ProgressBar;
-

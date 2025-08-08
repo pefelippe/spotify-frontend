@@ -10,7 +10,7 @@ const UserProfile = () => {
 
   if (!userId) {
     return (
-      <div className="w-full p-6">
+      <div className="w-full px-4 sm:px-6 py-6">
         <div className="flex items-center space-x-4 mb-8">
           <BackButton artistName="Usuário não encontrado" />
           <h1 className="text-2xl font-bold text-white-text">Usuário não encontrado</h1>
@@ -21,7 +21,7 @@ const UserProfile = () => {
 
   if (isLoading || error) {
     return (
-      <div className="w-full p-6">
+      <div className="w-full px-4 sm:px-6 py-6">
         <div className="flex items-center space-x-4 mb-8">
           <BackButton artistName={isLoading ? 'Carregando...' : 'Erro'} />
           <h1 className="text-2xl font-bold text-white-text">
@@ -40,27 +40,27 @@ const UserProfile = () => {
   }
 
   return (
-    <div className="w-full p-6">
+    <div className="w-full px-4 sm:px-6 py-6">
       <div className="flex items-center space-x-4 mb-8">
         <BackButton artistName={userProfile?.display_name || 'Usuário'} />
       </div>
 
       <CenteredLayout>
-        <div className="text-center">
+        <div className="text-center w-full max-w-screen-sm mx-auto">
           <div className="mb-6">
             <img
               src={userProfile?.images?.[0]?.url || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'}
               alt={userProfile?.display_name || 'User'}
-              className="w-32 h-32 rounded-full mx-auto object-cover border-4 border-gray-800"
+              className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full mx-auto object-cover border-4 border-gray-800"
             />
           </div>
 
-          <h1 className="text-3xl font-bold text-white-text mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white-text mb-4 break-words">
             {userProfile?.display_name || 'Usuário'}
           </h1>
 
           {userProfile?.followers?.total && (
-            <p className="text-gray-400 text-lg mb-6">
+            <p className="text-gray-400 text-base sm:text-lg mb-6">
               {userProfile.followers.total.toLocaleString()} seguidores
             </p>
           )}
