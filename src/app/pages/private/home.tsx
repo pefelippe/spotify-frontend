@@ -2,10 +2,9 @@ import { useNavigate } from 'react-router-dom';
 import { useUserPlaylists } from '@/features/user/useUserPlaylists';
 import { useLikedSongs } from '@/features/liked-songs/useLikedSongs';
 import { usePlayer } from '@/features/player';
-import { PlayIcon, HeartIcon } from '@/app/components/SpotifyIcons';
+import { HeartIcon, ChevronRightIcon, PlayIcon } from '@/app/components/SpotifyIcons';
 import { useRecentlyPlayed } from '@/features/user/useRecentlyPlayed';
 import { useTopArtists } from '@/features/user/useTopArtists';
-import { useUserProfile } from '@/features/user/useUserProfile';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -16,203 +15,193 @@ const Home = () => {
   const { data: topArtistsData } = useTopArtists();
   const topArtists = (topArtistsData?.pages?.[0]?.items || []).slice(0, 6);
 
-  const userPlaylists = playlistsData?.pages[0]?.items?.slice(0, 5) || [];
+  const userPlaylists = playlistsData?.pages[0]?.items || [];
   const likedSongsCount = likedSongsData?.pages[0]?.total || 0;
 
-  const handlePlaylistClick = (playlistId: string) => {
-    navigate(`/playlist/${playlistId}`);
+  const renderSectionHeader = (title: string, moreAction: () => void, moreText = 'Ver tudo') => (
+    <div className="flex items-center justify-between mb-4">
+      <h2 className="text-white text-2xl font-bold tracking-tight">{title}</h2>
+      <button 
+        onClick={moreAction} 
+        className="text-gray-400 hover:text-white text-sm flex items-center transition-colors duration-200 group cursor-pointer"
+      >
+        {moreText}
+        {moreText && (
+          <ChevronRightIcon 
+            size={16} 
+            className="ml-1 transform group-hover:translate-x-0.5 transition-transform" 
+          />
+        )}
+      </button>
+    </div>
+  );
+
+  const handlePlayItem = (uri: string, contextUri?: string) => {
+    if (!isReady || !deviceId) return;
+    playTrack(uri, contextUri);
   };
-
-  const handleLikedSongsClick = () => {
-    navigate('/playlists/liked-songs');
-  };
-
-  const handlePlaylistPlay = (playlistId: string) => {
-    if (!isReady || !deviceId) {
-      return;
-    }
-
-    const contextUri = `spotify:playlist:${playlistId}`;
-    playTrack('', contextUri);
-  };
-
-  const handleLikedSongsPlay = () => {
-    if (!isReady || !deviceId) {
-      return;
-    }
-
-    const contextUri = 'spotify:user:collection:tracks';
-    playTrack('', contextUri);
-  };
-
-  const quickAccessPlaylists = userPlaylists.slice(0, 5);
-
-  const { data: userProfile } = useUserProfile();
 
   return (
-    <div className="w-full p-6 space-y-8">
-      <header className="flex items-center justify-between bg-gradient-to-r from-gray-800/60 to-gray-700/40 rounded-xl px-5 py-4">
-        <div>
-          <h1 className="text-white text-2xl font-bold">{(() => { const h=new Date().getHours(); return h<12?'Bom dia':h<18?'Boa tarde':'Boa noite'; })()}, {userProfile?.display_name || 'você'}</h1>
-          <p className="text-gray-300 text-sm mt-1">Curta suas músicas e descubra novos artistas</p>
-        </div>
-        {userProfile?.images?.[0]?.url ? (
-          <img src={userProfile.images[0].url} alt={userProfile.display_name} className="w-10 h-10 rounded-full object-cover ring-1 ring-white/20" />
-        ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-700" />
-        )}
-      </header>
-      <section>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <div
-            className="group flex items-center bg-gradient-to-r from-purple-700 to-blue-700 hover:from-purple-600 hover:to-blue-600 rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
-            onClick={handleLikedSongsClick}
-          >
-              <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-white flex items-center justify-center">
-                <HeartIcon size={32} className="text-white" filled />
-              </div>
-              <div className="flex-1 px-4">
-                <h3 className="text-white font-medium">Músicas Curtidas</h3>
-                <p className="text-gray-200 text-sm">
-                {isLoadingLikedSongs ? 'Carregando...' :
-                  likedSongsError?.response?.status === 403 ? 'Faça login novamente' :
-                  likedSongsError ? 'Erro ao carregar' :
-                  likedSongsCount > 0 ? `${likedSongsCount} músicas` : 'Nenhuma música curtida'}
-                </p>
-              </div>
-              {!likedSongsError && likedSongsCount > 0 && (
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mr-4">
+    <div className="w-full min-h-screen bg-[#090707] text-white">
+      <div className="p-12 pb-32">
+        {/* Header */}
+        <header className="mb-16">
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Home
+          </h1>
+          <p className="text-gray-400 text-base">
+            Explore sua música, descubra novos sons e mergulhe em uma experiência musical personalizada.
+          </p>
+        </header>
+
+        {/* Recently Played Section */}
+        <section className="mb-16">
+          {renderSectionHeader('Tocados Recentemente', () => {}, '')}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {(recentlyPlayed?.items || []).slice(0, 6).map((item: any, idx: number) => {
+              const track = item?.track;
+              if (!track) {
+                return null;
+              }
+              
+              return (
+                <div
+                  key={`${track.id}-${idx}`}
+                  className="group relative bg-gray-800/30 hover:bg-gray-700/50 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer"
+                >
+                  <div 
+                    className="aspect-square relative"
+                    onClick={() => navigate(`/track/${track.id}`)}
+                  >
+                    <img 
+                      src={track.album?.images?.[0]?.url || 'https://via.placeholder.com/300x300/333/fff?text=♪'} 
+                      alt={track.name} 
+                      className="w-full h-full object-cover group-hover:brightness-75 transition-all" 
+                    />
+                    <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePlayItem(track.uri || `spotify:track:${track.id}`);
+                        }}
+                        className="bg-green-500 text-black p-3 rounded-full hover:scale-110 transition-transform cursor-pointer"
+                      >
+                        <PlayIcon size={20} className="ml-0.5" />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <h4 className="text-white text-sm font-semibold truncate" title={track.name}>{track.name}</h4>
+                    <p className="text-gray-400 text-xs truncate">{track.artists?.[0]?.name || 'Artista'}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Top Artists Section */}
+        <section className="mb-16">
+          {renderSectionHeader('Seus Top Artistas', () => navigate('/artists'))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {topArtists.map((artist: any) => {
+              if (!artist) {
+                return null;
+              }
+              
+              return (
+                <div
+                  key={artist.id}
+                  className="group cursor-pointer"
+                  onClick={() => navigate(`/artist/${artist.id}`)}
+                >
+                  <div className="aspect-square rounded-full overflow-hidden shadow-lg">
+                    <img
+                      src={artist.images?.[0]?.url || 'https://via.placeholder.com/300x300/333/fff?text=👤'}
+                      alt={artist.name}
+                      className="w-full h-full object-cover group-hover:brightness-75 transition-all"
+                    />
+                  </div>
+                  <div className="mt-2 text-center">
+                    <h4 className="text-sm font-semibold text-white truncate">{artist.name}</h4>
+                    <p className="text-xs text-gray-400">Artista</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Playlists Section */}
+        <section>
+          {renderSectionHeader('Suas Playlists', () => navigate('/playlists'))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            {/* Liked Songs as the first playlist */}
+            {likedSongsCount > 0 && (
+              <div
+                key="liked-songs"
+                className="group relative bg-gradient-to-br from-purple-600 to-blue-500 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => navigate('/playlists/liked-songs')}
+              >
+                <div className="aspect-square bg-gradient-to-br from-purple-500 to-blue-400 flex items-center justify-center">
+                  <HeartIcon size={64} className="text-white" filled />
+                </div>
+                <div className="p-3 bg-gray-800/50">
+                  <h4 className="text-white font-semibold text-sm truncate">Músicas Curtidas</h4>
+                  <p className="text-gray-300 text-xs">
+                    {isLoadingLikedSongs ? 'Carregando...' :
+                      likedSongsError?.response?.status === 403 ? 'Faça login novamente' :
+                      likedSongsError ? 'Erro ao carregar' :
+                      `${likedSongsCount} músicas`}
+                  </p>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleLikedSongsPlay();
+                      handlePlayItem('', 'spotify:user:collection:tracks');
                     }}
-                    className="w-12 h-12 bg-green-spotify rounded-full flex items-center justify-center hover:scale-105 transition-transform"
+                    className="bg-green-500 text-black p-3 rounded-full hover:scale-110 transition-transform cursor-pointer"
                   >
-                    <PlayIcon size={16} className="text-black ml-0.5" />
+                    <PlayIcon size={20} className="ml-0.5" />
                   </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-          {quickAccessPlaylists.map((playlist: any) => (
-            <div
-              key={playlist.id}
-              className="group flex items-center bg-gray-800/30 hover:bg-gray-700/50 rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
-              onClick={() => handlePlaylistClick(playlist.id)}
-            >
-              <img
-                src={playlist.images?.[0]?.url || 'https://via.placeholder.com/80x80/333/fff?text=♪'}
-                alt={playlist.name}
-                className="w-20 h-20 object-cover"
-              />
-              <div className="flex-1 px-4">
-                <h3 className="text-white font-medium truncate">{playlist.name}</h3>
-              </div>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mr-4">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePlaylistPlay(playlist.id);
-                  }}
-                  className="w-12 h-12 bg-green-spotify rounded-full flex items-center justify-center hover:scale-105 transition-transform"
-                >
-                  <PlayIcon size={16} className="text-black ml-0.5" />
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-white text-lg font-semibold mb-3">Suas Playlists</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-          {(playlistsData?.pages?.[0]?.items || []).slice(0, 8).map((pl: any) => (
-            <div
-              key={pl.id}
-              className="group bg-gray-800/30 hover:bg-gray-700/50 rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
-              onClick={() => handlePlaylistClick(pl.id)}
-            >
-              <div className="aspect-square w-full overflow-hidden">
-                <img src={pl.images?.[0]?.url || 'https://via.placeholder.com/300x300/333/fff?text=♪'} alt={pl.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
-              </div>
-              <div className="p-3">
-                <h4 className="text-white text-sm font-medium truncate" title={pl.name}>{pl.name}</h4>
-                <p className="text-gray-400 text-xs truncate">Playlist</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-white text-lg font-semibold mb-3">Tocados recentemente</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {(recentlyPlayed?.items || []).slice(0, 5).map((item: any, idx: number) => {
-            const track = item?.track;
-            if (!track) {
-              return null;
-            }
-            const imageUrl = track.album?.images?.[0]?.url || 'https://via.placeholder.com/300x300/333/fff?text=♪';
-            return (
+            {userPlaylists.slice(0, 11).map((pl: any) => (
               <div
-                key={`${track.id}-${idx}`}
-                className="group relative bg-gray-800/30 hover:bg-gray-700/40 rounded-lg overflow-hidden cursor-pointer transition-all duration-200"
-                onClick={() => {
-                  if (!isReady || !deviceId) {
-                    return;
-                  }
-                  playTrack(track.uri || `spotify:track:${track.id}`);
-                }}
+                key={pl.id}
+                className="group relative bg-gray-800/30 hover:bg-gray-700/50 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => navigate(`/playlist/${pl.id}`)}
               >
-                <div className="aspect-square w-full overflow-hidden">
-                  <img src={imageUrl} alt={track.name} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                <div className="aspect-square overflow-hidden">
+                  <img 
+                    src={pl.images?.[0]?.url || 'https://via.placeholder.com/300x300/333/fff?text=♪'} 
+                    alt={pl.name} 
+                    className="w-full h-full object-cover group-hover:brightness-75 transition-all" 
+                  />
                 </div>
                 <div className="p-3">
-                  <h4 className="text-white text-sm font-medium truncate" title={track.name}>{track.name}</h4>
-                  <p className="text-gray-400 text-xs truncate">
-                    {(track.artists || []).map((a: any) => a.name).join(', ')}
-                  </p>
+                  <h4 className="text-white text-sm font-semibold truncate" title={pl.name}>{pl.name}</h4>
+                  <p className="text-gray-400 text-xs truncate">Playlist</p>
                 </div>
-                <button
-                  className="absolute right-3 bottom-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 w-10 h-10 bg-green-spotify rounded-full flex items-center justify-center hover:scale-105 cursor-pointer"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!isReady || !deviceId) return;
-                    playTrack(track.uri || `spotify:track:${track.id}`);
-                  }}
-                >
-                  <PlayIcon size={16} className="text-black ml-0.5" />
-                </button>
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlayItem('', pl.uri);
+                    }}
+                    className="bg-green-500 text-black p-3 rounded-full hover:scale-110 transition-transform cursor-pointer"
+                  >
+                    <PlayIcon size={20} className="ml-0.5" />
+                  </button>
+                </div>
               </div>
-            );
-          })}
-        </div>
-      </section>
-
-      <section>
-        <h2 className="text-white text-lg font-semibold mb-3">Seus Top Artistas</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-          {topArtists.map((artist: any) => (
-            <div
-              key={artist.id}
-              className="group flex flex-col items-center text-center cursor-pointer"
-              onClick={() => navigate(`/artists/${artist.id}`)}
-            >
-              <div className="w-28 h-28 lg:w-32 lg:h-32 rounded-full overflow-hidden mb-3 ring-1 ring-white/10 group-hover:ring-white/30 transition-all">
-                <img
-                  src={artist.images?.[0]?.url || 'https://via.placeholder.com/300x300/333/fff?text=👤'}
-                  alt={artist.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="text-white text-sm font-medium truncate max-w-[10rem]">{artist.name}</div>
-              <div className="text-gray-400 text-xs">Artista</div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      </div>
     </div>
   );
 };

@@ -64,10 +64,6 @@ const UserProfile = () => {
               {userProfile.followers.total.toLocaleString()} seguidores
             </p>
           )}
-
-          <div className="text-gray-400 text-sm">
-            <p>Perfil do Spotify</p>
-          </div>
         </div>
       </CenteredLayout>
     </div>
