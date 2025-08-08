@@ -16,7 +16,9 @@ export const Sidebar = () => {
   const { installApp, isInstallable, isInstalled } = usePWA();
 
   const handleInstallClick = async () => {
-    await installApp();
+    console.log('[PWA] Install button clicked (Sidebar). isInstallable:', isInstallable, 'isInstalled:', isInstalled);
+    const ok = await installApp();
+    console.log('[PWA] installApp result:', ok);
   };
 
   return (
@@ -42,15 +44,13 @@ export const Sidebar = () => {
       </div>
 
       <div className="p-6 border-t border-gray-800/30">
-        {isInstallable && !isInstalled && (
-          <CustomButton
-            label="Instalar PWA"
-            icon={<DownloadIcon size={18} />}
-            onClick={handleInstallClick}
-            variant="pwa"
-            className="w-full justify-start"
-          />
-        )}
+        <CustomButton
+          label="Instalar PWA"
+          icon={<DownloadIcon size={18} />}
+          onClick={handleInstallClick}
+          variant="pwa"
+          className="w-full justify-start"
+        />
       </div>
     </div>
   );

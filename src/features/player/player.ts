@@ -6,6 +6,8 @@ export interface PlayerContextData {
   position: number;
   duration: number;
   deviceId: string | null;
+  activeDeviceId: string | null;
+  availableDevices: SpotifyDevice[];
   isPremiumRequired: boolean;
   userInteracted: boolean;
   resetPremiumWarning: () => void;
@@ -16,4 +18,15 @@ export interface PlayerContextData {
   previousTrack: () => Promise<void>;
   seekToPosition: (position: number) => Promise<void>;
   setVolume: (volume: number) => Promise<void>;
+  refreshDevices: () => Promise<void>;
+  transferPlayback: (deviceId: string, play?: boolean) => Promise<void>;
+}
+
+export interface SpotifyDevice {
+  id: string;
+  is_active: boolean;
+  is_restricted: boolean;
+  name: string;
+  type: 'Computer' | 'Tablet' | 'Smartphone' | 'Speaker' | 'TV' | 'AVR' | 'STB' | 'AudioDongle' | string;
+  volume_percent: number | null;
 }

@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { BackButton } from '@/app/layout/BackButton';
 import { QueryState } from '@/app/components/QueryState';
-import { TrackList } from '@/app/components/TrackList';
+import { TrackList } from '@/features/tracks/TrackList';
 import { UserAvatar } from '@/app/components/UserAvatar';
 import { useAlbumDetails, useAlbumTracks } from '@/features/artists/useAlbumDetails';
 

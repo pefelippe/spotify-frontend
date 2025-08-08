@@ -12,7 +12,7 @@ import { useUserProfile } from '@/features/user/useUserProfile';
 import { usePlayer } from '@/features/player';
 import PlaylistItem from '@/features/playlist/PlaylistItem';
 import { HeartIcon } from '@/app/components/SpotifyIcons';
-import { TrackList } from '@/app/components/TrackList';
+import { TrackList } from '@/features/tracks/TrackList';
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

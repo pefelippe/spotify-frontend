@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { InfiniteScrollList } from './InfiniteScrollList';
+import { InfiniteScrollList } from '@/app/components/InfiniteScrollList';
 import { usePlayer } from '@/features/player';
-import { useLikedTracks } from '@/app/providers/liked-tracks-provider';
+import { useLikedTracks } from '@/features/liked-songs/liked-tracks-provider';
 import { useAddToLikedSongs, useRemoveFromLikedSongs } from '@/features/liked-songs/useLikedSongs';
 import { AddToPlaylistModal } from '@/features/playlist/AddToPlaylistModal';
-import { PlayIcon, HeartIcon, PlayingIcon, TimeIcon } from './SpotifyIcons';
+import { PlayIcon, HeartIcon, PlayingIcon, TimeIcon } from '@/app/components/SpotifyIcons';
 
 interface Track {
   id: string;
@@ -289,3 +289,4 @@ export const TrackList = ({
     </div>
   );
 };
+

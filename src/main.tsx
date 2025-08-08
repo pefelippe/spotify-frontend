@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { AuthProvider } from './core/auth';
 import { ReactQueryProvider } from './app/providers/react-query-provider.js';
-import { LikedTracksProvider } from './app/providers/liked-tracks-provider';
+import { LikedTracksProvider } from '@/features/liked-songs/liked-tracks-provider';
 
 import './tailwind.css';
 

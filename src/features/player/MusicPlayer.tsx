@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '@/features/player';
-import { useLikedTracks } from '@/app/providers/liked-tracks-provider';
-import { AddToPlaylistModal } from '@/features/playlist/AddToPlaylistModal';
+import { useLikedTracks } from '@/features/liked-songs/liked-tracks-provider';
 import {
   PlayIcon,
   PauseIcon,
@@ -14,6 +13,8 @@ import {
   VolumeMuteIcon,
   HeartIcon,
   ChevronDownIcon,
+  DevicesIcon,
+  FullscreenIcon,
 } from '../../app/components/SpotifyIcons';
 
 const formatTime = (ms: number) => {
@@ -30,7 +31,9 @@ export const MusicPlayer = () => {
     position,
     duration,
     isReady,
-    userInteracted,
+    availableDevices,
+    refreshDevices,
+    transferPlayback,
     pauseTrack,
     resumeTrack,
     nextTrack,
@@ -45,12 +48,13 @@ export const MusicPlayer = () => {
   const [volumeState, setVolumeState] = useState(50);
   const [previousVolume, setPreviousVolume] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
+  const [showDevices, setShowDevices] = useState(false);
   const [isDragging] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(0); // 0: off, 1: all, 2: one
-  const [showAddToPlaylistModal, setShowAddToPlaylistModal] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [isEntering, setIsEntering] = useState(false);
 
   useEffect(() => {
     if (!isDragging) {
@@ -58,7 +62,6 @@ export const MusicPlayer = () => {
     }
   }, [position, isDragging]);
 
-  // Fechar player expandido com ESC
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isExpanded) {
@@ -94,6 +97,14 @@ export const MusicPlayer = () => {
     return () => clearInterval(interval);
   }, [isPlaying, duration, isDragging]);
 
+  // Animate mini player entrance when player becomes ready
+  useEffect(() => {
+    if (isReady) {
+      // first render with translate-y-full, then animate to 0
+      setTimeout(() => setIsEntering(true), 0);
+    }
+  }, [isReady]);
+
   const handlePlayPause = () => {
     if (isPlaying) {
       pauseTrack();
@@ -104,8 +115,8 @@ export const MusicPlayer = () => {
 
   const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const width = rect.width;
+    const { left, width } = rect;
+    const clickX = e.clientX - left;
     const seekTime = (clickX / width) * duration;
     seekToPosition(seekTime);
   };
@@ -148,6 +159,14 @@ export const MusicPlayer = () => {
     navigate(`/artists/${artistId}`);
   };
 
+  const handleToggleDevices = async (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    setShowDevices(prev => !prev);
+    await refreshDevices();
+  };
+
   const handlePlayerExpand = () => {
     setIsExpanded(true);
   };
@@ -166,19 +185,13 @@ export const MusicPlayer = () => {
     }
   };
 
-  // Player sempre visível, mesmo sem música
   if (!isReady) {
-    return (
-      <div className="fixed bottom-[72px] lg:bottom-0 left-0 lg:left-[250px] right-0 bg-black border-t border-gray-800 z-50 h-20 flex items-center justify-center">
-        <div className="text-gray-400 text-sm">Carregando player...</div>
-      </div>
-    );
+    return null;
   }
 
   const progressPercent = duration > 0 ? (currentPosition / duration) * 100 : 0;
   const isCurrentTrackLiked = currentTrack ? isTrackLiked(currentTrack.id) : false;
 
-  // Player Expandido (Fullscreen) - só quando há música
   if (isExpanded && currentTrack) {
     return (
       <div
@@ -187,7 +200,6 @@ export const MusicPlayer = () => {
         }`}
         onClick={handlePlayerCollapse}
       >
-        {/* Header */}
         <div className="flex items-center justify-between p-4 pt-8 lg:pt-4" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={handlePlayerCollapse}
@@ -199,12 +211,10 @@ export const MusicPlayer = () => {
             <p className="text-xs text-gray-400 uppercase tracking-wide">Playing from</p>
             <p className="text-sm text-white font-medium">{currentTrack.album.name}</p>
           </div>
-          <div className="w-10 h-10"></div> {/* Espaço vazio para manter centralização */}
+          <div className="w-10 h-10"></div>
         </div>
 
-        {/* Main Content - Mobile: Vertical, Desktop: Horizontal */}
         <div className="flex-1 flex flex-col lg:flex-row lg:items-center px-8 py-8 gap-8 lg:gap-12" onClick={(e) => e.stopPropagation()}>
-          {/* Album Art - quase 40% da largura em telas grandes */}
           <div className="flex items-center justify-center lg:flex-shrink-0 lg:w-[38%]">
             <div className="relative w-80 h-80 lg:w-full lg:h-auto lg:aspect-square max-w-sm lg:max-w-none">
               <img
@@ -215,9 +225,7 @@ export const MusicPlayer = () => {
             </div>
           </div>
 
-          {/* Right Side - Track Info, Progress, Controls */}
           <div className="flex-1 flex flex-col justify-center space-y-8 lg:space-y-12 min-w-0 lg:w-[60%]">
-            {/* Track Info */}
             <div>
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
@@ -257,10 +265,10 @@ export const MusicPlayer = () => {
               </div>
             </div>
 
-            {/* Progress Bar */}
-            <div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-400 w-12 text-left">{formatTime(currentPosition)}</span>
               <div
-                className="w-full h-2 bg-gray-600 rounded-full cursor-pointer group mb-4"
+                className="relative flex-1 h-2 bg-gray-600 rounded-full cursor-pointer group"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleSeek(e);
@@ -271,13 +279,9 @@ export const MusicPlayer = () => {
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <div className="flex justify-between text-sm text-gray-400">
-                <span>{formatTime(currentPosition)}</span>
-                <span>{formatTime(duration)}</span>
-              </div>
+              <span className="text-sm text-gray-400 w-12 text-right">{formatTime(duration)}</span>
             </div>
 
-            {/* Controls */}
             <div className="flex items-center justify-center space-x-6 lg:space-x-8">
               <button
                 onClick={(e) => {
@@ -347,18 +351,16 @@ export const MusicPlayer = () => {
     );
   }
 
-  // Player Compacto (Mini Player) - Sempre visível
   return (
     <div
-      className="fixed bottom-[72px] lg:bottom-0 left-0 lg:left-[250px] right-0 border-t border-gray-700/30 z-50 shadow-2xl"
+      className={`fixed bottom-[72px] lg:bottom-0 left-0 lg:left-[250px] right-0 border-t border-gray-700/30 z-50 shadow-2xl transform transition-transform duration-300 ease-out ${isEntering ? 'translate-y-0' : 'translate-y-full'}`}
       style={{ backgroundColor: '#000000' }}
       onClick={handlePlayerClick}
     >
       <div className="flex flex-col">
-        {/* Progress bar no topo - apenas desktop */}
+        
 
-        <div className="flex items-center justify-between h-20 lg:h-24 px-4 lg:px-6 py-4 lg:py-6 hover:bg-gray-900/20 transition-colors duration-200">
-          {/* Left: Track Info with Heart */}
+        <div className="flex items-center justify-between h-16 lg:h-20 px-3 lg:px-5 py-2 lg:py-3 hover:bg-gray-900/20 transition-colors duration-200">
           <div className="flex items-center space-x-3 lg:space-x-4 flex-1 min-w-0 max-w-[30%] lg:max-w-[25%] track-info-area">
             {currentTrack ? (
               <>
@@ -366,13 +368,13 @@ export const MusicPlayer = () => {
                   <img
                     src={currentTrack.album.images[0]?.url}
                     alt={currentTrack.name}
-                    className="w-12 h-12 lg:w-14 lg:h-14 rounded-md object-cover transition-transform duration-200 group-hover:scale-105"
+                    className="w-10 h-10 lg:w-12 lg:h-12 rounded-md object-cover transition-transform duration-200 group-hover:scale-105"
                     key={currentTrack.id}
                   />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1 mb-0.5">
-                    <h4 className="text-white text-sm lg:text-base font-normal truncate hover:underline cursor-pointer transition-colors">
+                    <h4 className="text-white text-xs lg:text-sm font-normal truncate hover:underline cursor-pointer transition-colors">
                       {currentTrack.name}
                     </h4>
                     <button
@@ -389,7 +391,7 @@ export const MusicPlayer = () => {
                       <HeartIcon size={16} filled={isCurrentTrackLiked} />
                     </button>
                   </div>
-                  <div className="text-gray-400 text-xs lg:text-sm truncate">
+                  <div className="text-gray-400 text-[11px] lg:text-xs truncate">
                     {currentTrack.artists.map((artist, index) => (
                       <span key={artist.uri || index}>
                         <span
@@ -424,9 +426,8 @@ export const MusicPlayer = () => {
             )}
           </div>
 
-          {/* Center: Player Controls - Sempre mostrar */}
-          <div className="flex flex-col items-center justify-center flex-1 max-w-[40%] lg:max-w-[50%]">
-            <div className="flex items-center justify-center space-x-2 lg:space-x-4 mb-2">
+          <div className="flex flex-col items-center justify-center flex-1 max-w-[40%] lg:max-w-[50%] pt-2">
+            <div className="flex items-center justify-center space-x-1.5 lg:space-x-3 mb-2">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -446,9 +447,9 @@ export const MusicPlayer = () => {
                   e.stopPropagation();
                   previousTrack();
                 }}
-                className="text-gray-300 hover:text-white transition-all duration-200 p-2 cursor-pointer hover:bg-white/10 rounded-full hover:scale-105"
+                className="text-gray-300 hover:text-white transition-all duration-200 p-1.5 cursor-pointer hover:bg-white/10 rounded-full hover:scale-105"
               >
-                <SkipPrevIcon size={20} />
+                <SkipPrevIcon size={18} />
               </button>
 
               <button
@@ -456,12 +457,12 @@ export const MusicPlayer = () => {
                   e.stopPropagation();
                   handlePlayPause();
                 }}
-                className="bg-white text-black rounded-full p-2 lg:p-2.5 hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:bg-gray-100 shadow-lg cursor-pointer flex items-center justify-center"
+                className="bg-white text-black rounded-full p-1.5 lg:p-2 hover:scale-105 active:scale-95 transition-all duration-200 ease-out hover:bg-gray-100 shadow-lg cursor-pointer flex items-center justify-center"
               >
                 {isPlaying ? (
-                  <PauseIcon size={16} />
+                  <PauseIcon size={14} />
                 ) : (
-                  <PlayIcon size={16} className="ml-0.5" />
+                  <PlayIcon size={14} className="ml-0.5" />
                 )}
               </button>
 
@@ -470,9 +471,9 @@ export const MusicPlayer = () => {
                   e.stopPropagation();
                   nextTrack();
                 }}
-                className="text-gray-300 hover:text-white transition-all duration-200 p-2 cursor-pointer hover:bg-white/10 rounded-full hover:scale-105"
+                className="text-gray-300 hover:text-white transition-all duration-200 p-1.5 cursor-pointer hover:bg-white/10 rounded-full hover:scale-105"
               >
-                <SkipNextIcon size={20} />
+                <SkipNextIcon size={18} />
               </button>
 
               <button
@@ -490,26 +491,31 @@ export const MusicPlayer = () => {
               </button>
             </div>
 
-            {/* Progress Bar - Mobile */}
-            <div className="w-full max-w-xs lg:hidden">
-              <div
-                className="w-full h-1 bg-gray-600 rounded-full cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSeek(e);
-                }}
-              >
+            <div className="w-full max-w-[240px] lg:max-w-[360px]">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] lg:text-xs text-gray-400 w-8 text-left">{formatTime(currentPosition)}</span>
                 <div
-                  className="h-full bg-white rounded-full transition-all duration-200"
-                  style={{ width: `${progressPercent}%` }}
-                />
+                  className="group relative flex-1 h-1 lg:h-1.5 bg-gray-600 rounded-full cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSeek(e);
+                  }}
+                >
+                  <div
+                    className="h-full bg-white rounded-full transition-all duration-200 group-hover:bg-green-500"
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                  <div
+                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 left-[var(--progress-left)] h-2.5 w-2.5 lg:h-3 lg:w-3 rounded-full bg-white shadow-md opacity-0 scale-75 transition-all duration-150 group-hover:opacity-100 group-hover:scale-100"
+                    style={{ left: `${progressPercent}%` }}
+                  />
+                </div>
+                <span className="text-[10px] lg:text-xs text-gray-400 w-8 text-right">{formatTime(duration)}</span>
               </div>
             </div>
           </div>
 
-          {/* Right: Volume and Add to Playlist - Sempre mostrar */}
-          <div className="flex items-center space-x-2 lg:space-x-4 flex-1 justify-end max-w-[30%] lg:max-w-[25%]">
-            {/* Volume Control - Desktop Only */}
+          <div className="flex items-center space-x-2 lg:space-x-3 flex-1 justify-end max-w-[30%] lg:max-w-[25%]">
             <div className="hidden lg:flex items-center space-x-2">
               <button
                 onClick={(e) => {
@@ -526,38 +532,67 @@ export const MusicPlayer = () => {
                 max="100"
                 value={volumeState}
                 onChange={handleVolumeChange}
-                className="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                className="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: `linear-gradient(to right, #fff 0%, #fff ${volumeState}%, #4b5563 ${volumeState}%, #4b5563 100%)`,
                 }}
               />
             </div>
-
-            {/* Add to Playlist Button */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setShowAddToPlaylistModal(true);
+                handlePlayerExpand();
               }}
-              className="text-gray-300 hover:text-white transition-colors cursor-pointer p-2 hover:bg-white/10 rounded-full"
-              title="Adicionar à playlist"
+              className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer"
+              aria-label="Expand player"
+              title="Expandir"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+              <FullscreenIcon size={16} />
             </button>
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleDevices(e);
+                }}
+                className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer"
+                aria-label="Devices"
+                title="Devices"
+              >
+                <DevicesIcon size={16} />
+              </button>
+              {showDevices && (
+                <div className="absolute right-0 bottom-10 w-64 bg-[#111] border border-gray-700 rounded-lg shadow-xl p-2 z-[200]" onClick={(e) => e.stopPropagation()}>
+                  <div className="px-2 py-1.5 text-xs text-gray-400">Available devices</div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {availableDevices.length === 0 ? (
+                      <div className="px-3 py-2 text-gray-500 text-sm">No devices found</div>
+                    ) : (
+                      availableDevices.map((d) => (
+                        <button
+                          key={d.id}
+                          className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors cursor-pointer ${d.is_active ? 'bg-green-600/10 text-green-400' : 'text-gray-200 hover:bg-white/10'}`}
+                          onClick={async (e) => {
+                            e.stopPropagation();
+                            await transferPlayback(d.id, true);
+                            setShowDevices(false);
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="truncate">{d.name}</span>
+                            {d.is_active && <span className="text-[10px] uppercase">Active</span>}
+                          </div>
+                          <div className="text-[10px] text-gray-400 capitalize">{`${d.type}`.toLowerCase()}</div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Add to Playlist Modal */}
-      {showAddToPlaylistModal && currentTrack && (
-        <AddToPlaylistModal
-          isOpen={showAddToPlaylistModal}
-          track={currentTrack}
-          onClose={() => setShowAddToPlaylistModal(false)}
-        />
-      )}
     </div>
   );
 };

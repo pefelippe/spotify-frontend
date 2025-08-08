@@ -5,7 +5,6 @@ export const PremiumWarning = () => {
   const [isVisible, setIsVisible] = useState(true);
   const { isPremiumRequired, resetPremiumWarning } = usePlayer();
 
-  // Reset visibility when isPremiumRequired becomes true
   useEffect(() => {
     if (isPremiumRequired) {
       setIsVisible(true);
@@ -41,3 +40,4 @@ export const PremiumWarning = () => {
     </div>
   );
 };
+

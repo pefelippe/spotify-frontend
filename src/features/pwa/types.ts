@@ -1,14 +1,12 @@
 export interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed';
-    platform: string;
-  }>;
-  prompt(): Promise<void>;
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
 }
 
-export interface PWAHookReturn {
+export type PWAHookReturn = {
   isInstallable: boolean;
   isInstalled: boolean;
   installApp: () => Promise<boolean>;
-}
+};
+

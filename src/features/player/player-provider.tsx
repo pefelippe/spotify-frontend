@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState, ReactNode } from 'react';
 import { useAuth } from '@/core/auth';
-import { PlayerContextData } from '../types/player';
+import { fetchRecentlyPlayed } from '@/core/api/queries/recently-played';
+import { PlayerContextData, SpotifyDevice } from './player';
 
 export const PlayerContext = createContext<PlayerContextData | undefined>(undefined);
 
@@ -13,6 +14,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   const [deviceId, setDeviceId] = useState<string | null>(null);
+  const [activeDeviceId, setActiveDeviceId] = useState<string | null>(null);
+  const [availableDevices, setAvailableDevices] = useState<SpotifyDevice[]>([]);
   const [isPremiumRequired, setIsPremiumRequired] = useState(false);
   const [userInteracted, setUserInteracted] = useState(false);
 
@@ -103,6 +106,32 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     };
   }, [accessToken]);
 
+  // Prefill last played track on first load (without auto-playing)
+  useEffect(() => {
+    const prefillLastPlayed = async () => {
+      if (!accessToken) {
+        return;
+      }
+      if (currentTrack) {
+        return;
+      }
+      try {
+        const data = await fetchRecentlyPlayed(accessToken, 1);
+        const last = data?.items?.[0]?.track;
+        if (last) {
+          setCurrentTrack(last as unknown as SpotifyTrack);
+          setPosition(0);
+          setDuration((last as any).duration_ms || 0);
+          setIsPlaying(false);
+        }
+      } catch (e) {
+        // silently ignore
+      }
+    };
+
+    prefillLastPlayed();
+  }, [accessToken, currentTrack]);
+
   const playTrack = async (uri: string, contextUri?: string) => {
     if (!deviceId || !accessToken) {
       return;
@@ -148,6 +177,52 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (error) {
       console.error('Erro ao tocar música:', error);
+    }
+  };
+
+  const refreshDevices = async () => {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const res = await fetch('https://api.spotify.com/v1/me/player/devices', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!res.ok) {
+        return;
+      }
+      const data = await res.json();
+      const devices: SpotifyDevice[] = data.devices || [];
+      setAvailableDevices(devices);
+      const active = devices.find(d => d.is_active);
+      setActiveDeviceId(active ? active.id : null);
+    } catch (e) {
+      console.error('Erro ao buscar dispositivos:', e);
+    }
+  };
+
+  const transferPlayback = async (targetDeviceId: string, play: boolean = true) => {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const res = await fetch('https://api.spotify.com/v1/me/player', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ device_ids: [targetDeviceId], play }),
+      });
+      if (res.ok) {
+        setActiveDeviceId(targetDeviceId);
+        await refreshDevices();
+      } else if (res.status === 403) {
+        console.error('❌ Transfer playback requires Premium');
+        setIsPremiumRequired(true);
+      }
+    } catch (e) {
+      console.error('Erro ao transferir reprodução:', e);
     }
   };
 
@@ -207,6 +282,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         position,
         duration,
         deviceId,
+        activeDeviceId,
+        availableDevices,
         isPremiumRequired,
         userInteracted,
         resetPremiumWarning,
@@ -217,6 +294,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         previousTrack,
         seekToPosition,
         setVolume,
+        refreshDevices,
+        transferPlayback,
       }}
     >
       {children}
