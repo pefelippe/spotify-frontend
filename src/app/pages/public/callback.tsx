@@ -14,12 +14,17 @@ export const Callback = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
-      authenticate(code);
       hasAuthenticated.current = true;
+      authenticate(code).catch((error) => {
+        console.error('Authentication failed:', error);
+        hasAuthenticated.current = false;
+      });
     }
   }, [authenticate]);
 
-  return <DefaultPage>
-    <p className="text-white text-center mt-20">Autenticando com o Spotify...</p>;
-  </DefaultPage>
+  return (
+    <DefaultPage>
+      <p className="text-white text-center mt-20">Autenticando com o Spotify...</p>
+    </DefaultPage>
+  );
 };

@@ -67,21 +67,6 @@ const Home = () => {
     handlePlayItem(trackUri);
   };
 
-  const formatTimeAgo = (playedAt: string) => {
-    const now = new Date();
-    const played = new Date(playedAt);
-    const diffInHours = Math.floor((now.getTime() - played.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) {
-      return 'Agora mesmo';
-    }
-    if (diffInHours < 24) {
-      return `${diffInHours}h atrás`;
-    }
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays}d atrás`;
-  };
-
   const hasContent = recentlyPlayedTracks.length > 0 || userPlaylists.length > 0 || topArtists.length > 0 || likedSongsCount > 0;
 
   return (
@@ -92,17 +77,7 @@ const Home = () => {
     >
       <div className="space-y-8">
         {!hasContent && (
-          <div className="text-center py-16">
-            <div className="text-gray-400 text-lg mb-4">
-              Comece a ouvir música para ver suas recomendações aqui
-            </div>
-            <button
-              onClick={() => navigate('/playlists')}
-              className="bg-green-500 text-black px-8 py-3 rounded-full font-semibold hover:bg-green-400 transition-colors"
-            >
-              Explorar Playlists
-            </button>
-          </div>
+          <p>Carregando...</p>
         )}
 
         {/* Recently Played Tracks Section */}

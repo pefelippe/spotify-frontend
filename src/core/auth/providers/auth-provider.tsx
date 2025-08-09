@@ -3,6 +3,7 @@ import {
   useEffect,
   useState,
   ReactNode,
+  useCallback,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { spotifyClient } from '@/core/api/client/spotify-client';
@@ -16,6 +17,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     sessionStorage.getItem('spotify_token'),
   );
   const navigate = useNavigate();
+
+  const logout = useCallback(() => {
+    sessionStorage.removeItem('spotify_token');
+    setAccessToken(null);
+    spotifyClient.clearToken();
+    spotifyClient.clearOnUnauthorized(); 
+    navigate('/login');
+  }, [navigate]);
 
   useEffect(() => {
     if (accessToken) {
@@ -32,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout();
       };
     }
-  }, [accessToken]);
+  }, [accessToken, logout]);
 
   // Listen for unauthorized events
   useEffect(() => {
@@ -46,14 +55,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       window.removeEventListener('spotify-unauthorized', handleUnauthorized);
     };
-  }, []);
+  }, [logout]);
 
   const authenticate = async (code: string) => {
     try {
       const response = await axios.get(
         `http://localhost:3001/auth/callback?code=${code}`,
       );
-      const token = response.data.access_token;
+      const token = response.data.data.access_token;
       sessionStorage.setItem('spotify_token', token);
       setAccessToken(token);
       spotifyClient.setToken(token);
@@ -62,14 +71,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Erro ao autenticar:', error);
       logout();
     }
-  };
-
-  const logout = () => {
-    sessionStorage.removeItem('spotify_token');
-    setAccessToken(null);
-    spotifyClient.clearToken();
-    spotifyClient.clearOnUnauthorized(); // Clear the unauthorized callback
-    navigate('/login');
   };
 
   return (
