@@ -1,16 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { BackButton } from '@/app/layout/BackButton';
-import { QueryState } from '@/app/components/QueryState';
-import { TrackList } from '@/features/tracks/TrackList';
-import { UserAvatar } from '@/app/components/UserAvatar';
-import { usePlaylistDetails, usePlaylistTracks } from '@/features/playlist/usePlaylistDetails';
-import { useDeletePlaylist } from '@/features/playlist/useDeletePlaylist';
-import { useRemoveTrackFromPlaylist } from '@/features/playlist/useRemoveTrackFromPlaylist';
-import { useUserProfile } from '@/features/user/useUserProfile';
-import { DefaultPage } from '@/app/layout/DefaultPage';
-import { Modal } from '@/app/components/CustomModal';
-import { CustomButton } from '@/app/components/CustomButton';
+import { QueryState } from '../../../app/components/QueryState';
+import { TrackList } from '../../../features/tracks/TrackList';
+import { UserAvatar } from '../../../app/components/UserAvatar';
+import { usePlaylistDetails, usePlaylistTracks } from '../../../features/playlist/usePlaylistDetails';
+import { useDeletePlaylist } from '../../../features/playlist/useDeletePlaylist';
+import { useRemoveTrackFromPlaylist } from '../../../features/playlist/useRemoveTrackFromPlaylist';
+import { useUserProfile } from '../../../features/user/useUserProfile';
+import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { Modal } from '../../../app/components/CustomModal';
+import { CustomButton } from '../../../app/components/CustomButton';
 
 
 const PlaylistDetalhes = () => {
@@ -21,7 +20,7 @@ const PlaylistDetalhes = () => {
   const { data: userProfile } = useUserProfile();
   const deletePlaylistMutation = useDeletePlaylist();
   const removeTrackMutation = useRemoveTrackFromPlaylist();
-  
+
   const {
     data: tracksData,
     isLoading: isLoadingTracks,
@@ -39,7 +38,7 @@ const PlaylistDetalhes = () => {
 
   const handleDeletePlaylist = async () => {
     if (!playlistId) return;
-    
+
     try {
       await deletePlaylistMutation.mutateAsync(playlistId);
       navigate('/playlists');
@@ -50,7 +49,7 @@ const PlaylistDetalhes = () => {
 
   const handleRemoveTrack = async (trackUri: string) => {
     if (!playlistId) return;
-    
+
     try {
       await removeTrackMutation.mutateAsync({
         playlistId,
@@ -246,7 +245,7 @@ const PlaylistDetalhes = () => {
               customClassName="flex-1"
             />
             <CustomButton
-              label={deletePlaylistMutation.isPending ? "Deletando..." : "Deletar"}
+              label={deletePlaylistMutation.isPending ? 'Deletando...' : 'Deletar'}
               onClick={handleDeletePlaylist}
               variant="primary"
               customClassName="flex-1 bg-red-600 hover:bg-red-700"

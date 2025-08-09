@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createPlaylist } from '@/core/api/queries/create-playlist';
-import { useAuth } from '@/core/auth';
-import { useUserProfile } from '@/features/user/useUserProfile';
+import { createPlaylist } from '../../core/api/queries/create-playlist';
+import { useAuth } from '../../core/auth';
+import { useUserProfile } from '../../features/user/useUserProfile';
 
 export const useCreatePlaylist = () => {
   const { accessToken } = useAuth();
@@ -15,7 +15,7 @@ export const useCreatePlaylist = () => {
       }
 
       console.log('useCreatePlaylist called with:', { name, userId: userProfile.id });
-      
+
       return createPlaylist(userProfile.id, name, accessToken);
     },
     onSuccess: (data) => {
@@ -27,4 +27,4 @@ export const useCreatePlaylist = () => {
       console.error('Error creating playlist:', error);
     },
   });
-}; 
+};

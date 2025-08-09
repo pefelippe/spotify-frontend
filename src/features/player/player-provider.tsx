@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState, useRef, ReactNode } from 'react';
-import { useAuth } from '@/core/auth';
+import { useAuth } from '../../core/auth';
 import { PlayerContextData, SpotifyDevice } from './player';
 
 export const PlayerContext = createContext<PlayerContextData | undefined>(undefined);

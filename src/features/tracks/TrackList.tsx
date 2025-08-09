@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { InfiniteScrollList } from '@/app/components/InfiniteScrollList';
-import { usePlayer } from '@/features/player';
-import { useLikedTracks } from '@/features/liked-songs/liked-tracks-provider';
-import { useAddToLikedSongs, useRemoveFromLikedSongs } from '@/features/liked-songs/useLikedSongs';
-import { AddToPlaylistModal } from '@/app/components/AddToPlaylistModal';
-import { PlayIcon, HeartIcon, PlayingIcon, TimeIcon, PlusIcon } from '@/app/components/SpotifyIcons';
+import { InfiniteScrollList } from '../../app/components/InfiniteScrollList';
+import { usePlayer } from '../player';
+import { useLikedTracks } from '../liked-songs/liked-tracks-provider';
+import { useAddToLikedSongs, useRemoveFromLikedSongs } from '../liked-songs/useLikedSongs';
+import { AddToPlaylistModal } from '../../app/components/AddToPlaylistModal';
+import { PlayIcon, HeartIcon, PlayingIcon, TimeIcon, PlusIcon } from '../../app/components/SpotifyIcons';
 
 interface Track {
   id: string;

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { addTrackToPlaylist } from '@/core/api/queries/add-track-to-playlist';
-import { useAuth } from '@/core/auth';
+import { addTrackToPlaylist } from '../../core/api/queries/add-track-to-playlist';
+import { useAuth } from '../../core/auth';
 
 export const useAddTrackToPlaylist = () => {
   const { accessToken } = useAuth();
@@ -23,4 +23,4 @@ export const useAddTrackToPlaylist = () => {
       console.error('Error adding track to playlist:', error);
     },
   });
-}; 
+};

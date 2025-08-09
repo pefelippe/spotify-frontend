@@ -1,19 +1,18 @@
-import { useParams, useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
-import { DefaultPage } from '@/app/layout/DefaultPage';
-import { QueryState } from '@/app/components/QueryState';
-import { InfiniteScrollList } from '@/app/components/InfiniteScrollList';
-import { UserHeader } from '@/app/components/UserHeader';
-import { useUserDetails, useUserPublicPlaylists } from '@/features/user/useUserDetails';
-import PlaylistItem from '@/features/playlist/PlaylistItem';
-import { usePlayer } from '@/features/player';
-import { PlayIcon } from '@/app/components/SpotifyIcons';
+import { useParams, useNavigate } from 'react-router-dom';
+import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { QueryState } from '../../../app/components/QueryState';
+import { InfiniteScrollList } from '../../../app/components/InfiniteScrollList';
+import { UserHeader } from '../../../app/components/UserHeader';
+import { useUserDetails, useUserPublicPlaylists } from '../../../features/user/useUserDetails';
+import PlaylistItem from '../../../features/playlist/PlaylistItem';
+import { usePlayer } from '../../../features/player';
 
 const UserDetails = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const { playTrack } = usePlayer();
-  
+
   const { data: userProfile, isLoading: isLoadingProfile, error: profileError } = useUserDetails(userId!);
   const {
     data: playlistsData,
@@ -85,7 +84,7 @@ const UserDetails = () => {
           showExternalLink={true}
           stats={{
             followers: userProfile?.followers?.total,
-            playlists: publicPlaylists.length
+            playlists: publicPlaylists.length,
           }}
         />
 
@@ -95,7 +94,7 @@ const UserDetails = () => {
             <h2 className="text-xl md:text-2xl font-semibold text-white-text mb-4 md:mb-6">
               Playlists Públicas
             </h2>
-            
+
             {isLoadingPlaylists ? (
               <QueryState
                 isLoading={true}

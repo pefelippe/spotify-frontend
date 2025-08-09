@@ -1,0 +1,13 @@
+{
+  "buildCommand": "yarn build:vercel",
+  "outputDirectory": "dist",
+  "installCommand": "yarn install",
+  "framework": "vite",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+

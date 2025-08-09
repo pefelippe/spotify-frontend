@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { publicRoutes } from '@/app/constants/publicRoutes';
+import { publicRoutes } from '../../app/constants/publicRoutes';
 
 export const PublicRoutes: React.FC = () => {
   return (

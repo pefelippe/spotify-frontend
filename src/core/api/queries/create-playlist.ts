@@ -7,7 +7,7 @@ export const createPlaylist = async (
 ) => {
   try {
     console.log('Creating playlist with:', { userId, name });
-    
+
     const response = await axios.post(
       `https://api.spotify.com/v1/users/${userId}/playlists`,
       {
@@ -21,7 +21,7 @@ export const createPlaylist = async (
         },
       },
     );
-    
+
     console.log('Playlist created successfully:', response.data);
     return response.data;
   } catch (error: any) {

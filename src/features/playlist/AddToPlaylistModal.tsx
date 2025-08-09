@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useUserPlaylists } from '@/features/user/useUserPlaylists';
-import { useAddToPlaylist } from '@/features/playlist/useAddToPlaylist';
-import { useLikedTracks } from '@/features/liked-songs/liked-tracks-provider';
-import { PlusIcon, HeartIcon } from '@/app/components/SpotifyIcons';
+import { useUserPlaylists } from '../../features/user/useUserPlaylists';
+import { useAddToPlaylist } from '../../features/playlist/useAddToPlaylist';
+import { useLikedTracks } from '../liked-songs/liked-tracks-provider';
+import { PlusIcon, HeartIcon } from '../../app/components/SpotifyIcons';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;

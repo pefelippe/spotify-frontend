@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from './CustomModal';
-import { useUserPlaylists } from '@/features/user/useUserPlaylists';
-import { useAddTrackToPlaylist } from '@/features/playlist/useAddTrackToPlaylist';
+import { useUserPlaylists } from '../../features/user/useUserPlaylists';
+import { useAddTrackToPlaylist } from '../../features/playlist/useAddTrackToPlaylist';
 import { useMemo } from 'react';
 
 interface AddToPlaylistModalProps {
@@ -102,4 +102,4 @@ export const AddToPlaylistModal: React.FC<AddToPlaylistModalProps> = ({
       </div>
     </Modal>
   );
-}; 
+};

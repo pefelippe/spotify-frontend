@@ -7,7 +7,7 @@ export const addTrackToPlaylist = async (
 ) => {
   try {
     console.log('Adding track to playlist:', { playlistId, trackUri });
-    
+
     const response = await axios.post(
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
@@ -20,11 +20,11 @@ export const addTrackToPlaylist = async (
         },
       },
     );
-    
+
     console.log('Track added successfully');
     return response.data;
   } catch (error: any) {
     console.error('Error adding track to playlist:', error);
     throw error;
   }
-}; 
+};

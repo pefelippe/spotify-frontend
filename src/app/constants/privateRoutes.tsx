@@ -1,12 +1,12 @@
-import Home from '@/app/pages/private/home';
-import Perfil from '@/app/pages/private/profile';
-import Artistas from '@/app/pages/private/artists';
-import Playlists from '@/app/pages/private/playlist';
-import UserProfile from '@/app/pages/private/user-details';
-import AlbumDetalhes from '@/app/pages/private/album-details';
-import ArtistaDetalhes from '@/app/pages/private/artists-details';
-import PlaylistDetalhes from '@/app/pages/private/playlist-details';
-import LikedSongs from '@/app/pages/private/liked-songs';
+import Home from '../../app/pages/private/home';
+import Perfil from '../../app/pages/private/profile';
+import Artistas from '../../app/pages/private/artists';
+import Playlists from '../../app/pages/private/playlist';
+import UserProfile from '../../app/pages/private/user-details';
+import AlbumDetalhes from '../../app/pages/private/album-details';
+import ArtistaDetalhes from '../../app/pages/private/artists-details';
+import PlaylistDetalhes from '../../app/pages/private/playlist-details';
+import LikedSongs from '../../app/pages/private/liked-songs';
 
 interface ProtectedRouteConfig {
     path: string;

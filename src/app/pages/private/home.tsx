@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { useUserPlaylists } from '@/features/user/useUserPlaylists';
-import { useLikedSongs } from '@/features/liked-songs/useLikedSongs';
-import { usePlayer } from '@/features/player';
-import { HeartIcon, ChevronRightIcon, PlayIcon, ClockIcon } from '@/app/components/SpotifyIcons';
-import { useTopArtists } from '@/features/user/useTopArtists';
-import { useRecentlyPlayed } from '@/features/user/useRecentlyPlayed';
-import { useUserProfile } from '@/features/user/useUserProfile';
-import { DefaultPage } from '@/app/layout/DefaultPage';
+import { useUserPlaylists } from '../../../features/user/useUserPlaylists';
+import { useLikedSongs } from '../../../features/liked-songs/useLikedSongs';
+import { usePlayer } from '../../../features/player';
+import { HeartIcon, ChevronRightIcon, PlayIcon } from '../../../app/components/SpotifyIcons';
+import { useTopArtists } from '../../../features/user/useTopArtists';
+import { useRecentlyPlayed } from '../../../features/user/useRecentlyPlayed';
+import { useUserProfile } from '../../../features/user/useUserProfile';
+import { DefaultPage } from '../../../app/layout/DefaultPage';
 import { useEffect } from 'react';
 
 const Home = () => {
@@ -31,8 +31,8 @@ const Home = () => {
         count: recentlyPlayedTracks.length,
         items: recentlyPlayedTracks.slice(0, 3).map((item: any) => ({
           track: item.track?.name,
-          playedAt: item.played_at
-        }))
+          playedAt: item.played_at,
+        })),
       });
     }
   }, [recentlyPlayedData, recentlyPlayedTracks.length]);
@@ -46,10 +46,12 @@ const Home = () => {
           className="text-gray-400 hover:text-white text-sm font-medium flex items-center transition-colors duration-200 group cursor-pointer"
         >
           {moreText}
-          <ChevronRightIcon
-            size={16}
-            className="ml-1 transform group-hover:translate-x-0.5 transition-transform"
-          />
+          {moreText && (
+            <ChevronRightIcon
+              size={16}
+              className="ml-1 transform group-hover:translate-x-0.5 transition-transform"
+            />
+          )}
         </button>
       )}
     </div>
@@ -78,6 +80,30 @@ const Home = () => {
       <div className="space-y-8">
         {!hasContent && (
           <p>Carregando...</p>
+        )}
+
+        {/* Quick Access Section */}
+        {likedSongsCount > 0 && (
+          <section className="mb-8 mt-10">
+            {renderSectionHeader(
+              'Feito por Você',
+              () => navigate('/playlists/liked-songs'),
+              '',
+            )}
+            <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-lg p-6 cursor-pointer hover:from-purple-600/30 hover:to-blue-600/30 transition-all duration-200"
+                 onClick={() => navigate('/playlists/liked-songs')}>
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <HeartIcon size={32} className="text-white" filled />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-white font-semibold text-lg mb-1">Músicas Curtidas</h3>
+                  <p className="text-gray-300 text-sm">{likedSongsCount} músicas</p>
+                </div>
+                <ChevronRightIcon size={20} className="text-gray-400" />
+              </div>
+            </div>
+          </section>
         )}
 
         {/* Recently Played Tracks Section */}
@@ -124,30 +150,6 @@ const Home = () => {
           </section>
         )}
 
-        {/* Quick Access Section */}
-        {likedSongsCount > 0 && (
-          <section className="mb-8">
-            {renderSectionHeader(
-              'Feito por Você',
-              () => navigate('/playlists/liked-songs'),
-              ''
-            )}
-            <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 rounded-lg p-6 cursor-pointer hover:from-purple-600/30 hover:to-blue-600/30 transition-all duration-200"
-                 onClick={() => navigate('/playlists/liked-songs')}>
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-                  <HeartIcon size={32} className="text-white" filled />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-white font-semibold text-lg mb-1">Músicas Curtidas</h3>
-                  <p className="text-gray-300 text-sm">{likedSongsCount} músicas</p>
-                </div>
-                <ChevronRightIcon size={20} className="text-gray-400" />
-              </div>
-            </div>
-          </section>
-        )}
-
         {/* Top Artists Section */}
         {topArtists.length > 0 && (
           <section className="mb-8">
@@ -157,7 +159,7 @@ const Home = () => {
                 <div
                   key={artist.id}
                   className="group cursor-pointer"
-                  onClick={() => navigate(`/artists/${artist.id}`)}
+                  onClick={() => navigate(`/artist/${artist.id}`)}
                 >
                   <div className="relative mb-3">
                     <img
@@ -186,7 +188,7 @@ const Home = () => {
             {renderSectionHeader(
               'Suas Playlists',
               () => navigate('/playlists'),
-              'Ver todas'
+              'Ver todas',
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {userPlaylists.slice(0, 8).map((playlist: any) => (

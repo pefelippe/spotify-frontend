@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deletePlaylist } from '@/core/api/queries/delete-playlist';
-import { useAuth } from '@/core/auth';
+import { deletePlaylist } from '../../core/api/queries/delete-playlist';
+import { useAuth } from '../../core/auth';
 
 export const useDeletePlaylist = () => {
   const { accessToken } = useAuth();
@@ -22,4 +22,4 @@ export const useDeletePlaylist = () => {
       console.error('Error deleting playlist:', error);
     },
   });
-}; 
+};

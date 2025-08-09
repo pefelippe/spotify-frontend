@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { usePlayer } from '@/features/player';
+import { usePlayer } from '../../../features/player';
 
 export const PremiumWarning = () => {
   const [isVisible, setIsVisible] = useState(true);

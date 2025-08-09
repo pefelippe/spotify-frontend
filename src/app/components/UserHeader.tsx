@@ -15,7 +15,7 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
   userProfile,
   showEmail = false,
   showExternalLink = true,
-  stats = {}
+  stats = {},
 }) => {
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
@@ -28,7 +28,7 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
         <h1 className="text-2xl md:text-3xl font-bold text-white-text mb-2">
           {userProfile?.display_name || 'Usuário'}
         </h1>
-        
+
         {/* User Stats */}
         <div className="flex flex-col md:flex-row items-center md:items-center space-y-2 md:space-y-0 md:space-x-6 mb-4">
           {stats.followers && (
@@ -39,7 +39,7 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
               <p className="text-gray-400 text-sm">seguidores</p>
             </div>
           )}
-          
+
           {stats.playlists !== undefined && (
             <div className="text-center md:text-left">
               <p className="text-white-text font-semibold text-lg">
@@ -101,4 +101,4 @@ export const UserHeader: React.FC<UserHeaderProps> = ({
       </div>
     </div>
   );
-}; 
+};

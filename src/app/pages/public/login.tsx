@@ -1,6 +1,7 @@
-import { CustomButton } from '@/app/components/CustomButton';
-import { Logo } from '@/app/components/Logo';
-import { DefaultPage } from '@/app/layout/DefaultPage';
+import { CustomButton } from '../../../app/components/CustomButton';
+import { Logo } from '../../../app/components/Logo';
+import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { env } from '../../../config/env';
 
 export const Login = () => {
   return (
@@ -12,7 +13,11 @@ export const Login = () => {
         </p>
         <CustomButton
           onClick={() => {
-            window.location.href = 'http://localhost:3001/auth/login';
+            // Garantir que não há duplas barras na URL
+            const baseUrl = env.API_URL.replace(/\/$/, ''); // Remove barra no final se existir
+            const loginUrl = `${baseUrl}/auth/login`;
+            console.log('Redirecionando para login:', loginUrl);
+            window.location.href = loginUrl;
           }}
           variant="spotify"
           label="Entrar"

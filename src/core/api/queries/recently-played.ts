@@ -15,6 +15,20 @@ export const fetchRecentlyPlayed = async (accessToken: string, limit = 10) => {
     return response.data;
   } catch (error: any) {
     console.error('Error fetching recently played:', error);
+    if (error?.response?.status === 403) {
+      console.error('Forbidden: Token may not have the required scopes for recently played tracks');
+      // Return empty data structure instead of throwing
+      return {
+        items: [],
+        next: null,
+        cursors: {
+          after: null,
+          before: null,
+        },
+        limit,
+        href: null,
+      };
+    }
     if (error?.response?.status === 401) {
       console.error('Unauthorized - token might be expired');
     }

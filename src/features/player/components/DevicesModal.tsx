@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpotifyDevice } from '@/features/player/player';
+import { SpotifyDevice } from '../../features/player/player';
 
 interface DevicesModalProps {
   devices: SpotifyDevice[];

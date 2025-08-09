@@ -1,6 +1,6 @@
 import React from 'react';
-import { Login } from '@/app/pages/public/login';
-import { Callback } from '@/app/pages/public/callback';
+import { Login } from '../../app/pages/public/login';
+import { Callback } from '../../app/pages/public/callback';
 
 interface RouteConfig {
   path: string;

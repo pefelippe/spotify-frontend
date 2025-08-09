@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePlayer } from '@/features/player';
-import { useLikedTracks } from '@/features/liked-songs/liked-tracks-provider';
+import { usePlayer } from '../../features/player';
+import { useLikedTracks } from '../liked-songs/liked-tracks-provider';
 import { ExpandedMusicPlayer } from './components/ExpandedMusicPlayer';
 import { CompactMusicPlayer } from './components/CompactMusicPlayer';
 

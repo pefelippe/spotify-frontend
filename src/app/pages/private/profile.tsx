@@ -1,8 +1,8 @@
 
 
-import { CustomButton } from '@/app/components/CustomButton';
-import { useUserProfile } from '@/features/user/useUserProfile';
-import { useAuth } from '@/core/auth';
+import { CustomButton } from '../../../app/components/CustomButton';
+import { useUserProfile } from '../../../features/user/useUserProfile';
+import { useAuth } from '../../../core/auth';
 
 const Perfil = () => {
   const { logout } = useAuth();

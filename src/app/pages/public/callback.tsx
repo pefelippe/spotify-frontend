@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
-import { useAuth } from '@/core/auth';
-import { DefaultPage } from '@/app/layout/DefaultPage';
+import { useAuth } from '../../../core/auth';
+import { DefaultPage } from '../../../app/layout/DefaultPage';
 
 export const Callback = () => {
   const { authenticate } = useAuth();

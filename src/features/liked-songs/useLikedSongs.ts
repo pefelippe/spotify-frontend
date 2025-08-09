@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchLikedSongs, addToLikedSongs, removeFromLikedSongs } from '@/core/api/queries/liked-songs';
-import { useAuth } from '@/core/auth';
+import { fetchLikedSongs, addToLikedSongs, removeFromLikedSongs } from '../../core/api/queries/liked-songs';
+import { useAuth } from '../../core/auth';
 
 export const useLikedSongs = () => {
   const { accessToken } = useAuth();

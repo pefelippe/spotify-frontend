@@ -26,6 +26,6 @@ dist-ssr
 *.sw?
 
 # JavaScript files
-*.js
+!vite.config.js
 
 .env

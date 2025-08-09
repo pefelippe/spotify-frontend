@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
-import { DefaultPage } from '@/app/layout/DefaultPage';
-import { QueryState } from '@/app/components/QueryState';
-import { TrackList } from '@/features/tracks/TrackList';
-import { UserAvatar } from '@/app/components/UserAvatar';
-import { useLikedSongs } from '@/features/liked-songs/useLikedSongs';
-import { useUserProfile } from '@/features/user/useUserProfile';
-import { usePlayer } from '@/features/player';
-import { HeartIcon, PlayIcon } from '@/app/components/SpotifyIcons';
+
+import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { QueryState } from '../../../app/components/QueryState';
+import { TrackList } from '../../../features/tracks/TrackList';
+import { UserAvatar } from '../../../app/components/UserAvatar';
+import { useLikedSongs } from '../../../features/liked-songs/useLikedSongs';
+import { useUserProfile } from '../../../features/user/useUserProfile';
+import { usePlayer } from '../../../features/player';
+import { HeartIcon, PlayIcon } from '../../../app/components/SpotifyIcons';
 
 const LikedSongs = () => {
   const navigate = useNavigate();
@@ -155,4 +155,4 @@ const LikedSongs = () => {
   );
 };
 
-export default LikedSongs; 
+export default LikedSongs;

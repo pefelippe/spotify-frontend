@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUserDetails } from '@/features/user/useUserDetails';
+import { useUserDetails } from '../../features/user/useUserDetails';
 
 interface UserAvatarProps {
   userId: string;

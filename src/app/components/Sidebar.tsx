@@ -4,7 +4,7 @@ import { CustomButton } from './CustomButton';
 import { Logo } from './Logo';
 import { NavigationButton } from './NavigationButton';
 import { HomeIcon, ArtistIcon, PlaylistIcon, UserIcon, DownloadIcon } from './SpotifyIcons';
-import { usePWA } from '@/features/pwa';
+import { usePWA } from '../../features/pwa';
 
 export const SidebarItems = [
   { name: 'Home', path: '/', icon: HomeIcon },

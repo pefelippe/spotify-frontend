@@ -1,22 +1,21 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { CustomButton } from '@/app/components/CustomButton';
-import { Modal } from '@/app/components/CustomModal';
-import { InfiniteScrollList } from '@/app/components/InfiniteScrollList';
-import { useUserPlaylists } from '@/features/user/useUserPlaylists';
-import { useCreatePlaylist } from '@/features/playlist/useCreatePlaylist';
-import { usePlayer } from '@/features/player';
-import PlaylistItem from '@/features/playlist/PlaylistItem';
-import { DefaultPage } from '@/app/layout/DefaultPage';
-import { PageHeader } from '@/app/layout/PageHeader';
-import { PlusIcon } from '@/app/components/SpotifyIcons';
+import { Modal } from '../../../app/components/CustomModal';
+import { InfiniteScrollList } from '../../../app/components/InfiniteScrollList';
+import { useUserPlaylists } from '../../../features/user/useUserPlaylists';
+import { useCreatePlaylist } from '../../../features/playlist/useCreatePlaylist';
+import { usePlayer } from '../../../features/player';
+import PlaylistItem from '../../../features/playlist/PlaylistItem';
+import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { PageHeader } from '../../../app/layout/PageHeader';
+import { PlusIcon } from '../../../app/components/SpotifyIcons';
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
+
   const { playTrack } = usePlayer();
   const {
     data,
@@ -63,7 +62,7 @@ const Playlists = () => {
       const result = await createPlaylistMutation.mutateAsync({
         name: playlistName.trim(),
       });
-      
+
       console.log('Playlist created successfully:', result);
       handleCloseModal();
     } catch (error) {
@@ -96,8 +95,8 @@ const Playlists = () => {
     <DefaultPage isLoading={isLoading} error={error} loadingMessage="Carregando playlists..." errorMessage="Erro ao carregar playlists. Tente novamente.">
       <div className="space-y-8">
         {/* Custom Header with Create Button */}
-        <PageHeader 
-          title="Minhas Playlists" 
+        <PageHeader
+          title="Minhas Playlists"
           subtitle="Sua coleção pessoal de playlists"
         >
           <button
@@ -181,7 +180,7 @@ const Playlists = () => {
                   : 'bg-gray-600 text-gray-400 cursor-not-allowed'
               }`}
             >
-              {createPlaylistMutation.isPending ? "Criando..." : "Criar"}
+              {createPlaylistMutation.isPending ? 'Criando...' : 'Criar'}
             </button>
           </div>
 

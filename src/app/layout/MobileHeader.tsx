@@ -1,4 +1,4 @@
-import { Logo } from '@/app/components/Logo';
+import { Logo } from '../../app/components/Logo';
 import { useNavigate } from 'react-router-dom';
 
 export const MobileHeader = () => {

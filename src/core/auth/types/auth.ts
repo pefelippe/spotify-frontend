@@ -3,4 +3,5 @@ export interface AuthContextData {
   accessToken: string | null
   authenticate: (code: string) => Promise<void>
   logout: () => void
+  tokenScopes: string | null
 }
