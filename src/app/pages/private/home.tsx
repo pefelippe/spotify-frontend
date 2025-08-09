@@ -7,7 +7,6 @@ import { useTopArtists } from '../../../features/user/useTopArtists';
 import { useRecentlyPlayed } from '../../../features/user/useRecentlyPlayed';
 import { useUserProfile } from '../../../features/user/useUserProfile';
 import { DefaultPage } from '../../../app/layout/DefaultPage';
-import { OptimizedImage } from '../../../app/components/OptimizedImage';
 import { useEffect } from 'react';
 
 const Home = () => {
@@ -200,11 +199,11 @@ const Home = () => {
                       >
                         <div className="flex items-center space-x-3">
                           <div className="relative flex-shrink-0">
-                            <OptimizedImage
+                            <img
                               src={track.album?.images?.[0]?.url || 'https://via.placeholder.com/56x56/333/fff?text=♪'}
                               alt={track.name}
-                              size="md"
                               className="w-14 h-14 rounded object-cover"
+                              loading="lazy"
                             />
                             <div className="absolute inset-0  flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                               <button className="bg-green-500 text-black p-2 rounded-full hover:scale-110 transition-transform">
@@ -240,11 +239,11 @@ const Home = () => {
                       onClick={() => navigate(`/artist/${artist.id}`)}
                     >
                       <div className="relative mb-3">
-                        <OptimizedImage
+                        <img
                           src={artist.images?.[0]?.url || 'https://via.placeholder.com/150x150/333/fff?text=♪'}
                           alt={artist.name}
-                          size="lg"
                           className="w-full aspect-square rounded-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          loading="lazy"
                         />
                         <div className="absolute inset-0 rounded-full transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                           <button className="bg-green-500 text-black p-3 rounded-full hover:scale-110">
@@ -277,11 +276,11 @@ const Home = () => {
                       onClick={() => navigate(`/playlist/${playlist.id}`)}
                     >
                       <div className="relative mb-3">
-                        <OptimizedImage
+                        <img
                           src={playlist.images?.[0]?.url || 'https://via.placeholder.com/200x200/333/fff?text=♪'}
                           alt={playlist.name}
-                          size="lg"
                           className="w-full aspect-square rounded object-cover group-hover:scale-105 transition-transform duration-200"
+                          loading="lazy"
                         />
                         <div className="absolute inset-0 rounded transition-all duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
                           <button className="bg-green-500 text-black p-3 rounded-full hover:scale-110">

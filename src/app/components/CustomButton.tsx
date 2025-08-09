@@ -6,7 +6,7 @@ interface CustomButtonProps {
   label: string;
   icon?: ReactNode | string;
   variant?: 'primary' | 'pwa' | 'outline' | 'ghost' | 'spotify';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'custom';
   disabled?: boolean;
   customClassName?: string;
   className?: string;
@@ -29,6 +29,7 @@ export const CustomButton = ({
     sm: 'px-4 py-2 text-sm h-8',
     md: 'px-6 py-3 text-base h-10',
     lg: 'px-8 py-4 text-lg h-12',
+    custom: ""
   };
 
   const variantClasses = {
@@ -36,7 +37,7 @@ export const CustomButton = ({
     pwa: 'text-gray-300 hover:text-white hover:bg-gray-700/60 rounded-lg font-medium text-sm gap-3 px-4 py-2.5',
     outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg',
     ghost: 'text-gray-700 hover:bg-gray-100 rounded-lg',
-    spotify: 'font-rubik bg-green-spotify text-black-text hover:bg-green-spotify/80 rounded-[24px] font-bold h-[50px] cursor-pointer flex items-center justify-center gap-[10px] px-10 py-2 transition-all hover:underline text-[16px] leading-[20px] font-weight-700',
+    spotify: 'font-rubik bg-green-spotify text-black-text rounded-[24px] font-medium h-[50px] cursor-pointer px-10  transition-all hover:underline hover:opacity-80',
   };
 
   const classes = `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${customClassName || ''} ${className || ''}`;
@@ -55,7 +56,7 @@ export const CustomButton = ({
       className={classes}
     >
       {icon && renderIcon()}
-      <span className={variant === 'pwa' ? 'font-medium' : 'text-xl font-extrabold'}>{label}</span>
+      <span>{label}</span>
     </button>
   );
 };

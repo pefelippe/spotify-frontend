@@ -103,16 +103,6 @@ html, body {
   }
 }
 
-/* Image optimization styles */
-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  image-rendering: pixelated;
-  backface-visibility: hidden;
-  transform: translateZ(0);
-  will-change: transform;
-}
-
 /* Loading skeleton animations */
 @keyframes shimmer {
   0% {
@@ -129,7 +119,7 @@ img {
   animation: shimmer 1.5s infinite;
 }
 
-/* Optimized image loading */
+/* Simple loading state */
 .image-loading {
   background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
   background-size: 200px 100%;
