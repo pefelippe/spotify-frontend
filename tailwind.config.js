@@ -9,6 +9,7 @@ export default {
     extend: {
       fontFamily: {
         'sans': ['DM Sans', 'sans-serif'],
+        'rubik': ['Rubik', 'sans-serif'],
       },
       colors: {
         'green-spotify': '#57B660',

@@ -36,7 +36,7 @@ export const CustomButton = ({
     pwa: 'text-gray-300 hover:text-white hover:bg-gray-700/60 rounded-lg font-medium text-sm gap-3 px-4 py-2.5',
     outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg',
     ghost: 'text-gray-700 hover:bg-gray-100 rounded-lg',
-    spotify: 'bg-green-spotify text-black-text rounded-[24px] font-bold h-[50px] cursor-pointer flex items-center hover:bg-green-spotify/80 justify-center gap-[10px] px-12',
+    spotify: 'font-rubik bg-green-spotify text-black-text hover:bg-green-spotify/80 rounded-[24px] font-bold h-[50px] cursor-pointer flex items-center justify-center gap-[10px] px-10 py-2 transition-all hover:underline text-[16px] leading-[20px] font-weight-700',
   };
 
   const classes = `${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${customClassName || ''} ${className || ''}`;
