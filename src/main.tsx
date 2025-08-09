@@ -3,12 +3,12 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AuthProvider } from './core/auth';
-import { ReactQueryProvider } from './app/providers/react-query-provider.js';
+import { ReactQueryProvider } from './app/providers/react-query-provider';
 import { LikedTracksProvider } from '@/features/liked-songs/liked-tracks-provider';
 
 import './tailwind.css';
 
-import App from './app/App.js';
+import App from './app/App';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
