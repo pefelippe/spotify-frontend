@@ -8,7 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { spotifyClient } from '../../../core/api/client/spotify-client';
 import { AuthContextData } from '../types/auth';
-import { env } from '../../../app/config/env';
+import { env } from '../../../app/env';
 import axios from 'axios';
 
 const REQUIRED_SCOPES = [

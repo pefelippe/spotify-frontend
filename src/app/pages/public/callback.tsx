@@ -19,7 +19,7 @@ export const Callback = () => {
         
         if (code) {
           await authenticate(code);
-          navigate('/home');
+          navigate('/');
         } else {
           throw new Error('No authorization code found');
         }

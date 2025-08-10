@@ -1,7 +1,7 @@
 import { CustomButton } from '../../components/CustomButton';
 import { SpotifyLogo } from '../../components/SpotifyIcons';
 import { DefaultPage } from '../../layout/DefaultPage';
-import { env } from '../../config/env';
+import { env } from '../../env';
 
 export const Login = () => {
   return (

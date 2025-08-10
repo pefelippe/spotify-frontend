@@ -70,7 +70,10 @@ export default defineConfig({
   ],
   server: {
     host: true,
-    allowedHosts: ['all'],
+    allowedHosts: ['all', 'd35f04a2c751.ngrok-free.app'],
+  },
+  preview: {
+    host: true,
   },
   define: {
     'process.env': {},

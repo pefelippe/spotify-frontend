@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:local": "NODE_ENV=development vite dev",
+    "dev:vercel": "NODE_ENV=development yarn dev",
     "build": "vite build",
     "build:vercel": "NODE_ENV=production yarn build",
     "build:analyze": "vite build --mode analyze",
