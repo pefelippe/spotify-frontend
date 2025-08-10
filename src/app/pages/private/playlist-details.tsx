@@ -1,15 +1,15 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { QueryState } from '../../../app/components/QueryState';
+import { QueryState } from '../../components/QueryState';
 import { TrackList } from '../../../features/tracks/TrackList';
-import { UserAvatar } from '../../../app/components/UserAvatar';
+import { UserAvatar } from '../../components/UserAvatar';
 import { usePlaylistDetails, usePlaylistTracks } from '../../../features/playlist/usePlaylistDetails';
 import { useDeletePlaylist } from '../../../features/playlist/useDeletePlaylist';
 import { useRemoveTrackFromPlaylist } from '../../../features/playlist/useRemoveTrackFromPlaylist';
 import { useUserProfile } from '../../../features/user/useUserProfile';
-import { DefaultPage } from '../../../app/layout/DefaultPage';
-import { Modal } from '../../../app/components/CustomModal';
-import { CustomButton } from '../../../app/components/CustomButton';
+import { DefaultPage } from '../../layout/DefaultPage';
+import { Modal } from '../../components/CustomModal';
+import { CustomButton } from '../../components/CustomButton';
 
 
 const PlaylistDetalhes = () => {

@@ -1,5 +1,22 @@
-// Ícones SVG idênticos ao Spotify oficial
 import { Play, Pause, SkipForward, SkipBack, Shuffle, Repeat, SpeakerHigh, SpeakerSlash, Heart as HeartPh, ArrowsOutSimple, DeviceMobileSpeaker } from 'phosphor-react';
+import spotifyLogo from '../assets/spotify-logo.png';
+
+export const SpotifyLogo = ({ className = '', onClick }: { size?: number; className?: string, onClick?: () => void }) => (
+    <img
+    src={spotifyLogo}
+    alt="Spotify"
+    className={className}
+    onClick={onClick}
+  />
+);
+
+export const SkipBackIcon = ({ size = 16, className = '' }: { size?: number; className?: string }) => (
+  <SkipBack size={size} weight="fill" className={className} />
+);
+
+export const SkipForwardIcon = ({ size = 16, className = '' }: { size?: number; className?: string }) => (
+  <SkipForward size={size} weight="fill" className={className} />
+);
 
 export const PlayIcon = ({ size = 16, className = '' }: { size?: number; className?: string }) => (
   <Play size={size} weight="fill" className={className} />

@@ -4,13 +4,13 @@ import { useMemo, useState } from 'react';
 
 import ArtistAlbum from '../../../features/artists/ArtistAlbum';
 
-import { InfiniteScrollList } from '../../../app/components/InfiniteScrollList';
+import { InfiniteScrollList } from '../../components/InfiniteScrollList';
 import { TrackList } from '../../../features/tracks/TrackList';
 import { useArtistDiscography, useArtistCollaborations } from '../../../features/artists/useArtistAlbums';
 import { useArtistDetails } from '../../../features/artists/useArtistDetails';
 import { useArtistTopTracks } from '../../../features/artists/useArtistTopTracks';
 import { usePlayer } from '../../../features/player';
-import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { DefaultPage } from '../../layout/DefaultPage';
 
 type DiscographyFilter = 'populares' | 'albuns' | 'singles' | 'eps';
 

@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 
-import { DefaultPage } from '../../../app/layout/DefaultPage';
-import { QueryState } from '../../../app/components/QueryState';
+import { DefaultPage } from '../../layout/DefaultPage';
+import { QueryState } from '../../components/QueryState';
 import { TrackList } from '../../../features/tracks/TrackList';
-import { UserAvatar } from '../../../app/components/UserAvatar';
+import { UserAvatar } from '../../components/UserAvatar';
 import { useLikedSongs } from '../../../features/liked-songs/useLikedSongs';
 import { useUserProfile } from '../../../features/user/useUserProfile';
 import { usePlayer } from '../../../features/player';
-import { HeartIcon, PlayIcon } from '../../../app/components/SpotifyIcons';
+import { HeartIcon, PlayIcon } from '../../components/SpotifyIcons';
 
 const LikedSongs = () => {
   const navigate = useNavigate();

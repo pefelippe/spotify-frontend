@@ -1,10 +1,10 @@
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { QueryState } from '../../../app/components/QueryState';
+import { QueryState } from '../../components/QueryState';
 import { TrackList } from '../../../features/tracks/TrackList';
-import { UserAvatar } from '../../../app/components/UserAvatar';
+import { UserAvatar } from '../../components/UserAvatar';
 import { useAlbumDetails, useAlbumTracks } from '../../../features/artists/useAlbumDetails';
-import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { DefaultPage } from '../../layout/DefaultPage';
 
 const AlbumDetalhes = () => {
   const { albumId } = useParams();

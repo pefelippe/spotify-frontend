@@ -2,8 +2,8 @@ import React from 'react';
 import {
   PlayIcon,
   PauseIcon,
-  SkipNextIcon,
-  SkipPrevIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
   ShuffleIcon,
   RepeatIcon,
 } from '../../../app/components/SpotifyIcons';
@@ -81,7 +81,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           className={`${size === 'small' ? 'cursor-pointer text-gray-300 hover:text-white p-1.5 hover:bg-white/10 rounded-full' : 'text-gray-300 hover:text-white transition-all duration-200 p-3 cursor-pointer hover:scale-110'}`}
           title="Previous"
         >
-          <SkipPrevIcon size={currentSizes.skipPrev} />
+          <SkipBackIcon size={currentSizes.skipPrev} />
         </button>
         <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
           Previous
@@ -118,7 +118,7 @@ export const PlayerControls: React.FC<PlayerControlsProps> = ({
           className={`${size === 'small' ? 'cursor-pointer text-gray-300 hover:text-white p-1.5 hover:bg-white/10 rounded-full' : 'text-gray-300 hover:text-white transition-all duration-200 p-3 cursor-pointer hover:scale-110'}`}
           title="Next"
         >
-          <SkipNextIcon size={currentSizes.skipNext} />
+          <SkipForwardIcon size={currentSizes.skipNext} />
         </button>
         <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
           Next

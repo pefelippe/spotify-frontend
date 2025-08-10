@@ -2,11 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { useUserPlaylists } from '../../../features/user/useUserPlaylists';
 import { useLikedSongs } from '../../../features/liked-songs/useLikedSongs';
 import { usePlayer } from '../../../features/player';
-import { HeartIcon, ChevronRightIcon, PlayIcon } from '../../../app/components/SpotifyIcons';
+import { HeartIcon, ChevronRightIcon, PlayIcon } from '../../components/SpotifyIcons';
 import { useTopArtists } from '../../../features/user/useTopArtists';
 import { useRecentlyPlayed } from '../../../features/user/useRecentlyPlayed';
 import { useUserProfile } from '../../../features/user/useUserProfile';
-import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { DefaultPage } from '../../layout/DefaultPage';
 import { useEffect } from 'react';
 
 const Home = () => {

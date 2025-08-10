@@ -1,15 +1,15 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-import { Modal } from '../../../app/components/CustomModal';
-import { InfiniteScrollList } from '../../../app/components/InfiniteScrollList';
 import { useUserPlaylists } from '../../../features/user/useUserPlaylists';
 import { useCreatePlaylist } from '../../../features/playlist/useCreatePlaylist';
+import { Modal } from '../../components/CustomModal';
+import { InfiniteScrollList } from '../../components/InfiniteScrollList';
+import { useAuth } from '../../../core/auth';
+import { useNavigate } from 'react-router-dom';
+import { useMemo, useState } from 'react';
+import { DefaultPage } from '../../layout/DefaultPage';
+import { PageHeader } from '../../layout/PageHeader';
+import { PlusIcon } from '../../components/SpotifyIcons';
 import { usePlayer } from '../../../features/player';
 import PlaylistItem from '../../../features/playlist/PlaylistItem';
-import { DefaultPage } from '../../../app/layout/DefaultPage';
-import { PageHeader } from '../../../app/layout/PageHeader';
-import { PlusIcon } from '../../../app/components/SpotifyIcons';
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

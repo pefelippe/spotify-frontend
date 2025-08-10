@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { DefaultPage } from '../../../app/layout/DefaultPage';
-import { QueryState } from '../../../app/components/QueryState';
-import { InfiniteScrollList } from '../../../app/components/InfiniteScrollList';
-import { UserHeader } from '../../../app/components/UserHeader';
+import { DefaultPage } from '../../layout/DefaultPage';
+import { QueryState } from '../../components/QueryState';
+import { InfiniteScrollList } from '../../components/InfiniteScrollList';
+import { UserHeader } from '../../components/UserHeader';
 import { useUserDetails, useUserPublicPlaylists } from '../../../features/user/useUserDetails';
 import PlaylistItem from '../../../features/playlist/PlaylistItem';
 import { usePlayer } from '../../../features/player';

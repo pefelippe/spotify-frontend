@@ -1,12 +1,11 @@
 
-import { useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
-
-import Album from '../../../features/artists/Album';
-import { InfiniteScrollList } from '../../../app/components/InfiniteScrollList';
-
 import { useTopArtists } from '../../../features/user/useTopArtists';
-import { DefaultPage } from '../../../app/layout/DefaultPage';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../core/auth';
+import { InfiniteScrollList } from '../../components/InfiniteScrollList';
+import { ArtistAlbum } from '../../../features/artists/ArtistAlbum';
+import { useMemo } from 'react';
+import { DefaultPage } from '../../layout/DefaultPage';
 
 const Artistas = () => {
   const navigate = useNavigate();
@@ -32,7 +31,7 @@ const Artistas = () => {
       onClick={() => handleArtistClick(artist.id)}
       className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 cursor-pointer"
     >
-      <Album
+      <ArtistAlbum
         name={artist.name}
         imageUrl={artist.images?.[0]?.url || ''}
         size="xs"

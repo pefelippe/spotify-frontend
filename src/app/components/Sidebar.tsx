@@ -1,9 +1,8 @@
 
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from './CustomButton';
-import { Logo } from './Logo';
 import { NavigationButton } from './NavigationButton';
-import { HomeIcon, ArtistIcon, PlaylistIcon, UserIcon, DownloadIcon } from './SpotifyIcons';
+import { HomeIcon, ArtistIcon, PlaylistIcon, UserIcon, DownloadIcon, SpotifyLogo } from './SpotifyIcons';
 import { usePWA } from '../../features/pwa';
 
 export const SidebarItems = [
@@ -25,7 +24,7 @@ export const Sidebar = () => {
   return (
     <div className="w-[250px] fixed top-0 left-0 h-screen flex-col hidden lg:flex animate-slide-in-left border-r border-gray-800/50" style={{ backgroundColor: '#000000' }}>
       <div className="p-6 border-b border-gray-800/30">
-        <Logo className="w-[170px] h-[42px] object-contain mx-auto cursor-pointer" onClick={() => navigate('/')}/>
+        <SpotifyLogo className="w-[170px] h-[42px] object-contain mx-auto cursor-pointer" onClick={() => navigate('/')}/>
       </div>
 
       <div className="flex-1 px-3 flex items-start justify-start">
