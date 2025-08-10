@@ -3,7 +3,7 @@ import { useTopArtists } from '../../../features/user/useTopArtists';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../core/auth';
 import { InfiniteScrollList } from '../../components/InfiniteScrollList';
-import { ArtistAlbum } from '../../../features/artists/ArtistAlbum';
+import { ArtistItem } from '../../../features/artists/ArtistItem';
 import { useMemo } from 'react';
 import { DefaultPage } from '../../layout/DefaultPage';
 
@@ -27,21 +27,12 @@ const Artistas = () => {
   };
 
   const renderArtistItem = (artist: any) => (
-    <div
+    <ArtistItem
+      name={artist.name}
+      imageUrl={artist.images?.[0]?.url || ''}
       onClick={() => handleArtistClick(artist.id)}
-      className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 cursor-pointer"
-    >
-      <ArtistAlbum
-        name={artist.name}
-        imageUrl={artist.images?.[0]?.url || ''}
-        size="xs"
-      />
-      <div className="flex-1">
-        <h3 className="text-white-text font-semibold text-lg">
-          {artist.name}
-        </h3>
-      </div>
-    </div>
+      size="md"
+    />
   );
 
   return (
