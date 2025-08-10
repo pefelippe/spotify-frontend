@@ -7,6 +7,8 @@ export interface PlayerContextData {
   duration: number;
   deviceId: string | null;
   activeDeviceId: string | null;
+  activeDeviceName: string | null;
+  isRemotePlayback: boolean;
   availableDevices: SpotifyDevice[];
   isPremiumRequired: boolean;
   userInteracted: boolean;
@@ -20,6 +22,7 @@ export interface PlayerContextData {
   setVolume: (volume: number) => Promise<void>;
   refreshDevices: () => Promise<void>;
   transferPlayback: (deviceId: string, play?: boolean) => Promise<void>;
+  refreshPlayback: () => Promise<void>;
   hasTrack: boolean;
   // Add new methods for shuffle and repeat
   setShuffle: (shuffleState: boolean) => Promise<void>;

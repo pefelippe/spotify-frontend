@@ -34,7 +34,7 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
   };
 
   return (
-    <section className="mt-6">
+    <section className="">
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ">
         {items.map((pl) => (
           <div key={pl.id} className="group">

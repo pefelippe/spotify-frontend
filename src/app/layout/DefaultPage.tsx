@@ -25,7 +25,7 @@ export const DefaultPage = ({ title, subtitle, children, className, isLoading, e
     }
 
     return (
-        <div className={`min-h-[90vh] lg:min-h-screen bg-[#090707] w-full p-6 lg:p-10 ${className} min-w-[400px]`}>
+        <div className={`min-h-[90vh] lg:min-h-screen bg-[#090707] w-full p-6  ${className} min-w-[400px] animate-slide-in-left`}>
             {hasBackButton && <BackButton artistName={title || 'Voltar'} />}
             {title && subtitle && <PageHeader title={title} subtitle={subtitle} />}
             {children}

@@ -55,6 +55,23 @@ const Home = () => {
   const likedSongsCount = likedSongsData?.pages[0]?.total || 0;
   const recentlyPlayedTracks = recentlyPlayedData?.items || [];
 
+  const uniqueRecentlyPlayed = useMemo(() => {
+    const seen = new Set<string>();
+    const uniques: any[] = [];
+    for (const item of recentlyPlayedTracks) {
+      const id = item?.track?.id as string | undefined;
+      if (!id) {
+        continue;
+      }
+      if (seen.has(id)) {
+        continue;
+      }
+      seen.add(id);
+      uniques.push(item);
+    }
+    return uniques;
+  }, [recentlyPlayedTracks]);
+
 
   const handlePlayItem = (uri: string, contextUri?: string) => {
     if (!isReady || !deviceId) {
@@ -103,10 +120,10 @@ const Home = () => {
 
 
             {/* Recently Played Tracks Section */}
-            {recentlyPlayedTracks.length > 0 && (
+            {uniqueRecentlyPlayed.length > 0 && (
               <CustomHomeSection
                 title="Tocadas Recentemente"
-                data={recentlyPlayedTracks.slice(0, 12).map((item: any, index: number) => {
+                data={uniqueRecentlyPlayed.slice(0, 12).map((item: any, index: number) => {
                   const { track } = item;
                   if (!track) {
                     return null as any;
@@ -120,7 +137,7 @@ const Home = () => {
                   };
                 }).filter(Boolean)}
                 onClickData={(id) => {
-                  const match = recentlyPlayedTracks
+                  const match = uniqueRecentlyPlayed
                     .map((rp: any, idx: number) => ({ rp, idx }))
                     .find(({ rp, idx }: { rp: any; idx: number }) => `${rp.track?.id}-${idx}` === id);
                   const track = match?.rp?.track;

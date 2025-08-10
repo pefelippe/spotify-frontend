@@ -14,6 +14,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [duration, setDuration] = useState(0);
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [activeDeviceId, setActiveDeviceId] = useState<string | null>(null);
+  const [activeDeviceName, setActiveDeviceName] = useState<string | null>(null);
   const [availableDevices, setAvailableDevices] = useState<SpotifyDevice[]>([]);
   const [isPremiumRequired, setIsPremiumRequired] = useState(false);
   const [userInteracted, setUserInteracted] = useState(false);
@@ -136,6 +137,94 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [accessToken, currentTrack, deviceId, isReady]);
 
   const [recentlyPlayedTracks, setRecentlyPlayedTracks] = useState<Set<string>>(new Set());
+
+  // Helper to hydrate state from /me/player
+  const fetchCurrentPlayback = async () => {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const res = await fetch('https://api.spotify.com/v1/me/player', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!res.ok) {
+        return;
+      }
+      const playback = await res.json();
+      if (playback) {
+        setIsPlaying(!!playback.is_playing);
+        if (playback.item) {
+          setCurrentTrack(playback.item);
+          setDuration(playback.item.duration_ms || 0);
+        }
+        setPosition(playback.progress_ms || 0);
+        if (playback.device) {
+          setActiveDeviceId(playback.device.id || null);
+          setActiveDeviceName(playback.device.name || null);
+        }
+      }
+    } catch (e) {
+      // silent
+    }
+  };
+
+  const refreshPlayback = async () => {
+    await fetchCurrentPlayback();
+    await refreshDevices();
+  };
+
+  // Smart polling: refresh devices and playback when remote playback or inactive local
+  useEffect(() => {
+    if (!accessToken || !isReady) {
+      return;
+    }
+
+    let intervalId: number | null = null;
+
+    const start = () => {
+      const isHidden = typeof document !== 'undefined' && (document as any).hidden;
+      if (isHidden) {
+        return;
+      }
+      const isRemote = !!activeDeviceId && activeDeviceId !== deviceId;
+      const period = isRemote ? 10000 : 30000; // 10s when remote, 30s otherwise
+      intervalId = window.setInterval(async () => {
+        await fetchCurrentPlayback();
+        await refreshDevices();
+      }, period);
+    };
+
+    // kick a first refresh when starting
+    (async () => {
+      await fetchCurrentPlayback();
+      await refreshDevices();
+      start();
+    })();
+
+    const handleVisibility = async () => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+        intervalId = null;
+      }
+      if (!document.hidden) {
+        await fetchCurrentPlayback();
+        await refreshDevices();
+        start();
+      }
+    };
+    const handleFocus = handleVisibility;
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [accessToken, isReady, deviceId, activeDeviceId]);
 
   const playTrack = async (uri: string, contextUri?: string) => {
     const trackId = uri.split(':').pop();
@@ -289,6 +378,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       setAvailableDevices(devices);
       const active = devices.find(d => d.is_active);
       setActiveDeviceId(active ? active.id : null);
+      setActiveDeviceName(active ? active.name : null);
     } catch (e) {
       console.error('Erro ao buscar dispositivos:', e);
     }
@@ -324,18 +414,17 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const pauseTrack = async () => {
-    if (!deviceId || !accessToken) {
+    if (!accessToken) {
       return;
     }
 
     try {
-      const response = await fetch('https://api.spotify.com/v1/me/player/pause', {
+      const target = activeDeviceId || deviceId;
+      const response = await fetch(`https://api.spotify.com/v1/me/player/pause${target ? `?device_id=${target}` : ''}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ device_id: deviceId }),
       });
 
       if (!response.ok) {
@@ -351,8 +440,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       setUserInteracted(true);
       setIsPlaying(false);
 
-      // Fallback to SDK pause if API call fails
-      if (player) {
+      // For local device, also pause SDK to keep state in sync
+      if (player && deviceId && (!activeDeviceId || activeDeviceId === deviceId)) {
         await player.pause();
       }
     } catch (error) {
@@ -361,36 +450,131 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const resumeTrack = async () => {
-    if (player) {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const target = activeDeviceId || deviceId;
+      const res = await fetch(`https://api.spotify.com/v1/me/player/play${target ? `?device_id=${target}` : ''}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to resume track:', {
+          status: res.status,
+          statusText: res.statusText,
+          body: errorText,
+        });
+        return;
+      }
       setUserInteracted(true);
-      await player.resume();
+      setIsPlaying(true);
+      // For local device, also resume SDK
+      if (player && deviceId && (!activeDeviceId || activeDeviceId === deviceId)) {
+        await player.resume();
+      }
+    } catch (e) {
+      console.error('Error resuming track:', e);
     }
   };
 
   const nextTrack = async () => {
-    if (player) {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const target = activeDeviceId || deviceId;
+      const res = await fetch(`https://api.spotify.com/v1/me/player/next${target ? `?device_id=${target}` : ''}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to skip to next track:', {
+          status: res.status,
+          statusText: res.statusText,
+          body: errorText,
+        });
+        return;
+      }
       setUserInteracted(true);
-      await player.nextTrack();
+    } catch (e) {
+      console.error('Error going to next track:', e);
     }
   };
 
   const previousTrack = async () => {
-    if (player) {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const target = activeDeviceId || deviceId;
+      const res = await fetch(`https://api.spotify.com/v1/me/player/previous${target ? `?device_id=${target}` : ''}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to go to previous track:', {
+          status: res.status,
+          statusText: res.statusText,
+          body: errorText,
+        });
+        return;
+      }
       setUserInteracted(true);
-      await player.previousTrack();
+    } catch (e) {
+      console.error('Error going to previous track:', e);
     }
   };
 
   const seekToPosition = async (position: number) => {
-    if (player) {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const target = activeDeviceId || deviceId;
+      const res = await fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${position}${target ? `&device_id=${target}` : ''}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Failed to seek position:', {
+          status: res.status,
+          statusText: res.statusText,
+          body: errorText,
+        });
+        return;
+      }
       setUserInteracted(true);
-      await player.seek(position);
+      // For local device, also update SDK position
+      if (player && deviceId && (!activeDeviceId || activeDeviceId === deviceId)) {
+        await player.seek(position);
+      }
+    } catch (e) {
+      console.error('Error seeking:', e);
     }
   };
 
   const setVolume = async (volume: number) => {
+    setUserInteracted(true);
+    const target = activeDeviceId || deviceId;
+    // Use API for remote devices; SDK for local
+    if (activeDeviceId && activeDeviceId !== deviceId) {
+      if (!accessToken) {
+        return;
+      }
+      try {
+        await fetch(`https://api.spotify.com/v1/me/player/volume?volume_percent=${Math.round(volume * 100)}${target ? `&device_id=${target}` : ''}`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${accessToken}` },
+        });
+      } catch {}
+      return;
+    }
     if (player) {
-      setUserInteracted(true);
       await player.setVolume(volume);
     }
   };
@@ -402,7 +586,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      const url = `https://api.spotify.com/v1/me/player/shuffle?state=${shuffleState}${deviceId ? `&device_id=${deviceId}` : ''}`;
+      const target = activeDeviceId || deviceId;
+      const url = `https://api.spotify.com/v1/me/player/shuffle?state=${shuffleState}${target ? `&device_id=${target}` : ''}`;
       const response = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -429,7 +614,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      const url = `https://api.spotify.com/v1/me/player/repeat?state=${mode}${deviceId ? `&device_id=${deviceId}` : ''}`;
+      const target = activeDeviceId || deviceId;
+      const url = `https://api.spotify.com/v1/me/player/repeat?state=${mode}${target ? `&device_id=${target}` : ''}`;
       const response = await fetch(url, {
         method: 'PUT',
         headers: {
@@ -478,6 +664,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         duration,
         deviceId,
         activeDeviceId,
+        activeDeviceName,
+        isRemotePlayback: !!activeDeviceId && activeDeviceId !== deviceId,
         availableDevices,
         isPremiumRequired,
         userInteracted,
@@ -490,6 +678,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         seekToPosition,
         setVolume,
         refreshDevices,
+        refreshPlayback,
         transferPlayback,
         // Add a new method to check if a track is available
         hasTrack: !!currentTrack,

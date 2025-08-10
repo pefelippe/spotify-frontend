@@ -13,8 +13,12 @@ export const MusicPlayer = () => {
     position,
     duration,
     isReady,
+    deviceId,
+    activeDeviceId,
+    activeDeviceName,
     availableDevices,
     refreshDevices,
+    refreshPlayback,
     transferPlayback,
     pauseTrack,
     resumeTrack,
@@ -35,6 +39,7 @@ export const MusicPlayer = () => {
   const [isMuted, setIsMuted] = useState(false);
   const [showDevices, setShowDevices] = useState(false);
   const [isDragging] = useState(false);
+  const [isSeeking, setIsSeeking] = useState(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -42,13 +47,13 @@ export const MusicPlayer = () => {
   const [isEntering, setIsEntering] = useState(false);
 
   useEffect(() => {
-    if (!isDragging) {
+    if (!isDragging && !isSeeking) {
       setCurrentPosition(position);
     }
-  }, [position, isDragging]);
+  }, [position, isDragging, isSeeking]);
 
   useEffect(() => {
-    if (!isPlaying) {
+    if (!isPlaying || isSeeking) {
       return;
     }
 
@@ -59,7 +64,7 @@ export const MusicPlayer = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, duration, isDragging]);
+  }, [isPlaying, duration, isDragging, isSeeking]);
 
   useEffect(() => {
     if (isReady) {
@@ -67,17 +72,33 @@ export const MusicPlayer = () => {
     }
   }, [isReady]);
 
+  // Ensure we surface player UI when remote playback starts by forcing a refresh on focus/visibility
+  useEffect(() => {
+    const onFocus = () => {
+      refreshPlayback();
+    };
+    const onVisibility = () => {
+      if (!document.hidden) {
+        refreshPlayback();
+      }
+    };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
+    };
+  }, [refreshPlayback]);
+
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent) => {
       if (showDevices) {
-        const deviceButton = document.querySelector('[aria-label="Devices"]');
+        const trigger = document.querySelector('[data-device-trigger]');
         const devicesModal = document.querySelector('.devices-modal');
-        if (
-          deviceButton &&
-          !deviceButton.contains(e.target as Node) &&
-          devicesModal &&
-          !devicesModal.contains(e.target as Node)
-        ) {
+        const target = e.target as Node;
+        const clickedInsideTrigger = !!trigger && trigger.contains(target);
+        const clickedInsideModal = !!devicesModal && devicesModal.contains(target);
+        if (!clickedInsideTrigger && !clickedInsideModal) {
           setShowDevices(false);
         }
       }
@@ -127,7 +148,9 @@ export const MusicPlayer = () => {
     }
   };
 
-  if (!isReady || !hasTrack) {
+  const isRemotePlayback = !!activeDeviceId && activeDeviceId !== deviceId;
+
+  if (!isReady || (!hasTrack && !isRemotePlayback)) {
     return null;
   }
 
@@ -147,6 +170,8 @@ export const MusicPlayer = () => {
           isMuted={isMuted}
           volumeState={volumeState}
           availableDevices={availableDevices}
+          isRemotePlayback={isRemotePlayback}
+          activeDeviceName={activeDeviceName}
           showDevices={showDevices}
           onExpand={handlePlayerExpand}
           onPlayPause={() => (isPlaying ? pauseTrack() : resumeTrack())}
@@ -161,8 +186,19 @@ export const MusicPlayer = () => {
             setRepeat(newIndex);
             providerSetRepeat(mode);
           }}
-          onSeek={(ms) => seekToPosition(ms)}
-          onVolumeChange={(v) => setVolume(v / 100)}
+          onSeekStart={() => setIsSeeking(true)}
+          onSeekChange={(ms) => setCurrentPosition(ms)}
+          onSeekCommit={async (ms) => {
+            setIsSeeking(false);
+            await seekToPosition(ms);
+          }}
+          onVolumeChange={(v) => {
+            setVolumeState(v);
+            if (isMuted && v > 0) {
+              setIsMuted(false);
+            }
+            setVolume(v / 100);
+          }}
           onMuteToggle={handleMuteToggle}
           onToggleDevices={handleToggleDevices}
           onDeviceSelect={async (deviceId) => await transferPlayback(deviceId, true)}

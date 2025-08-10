@@ -42,6 +42,14 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
   isCurrentTrackLiked,
   onToggleLike,
 }) => {
+  // Disable body scroll when expanded
+  React.useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
   return (
     <div
       className={`fixed inset-0 bg-gradient-to-b from-gray-900 via-black to-black z-[100] ${
@@ -51,17 +59,20 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
     >
       <div className={`${isClosing ? 'animate-fade-out-scale' : 'animate-fade-in-scale'}`} onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 pt-8 lg:pt-4">
-        <div className="text-center flex-1">
-          <p className="text-xs text-gray-400 uppercase tracking-wide">Playing from</p>
-          <p className="text-sm text-white font-medium">{currentTrack.album.name}</p>
-        </div>
-        <button
-          onClick={onClose}
-          className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer ml-4"
-        >
-          <ChevronDownIcon size={24} />
-        </button>
+        <div className="relative p-4 pt-8 lg:pt-4">
+          <div className="absolute left-1/2 -translate-x-1/2 top-6 lg:top-4 text-center">
+            <p className="text-xs text-gray-400 uppercase tracking-wide">Playing</p>
+            <p className="text-sm text-white font-medium">{currentTrack.album.name}</p>
+          </div>
+          <div className="flex items-center justify-end">
+            <button
+              onClick={onClose}
+              className="p-2 text-gray-400 hover:text-white transition-colors cursor-pointer ml-4"
+              aria-label="Close player"
+            >
+              <ChevronDownIcon size={24} />
+            </button>
+          </div>
         </div>
 
         <div
@@ -70,12 +81,14 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
         {/* Album image */}
           <div className="flex-shrink-0 flex justify-start items-start w-full lg:w-auto">
             <div className="w-full lg:w-[40vw] xl:w-[36vw] max-w-none aspect-square max-h-[60vh] max-lg:max-h-[50vh] lg:max-h-[80vh] h-full">
-            <img
-              src={currentTrack.album.images[0]?.url}
-              alt={currentTrack.album.name}
-                className="rounded-2xl object-cover w-full h-full lg:shadow-2xl"
-            />
-          </div>
+              <button className="w-full h-full" onClick={onClose} aria-label="Collapse player">
+                <img
+                  src={currentTrack.album.images[0]?.url}
+                  alt={currentTrack.album.name}
+                  className="rounded-2xl object-cover w-full h-full lg:shadow-2xl"
+                />
+              </button>
+            </div>
         </div>
 
         {/* Info and controls */}
@@ -125,10 +138,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
             <ProgressBar
               currentPosition={currentPosition}
               duration={duration}
-              onSeek={(e) => {
-                const seekTime = Number(e.currentTarget.value);
-                onSeek(seekTime);
-              }}
+              onSeekChange={(ms) => onSeek(ms)}
               size="large"
             />
             <PlayerControls

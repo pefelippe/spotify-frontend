@@ -7,6 +7,7 @@ interface TrackInfoProps {
   onArtistClick?: (artistId: string) => void;
   onLikeToggle?: () => void;
   size?: 'small' | 'large';
+  onImageClick?: () => void;
 }
 
 export const TrackInfo: React.FC<TrackInfoProps> = ({
@@ -15,6 +16,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
   onArtistClick,
   onLikeToggle,
   size = 'small',
+  onImageClick,
 }) => {
   if (!track) {
     return (
@@ -52,14 +54,14 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
 
   return (
     <div className="flex items-center space-x-3 lg:space-x-4 flex-1 min-w-0  lg:max-w-[25%] track-info-area">
-      <div className="relative overflow-hidden rounded-md group">
+      <button className="relative overflow-hidden rounded-md group focus:outline-none" onClick={onImageClick} aria-label="Expand player">
         <img
           src={track.album.images[0]?.url}
           alt={track.name}
           className={`${imageSize} transition-transform duration-200 group-hover:scale-105`}
           key={track.id}
         />
-      </div>
+      </button>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1 mb-0.5">
           <h4 className={`text-white ${size === 'small' ? 'text-xs lg:text-sm' : 'text-3xl lg:text-5xl'} font-normal truncate hover:underline cursor-pointer transition-colors`}>

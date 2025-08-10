@@ -16,6 +16,8 @@ interface CompactMusicPlayerProps {
   isMuted: boolean;
   volumeState: number;
   availableDevices: any[];
+  isRemotePlayback?: boolean;
+  activeDeviceName?: string | null;
   showDevices: boolean;
   onExpand: () => void;
   onPlayPause: () => void;
@@ -23,7 +25,9 @@ interface CompactMusicPlayerProps {
   onNext: () => void;
   onShuffleToggle: () => void;
   onRepeatCycle: () => void;
-  onSeek: (ms: number) => void;
+  onSeekStart?: () => void;
+  onSeekChange?: (ms: number) => void;
+  onSeekCommit?: (ms: number) => void;
   onVolumeChange: (value: number) => void;
   onMuteToggle: () => void;
   onToggleDevices: () => void;
@@ -44,6 +48,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
   isMuted,
   volumeState,
   availableDevices,
+  activeDeviceName,
   showDevices,
   onExpand,
   onPlayPause,
@@ -51,7 +56,9 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
   onNext,
   onShuffleToggle,
   onRepeatCycle,
-  onSeek,
+  onSeekStart,
+  onSeekChange,
+  onSeekCommit,
   onVolumeChange,
   onMuteToggle,
   onToggleDevices,
@@ -67,8 +74,6 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
         shadow-2xl transform transition-transform duration-300 ease-out 
         ${isEntering ? 'translate-y-0' : 'translate-y-full'}`}
       onClick={(e) => {
-        // On screens smaller than lg, any click on the player should expand,
-        // except when clicking interactive buttons
         const isBelowLg = typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 1023px)').matches;
         if (isBelowLg) {
           const target = e.target as HTMLElement | null;
@@ -80,12 +85,13 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
       }}
     >
       <div className="flex flex-col">
-        <div className="flex items-center justify-between h-16 lg:h-24 px-3 lg:px-5 py-2 lg:py-3 hover:bg-gray-900/20 transition-colors duration-200">
+        <div className="flex items-center justify-between px-3 lg:px-5 py-2 lg:py-3 hover:bg-gray-900/20 transition-colors duration-200">
           <TrackInfo
             track={currentTrack}
             isLiked={isCurrentTrackLiked}
             onArtistClick={onArtistClick}
             onLikeToggle={onToggleLike}
+            onImageClick={onExpand}
           />
 
           <div className="hidden lg:flex flex-col items-center justify-center flex-1 max-w-[40%] lg:max-w-[50%] pt-2">
@@ -103,15 +109,35 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
             <ProgressBar
               currentPosition={currentPosition}
               duration={duration}
-              onSeek={(e) => onSeek(Number(e.currentTarget.value))}
+              onSeekStart={onSeekStart}
+              onSeekChange={onSeekChange}
+              onSeekCommit={onSeekCommit}
             />
           </div>
 
           <div className="flex items-center space-x-2 lg:space-x-3 flex-1 justify-end max-w-[30%] lg:max-w-[25%]">
-            <div className="hidden lg:flex items-center space-x-2">
+            <div className="hidden lg:flex items-center space-x-2 relative">
+              <button
+                type="button"
+                onClick={onToggleDevices}
+                className="inline-flex items-center gap-1 text-xs mr-4 text-gray-300 bg-white/10 px-2 py-1 rounded-md hover:bg-white/15 transition-colors max-w-[180px] truncate"
+                aria-label="Dispositivos disponíveis"
+                title={activeDeviceName ? `Reproduzindo em ${activeDeviceName}` : 'Este dispositivo'}
+                data-device-trigger
+              >
+                <DevicesIcon size={14} />
+                <span className="truncate">{activeDeviceName === 'Spotify Clone Player' ? 'Este dispositivo' : activeDeviceName}</span>
+              </button>
+              {showDevices && (
+                <DevicesModal
+                  devices={availableDevices}
+                  onDeviceSelect={onDeviceSelect}
+                  onClose={onToggleDevices}
+                />
+              )}
               <button
                 onClick={onMuteToggle}
-                className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+                className="text-gray-300 hover:text-white tSpotify Clone Playerransition-colors cursor-pointer"
               >
                 {isMuted ? <VolumeMuteIcon size={16} /> : <VolumeIcon size={16} />}
               </button>
@@ -121,7 +147,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
                 max="100"
                 value={volumeState}
                 onChange={(e) => onVolumeChange(parseInt(e.target.value))}
-                className="w-16 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                className="w-16 lg:w-24 h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: `linear-gradient(to right, #22c55e 0%, #22c55e ${volumeState}%, #4b5563 ${volumeState}%, #4b5563 100%)`,
                 }}
@@ -134,22 +160,6 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
             >
               <FullscreenIcon size={16} />
             </button>
-            <div className="relative hidden lg:block">
-              <button
-                onClick={onToggleDevices}
-                className="p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer"
-                aria-label="Devices"
-              >
-                <DevicesIcon size={16} />
-              </button>
-              {showDevices && (
-                <DevicesModal
-                  devices={availableDevices}
-                  onDeviceSelect={onDeviceSelect}
-                  onClose={onToggleDevices}
-                />
-              )}
-            </div>
           </div>
         </div>
       </div>
