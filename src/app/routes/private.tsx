@@ -1,5 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import ScrollToTop from '../components/ScrollToTop';
 
 import { Sidebar } from '../components/Sidebar';
 import { MobileHeader } from '../layout/MobileHeader';
@@ -36,6 +37,7 @@ export const PrivateRoutes: React.FC = () => {
   return (
     <>
       <MobileHeader />
+      <ScrollToTop />
       <Sidebar />
       <Routes>
         {privateRoutes.map(({ path, component: Component }) => (

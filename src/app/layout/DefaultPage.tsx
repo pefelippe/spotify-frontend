@@ -13,10 +13,9 @@ interface DefaultPageProps {
     loadingMessage?: string
     errorMessage?: string
     hasBackButton?: boolean
-    hasCustomButton?: boolean
 }
 
-export const DefaultPage = ({ title, subtitle, children, className, isLoading, error, loadingMessage, errorMessage, hasBackButton, hasCustomButton }: DefaultPageProps) => {
+export const DefaultPage = ({ title, subtitle, children, className, isLoading, error, loadingMessage, errorMessage, hasBackButton }: DefaultPageProps) => {
     if (isLoading) {
         return <PageWithQueryState isLoading={isLoading} error={error} loadingMessage={loadingMessage} errorMessage={errorMessage} />;
     }

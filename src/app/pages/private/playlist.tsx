@@ -2,7 +2,6 @@ import { useUserPlaylists } from '../../../features/user/useUserPlaylists';
 import { useCreatePlaylist } from '../../../features/playlist/useCreatePlaylist';
 import { Modal } from '../../components/CustomModal';
 import { InfiniteScrollList } from '../../components/InfiniteScrollList';
-import { useAuth } from '../../../core/auth';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { DefaultPage } from '../../layout/DefaultPage';
@@ -32,32 +31,19 @@ const Playlists = () => {
     return data?.pages.flatMap(page => page.items) || [];
   }, [data]);
 
-  // Monitor modal state
-  useEffect(() => {
-    console.log('Modal state changed:', isModalOpen);
-  }, [isModalOpen]);
-
   const handleCreatePlaylist = () => {
-    console.log('Create playlist button clicked');
-    console.log('Modal state before opening:', isModalOpen);
     setIsModalOpen(true);
-    console.log('Modal state after setting to true:', true);
   };
 
   const handleCloseModal = () => {
-    console.log('Closing modal');
     setIsModalOpen(false);
     setPlaylistName('');
   };
 
   const handleSubmitPlaylist = async () => {
     if (!playlistName.trim()) {
-      console.log('Playlist name is empty, not submitting');
       return;
     }
-
-    console.log('Submitting playlist:', { name: playlistName });
-
     try {
       const result = await createPlaylistMutation.mutateAsync({
         name: playlistName.trim(),
@@ -67,7 +53,6 @@ const Playlists = () => {
       handleCloseModal();
     } catch (error) {
       console.error('Failed to create playlist:', error);
-      // Don't close modal on error so user can see the error message
     }
   };
 
