@@ -93,12 +93,12 @@ export const MusicPlayer = () => {
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent) => {
       if (showDevices) {
-        const trigger = document.querySelector('[data-device-trigger]');
+        const triggers = Array.from(document.querySelectorAll('[data-device-trigger]'));
         const devicesModal = document.querySelector('.devices-modal');
         const target = e.target as Node;
-        const clickedInsideTrigger = !!trigger && trigger.contains(target);
+        const clickedInsideAnyTrigger = triggers.some((el) => el.contains(target));
         const clickedInsideModal = !!devicesModal && devicesModal.contains(target);
-        if (!clickedInsideTrigger && !clickedInsideModal) {
+        if (!clickedInsideAnyTrigger && !clickedInsideModal) {
           setShowDevices(false);
         }
       }

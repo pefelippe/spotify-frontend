@@ -22,6 +22,7 @@ const Home = () => {
   const { data: topArtistsData } = useTopArtists();
   const topArtists = (topArtistsData?.pages?.[0]?.items || []).slice(0, 6);
   const [randomTopArtist, setRandomTopArtist] = useState<any | null>(null);
+
   useEffect(() => {
     if (!topArtists || topArtists.length === 0) {
       return;
@@ -39,6 +40,7 @@ const Home = () => {
     }
     setRandomTopArtist(picked);
   }, [topArtists, userProfile?.id]);
+  
   const { data: discogData } = useArtistDiscography(randomTopArtist?.id || '');
   const discographyItems = useMemo(() => {
     const items = discogData?.pages?.flatMap((p: any) => p.items) || [];
@@ -95,7 +97,6 @@ const Home = () => {
       <div className="space-y-10 ">
         {!isLoading && hasContent && (
           <>
-            {/* Quick Playlists row */}
             {(likedSongsCount > 0 || userPlaylists.length > 0) && (
               <QuickPlaylists
                 items={[
@@ -118,8 +119,6 @@ const Home = () => {
               />
             )}
 
-
-            {/* Recently Played Tracks Section */}
             {uniqueRecentlyPlayed.length > 0 && (
               <CustomHomeSection
                 title="Tocadas Recentemente"
@@ -150,7 +149,6 @@ const Home = () => {
               />
             )}
 
-            {/* Top Artists Section (with play button) */}
             {topArtists.length > 0 && (
               <CustomHomeSection
                 title="Seus Artistas Favoritos"
@@ -167,7 +165,6 @@ const Home = () => {
               />
             )}
 
-            {/* User Playlists Section */}
             {userPlaylists.length > 0 && (
               <>
                 <CustomHomeSection
@@ -185,7 +182,6 @@ const Home = () => {
                   actionText="Mostrar tudo"
                 />
 
-                {/* For Fans Section below playlists */}
                 {randomTopArtist && discographyItems.length > 0 && (
                   <CustomHomeSection
                     title={`Para fãs de ${randomTopArtist.name}`}

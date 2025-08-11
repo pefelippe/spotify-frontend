@@ -343,3 +343,24 @@ html, body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Marquee animation */
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-wrapper {
+  position: relative;
+}
+
+.marquee {
+  width: 200%;
+  animation-name: marquee-left;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}

@@ -27,6 +27,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   size = 'small',
 }) => {
   const progressPercent = duration > 0 ? (currentPosition / duration) * 100 : 0;
+  const remaining = Math.max(duration - currentPosition, 0);
 
   const barHeight = size === 'small'
     ? 'h-1 lg:h-1.5'
@@ -34,7 +35,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
 
   return (
     <div className={`w-full ${size === 'large' ? 'lg:max-w-[720px]' : 'lg:max-w-[500px]'}`}>
-      <div className={`flex items-center ${size === 'large' ? 'gap-3' : 'gap-2'}`}>
+      <div className={`hidden lg:flex items-center ${size === 'large' ? 'gap-3' : 'gap-2'}`}>
         <span className={`${size === 'small' ? 'text-[10px] lg:text-xs' : 'text-sm lg:text-base'} text-gray-400 w-10 text-left`}>
           {formatTime(currentPosition)}
         </span>
@@ -54,8 +55,30 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           }}
         />
         <span className={`${size === 'small' ? 'text-[10px] lg:text-xs' : 'text-sm lg:text-base'} text-gray-400 w-10 text-right`}>
-          {formatTime(duration)}
+          -{formatTime(remaining)}
         </span>
+      </div>
+
+      <div className="flex flex-col lg:hidden gap-1.5">
+        <input
+          type="range"
+          min="0"
+          max={duration}
+          value={currentPosition}
+          onMouseDown={() => onSeekStart && onSeekStart()}
+          onTouchStart={() => onSeekStart && onSeekStart()}
+          onChange={(e) => onSeekChange && onSeekChange(Number(e.currentTarget.value))}
+          onMouseUp={(e) => onSeekCommit && onSeekCommit(Number((e.currentTarget as HTMLInputElement).value))}
+          onTouchEnd={(e) => onSeekCommit && onSeekCommit(Number((e.currentTarget as HTMLInputElement).value))}
+          className={`w-full appearance-none bg-gray-600/60 hover:bg-gray-500/60 rounded-full cursor-pointer ${barHeight} progress-slider`}
+          style={{
+            background: `linear-gradient(to right, #22c55e 0%, #22c55e ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`,
+          }}
+        />
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] text-gray-400">{formatTime(currentPosition)}</span>
+          <span className="text-[10px] text-gray-400">-{formatTime(remaining)}</span>
+        </div>
       </div>
     </div>
   );
