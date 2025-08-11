@@ -1,8 +1,40 @@
 ## Spotify – Frontend
 
+## Descrição
+
+Interface web inspirada no Spotify, construída com React + Vite + TailwindCSS e integrada à Spotify Web API e ao Web Playback SDK. Permite autenticação, navegação por artistas/álbuns/playlists, busca, gerenciamento de playlists e reprodução de faixas diretamente no navegador.
+
 ## Deploy
 
 https://spotify-frontend-zeta-blue.vercel.app/login
+
+## Funcionalidades
+
+- Autenticação via Spotify (OAuth) com fluxo de callback
+- Home com banner de boas-vindas, playlists do usuário, tocadas recentemente e seção “Seus Artistas Favoritos” (até 10 artistas)
+- Busca com prévia de resultados e histórico de buscas recentes
+- Artistas: listagem, detalhes, top músicas e discografia (álbuns e singles)
+- Álbuns: detalhes, tracklist e reprodução em contexto
+- Playlists: criar, editar, apagar, adicionar/remover faixas e adicionar música a playlists
+- Músicas Curtidas: visualização das faixas curtidas pelo usuário
+- Player integrado: modos compacto e expandido, controles, barra de progresso, seleção de dispositivos e aviso para contas não‑Premium
+- Listas com scroll infinito e seções em carrossel
+- PWA: instalação e suporte offline básico (quando disponível)
+- Layout responsivo para desktop e mobile
+
+## Tecnologias
+
+- React 19 + React Router
+- Vite 7
+- TypeScript 5
+- TailwindCSS 3
+- TanStack React Query 5 (cache, infinite queries)
+- Axios
+- Spotify Web API + Web Playback SDK
+- Testing Library + Vitest (unitários)
+- Playwright (E2E)
+- ESLint + Prettier
+- PWA (via `vite-plugin-pwa`)
 
 ## Screens
 
@@ -15,7 +47,8 @@ https://spotify-frontend-zeta-blue.vercel.app/login
 ![Player Expandido (Mobile)](screens/expandedplayer-mobile.png)
 
 ## Login
-![Login](screens/Login.jpg)
+
+[Login no deploy](https://spotify-frontend-zeta-blue.vercel.app/login)
 
 ## Álbum
 
