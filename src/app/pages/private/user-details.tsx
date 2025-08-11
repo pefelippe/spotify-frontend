@@ -9,6 +9,7 @@ import { CustomHomeSection } from '../../../features/home/CustomHomeSection';
 import { useTopArtists } from '../../../core/api/hooks/useTopArtists';
 import { useUserProfile } from '../../../core/api/hooks/useUserProfile';
 import { useUserFollowingArtists } from '../../../core/api/hooks/useUserFollowing';
+import { useLikedSongs } from '../../../core/api/hooks/useLikedSongs';
 
 const UserDetails = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -28,6 +29,9 @@ const UserDetails = () => {
     [followingData],
   );
 
+  const { data: likedSongsData } = useLikedSongs();
+  const likedSongsTotal = showPrivateSections ? (likedSongsData?.pages?.[0]?.total ?? undefined) : undefined;
+
   const publicPlaylists = useMemo(() => {
     const all = playlistsData?.pages.flatMap(page => page.items) || [];
     return all.filter((pl: any) => pl?.owner?.id === userProfile?.id);
@@ -44,11 +48,11 @@ const UserDetails = () => {
       <div className="space-y-8">
         <UserHeader
           userProfile={userProfile}
-          showEmail={false}
-          showExternalLink={true}
           stats={{
             followers: userProfile?.followers?.total,
+            following: showPrivateSections ? followingData?.pages?.[0]?.artists?.total ?? 0 : undefined,
             playlists: publicPlaylists.length,
+            likedSongs: likedSongsTotal,
           }}
         />
         {showPrivateSections && topArtists.length > 0 && (

@@ -136,13 +136,12 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
               <button
                 type="button"
                 onClick={onToggleDevices}
-                className="inline-flex items-center gap-1 text-xs mr-4 text-gray-300 bg-white/10 px-2 py-1 rounded-md hover:bg-white/15 transition-colors max-w-[180px] truncate"
+                className=" text-green-500 transition-colors cursor-pointer hover:bg-white/10 p-1.5 rounded-md"
                 aria-label="Dispositivos disponíveis"
                 title={activeDeviceName ? `Reproduzindo em ${activeDeviceName}` : 'Este dispositivo'}
                 data-device-trigger
               >
-                <DevicesIcon size={14} />
-                <span className="truncate max-xl:hidden">{activeDeviceName === 'Spotify Clone Player' ? 'Este dispositivo' : activeDeviceName}</span>
+                <DevicesIcon size={18} />
               </button>
               {showDevices && (
                 <DevicesModal
@@ -169,7 +168,6 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
                 }}
               />
             </div>
-            {/* Mobile play/pause on the right */}
             <button
               onClick={onPlayPause}
               className="inline-flex lg:hidden p-2 mr-1 text-white bg-green-500 hover:bg-green-400 rounded-full transition-colors cursor-pointer"

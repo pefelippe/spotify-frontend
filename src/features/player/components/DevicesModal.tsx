@@ -22,7 +22,7 @@ export const DevicesModal: React.FC<DevicesModalProps> = ({
       onClick={(e) => e.stopPropagation()}
       className="devices-modal absolute bottom-full mb-2 right-0 w-72 bg-[#111] border border-gray-700 rounded-xl shadow-2xl p-2 z-[200]"
     >
-      <div className="absolute -bottom-1 left-[2%] w-2 h-2 bg-[#111] border-l border-b border-gray-700 -rotate-45" />
+      <div className="absolute -bottom-1 left-[49%] w-2 h-2 bg-[#111] border-l border-b border-gray-700 -rotate-45" />
       <div className="px-2 py-1.5 text-xs text-gray-400">Dispositivos disponíveis</div>
       <div className="max-h-60 overflow-y-auto">
         {devices.length === 0 ? (
