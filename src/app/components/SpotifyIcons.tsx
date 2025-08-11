@@ -1,4 +1,4 @@
-import { Play, Pause, SkipForward, SkipBack, Shuffle, Repeat, SpeakerHigh, SpeakerSlash, Heart as HeartPh, ArrowsOutSimple, DeviceMobileSpeaker, PencilSimple, Trash } from 'phosphor-react';
+import { Play, Pause, SkipForward, SkipBack, Shuffle, Repeat, SpeakerHigh, SpeakerSlash, Heart as HeartPh, ArrowsOutSimple, DeviceMobileSpeaker, PencilSimple, Trash, Check } from 'phosphor-react';
 import spotifyLogo from '../assets/spotify-logo.png';
 
 export const SpotifyLogo = ({ className = '', onClick }: { size?: number; className?: string, onClick?: () => void }) => (
@@ -161,4 +161,8 @@ export const PencilIcon = ({ size = 20, className = '' }: { size?: number; class
 
 export const TrashIcon = ({ size = 20, className = '' }: { size?: number; className?: string }) => (
   <Trash size={size} weight="regular" className={className} />
+);
+
+export const CheckIcon = ({ size = 16, className = '' }: { size?: number; className?: string }) => (
+  <Check size={size} weight="bold" className={className} />
 );

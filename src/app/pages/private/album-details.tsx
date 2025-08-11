@@ -88,8 +88,8 @@ const AlbumDetalhes = () => {
               fetchNextPage={fetchNextPage}
               isPlaylist={false}
               contextUri={`spotify:album:${albumId}`}
-              defaultAlbumImageUrl={albumDetails.images?.[0]?.url}
-              defaultAlbumName={albumDetails.name}
+              defaultAlbumImageUrl={albumDetails?.images?.[0]?.url}
+              defaultAlbumName={albumDetails?.name}
             />
           )}
         </div>

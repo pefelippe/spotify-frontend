@@ -1,6 +1,6 @@
 import React from 'react';
 import { CustomButton } from '../../app/components/CustomButton';
-import { PlayIcon } from '../../app/components/SpotifyIcons';
+import { PlayIcon, CheckIcon } from '../../app/components/SpotifyIcons';
 
 interface ArtistHeaderProps {
   imageUrl: string;
@@ -9,9 +9,11 @@ interface ArtistHeaderProps {
   releasesCount?: number;
   genres?: string[];
   onPlay?: () => void;
+  isFollowing?: boolean;
+  onToggleFollow?: () => void;
 }
 
-export const ArtistHeader: React.FC<ArtistHeaderProps> = ({ imageUrl, name, followers, onPlay }) => {
+export const ArtistHeader: React.FC<ArtistHeaderProps> = ({ imageUrl, name, followers, onPlay, isFollowing, onToggleFollow }) => {
   return (
     <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
       <img
@@ -24,15 +26,26 @@ export const ArtistHeader: React.FC<ArtistHeaderProps> = ({ imageUrl, name, foll
         <div className="mb-3">
           {followers ? <p className="text-gray-400 text-sm">{followers.toLocaleString()} seguidores</p> : null}
         </div>
-        {onPlay ? (
-          <CustomButton
-            label="Reproduzir"
-            onClick={onPlay}
-            variant="spotify"
-            customClassName="inline-flex items-center gap-2"
-            icon={<PlayIcon size={18} className="ml-0.5" />}
-          />
-        ) : null}
+        <div className="flex items-center gap-3">
+          {onPlay ? (
+            <CustomButton
+              label="Reproduzir"
+              onClick={onPlay}
+              variant="spotify"
+              customClassName="inline-flex items-center gap-2"
+              icon={<PlayIcon size={18} className="ml-0.5" />}
+            />
+          ) : null}
+          {onToggleFollow ? (
+            <CustomButton
+              label={isFollowing ? 'Seguindo' : '+ Seguir'}
+              onClick={onToggleFollow}
+              variant={isFollowing ? 'pwa' : 'outline'}
+              customClassName={`inline-flex items-center gap-2 ${isFollowing ? 'text-white' : ''}`}
+              icon={isFollowing ? <CheckIcon size={18} className="ml-0.5" /> : undefined}
+            />
+          ) : null}
+        </div>
       </div>
     </div>
   );

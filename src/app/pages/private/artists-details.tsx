@@ -5,6 +5,7 @@ import { TrackList } from '../../components/TrackList';
 import { useArtistDiscography, useArtistCollaborations } from '../../../core/api/hooks/useArtistAlbums';
 import { useArtistDetails } from '../../../core/api/hooks/useArtistDetails';
 import { useArtistTopTracks } from '../../../core/api/hooks/useArtistTopTracks';
+import { useFollowArtist, useIsFollowingArtist, useUnfollowArtist } from '../../../core/api/hooks/useFollowArtist';
 import { usePlayer } from '../../../features/player';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { ArtistHeader } from '../../../features/artists/ArtistHeader';
@@ -30,6 +31,10 @@ const ArtistaDetalhes = () => {
     isLoading: isLoadingArtist,
     error: artistError,
   } = useArtistDetails(artistId!);
+
+  const { data: isFollowing = false } = useIsFollowingArtist(artistId);
+  const followMutation = useFollowArtist();
+  const unfollowMutation = useUnfollowArtist();
 
   const {
     data: topTracksData,
@@ -105,6 +110,17 @@ const ArtistaDetalhes = () => {
           onPlay={() => {
             const contextUri = `spotify:artist:${artistId}`;
             playTrack('', contextUri);
+          }}
+          isFollowing={isFollowing}
+          onToggleFollow={() => {
+            if (!artistId) {
+              return;
+            }
+            if (isFollowing) {
+              unfollowMutation.mutate({ artistId });
+            } else {
+              followMutation.mutate({ artistId });
+            }
           }}
         />
 
