@@ -9,7 +9,8 @@ import { useUserProfile } from '../../../features/user/useUserProfile';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { CustomHomeSection, QuickPlaylists } from '../../components/home';
 import { useArtistDiscography } from '../../../features/artists/useArtistAlbums';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { usePickRandomTopArtist } from './useHomeEffects';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -23,23 +24,7 @@ const Home = () => {
   const topArtists = (topArtistsData?.pages?.[0]?.items || []).slice(0, 6);
   const [randomTopArtist, setRandomTopArtist] = useState<any | null>(null);
 
-  useEffect(() => {
-    if (!topArtists || topArtists.length === 0) {
-      return;
-    }
-    const userId = userProfile?.id || 'anon';
-    const key = `forFans:selectedArtist:${userId}`;
-    const savedId = typeof window !== 'undefined' ? sessionStorage.getItem(key) : null;
-    let picked = savedId ? topArtists.find((a: any) => a.id === savedId) : null;
-    if (!picked) {
-      const idx = Math.floor(Math.random() * topArtists.length);
-      picked = topArtists[idx];
-      try {
-        sessionStorage.setItem(key, picked.id);
-      } catch {}
-    }
-    setRandomTopArtist(picked);
-  }, [topArtists, userProfile?.id]);
+  usePickRandomTopArtist(topArtists, userProfile?.id, setRandomTopArtist);
   
   const { data: discogData } = useArtistDiscography(randomTopArtist?.id || '');
   const discographyItems = useMemo(() => {

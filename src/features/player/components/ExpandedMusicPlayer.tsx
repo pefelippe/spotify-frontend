@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLockBodyScroll } from './useExpandedMusicPlayerEffects';
 import TextMarquee from './TextMarquee';
 import { ProgressBar } from './ProgressBar';
 import { PlayerControls } from './PlayerControls';
@@ -42,13 +43,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
   isCurrentTrackLiked,
   onToggleLike,
 }) => {
-  React.useEffect(() => {
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
-  }, []);
+  useLockBodyScroll();
   return (
     <div
       className={`fixed inset-0 bg-gradient-to-b from-gray-900 via-black to-black z-[100] ${

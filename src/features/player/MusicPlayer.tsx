@@ -1,9 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../../features/player';
 import { useLikedTracks } from '../liked-songs/liked-tracks-provider';
 import { ExpandedMusicPlayer } from './components/ExpandedMusicPlayer';
 import { CompactMusicPlayer } from './components/CompactMusicPlayer';
+import {
+  useCloseDevicesOnOutsideClick,
+  useEnterOnReady,
+  usePlayheadProgress,
+  useRefreshPlaybackOnAppFocus,
+  useSyncCurrentPosition,
+} from './useMusicPlayerEffects';
 
 export const MusicPlayer = () => {
   const navigate = useNavigate();
@@ -46,69 +53,16 @@ export const MusicPlayer = () => {
   const [isClosing, setIsClosing] = useState(false);
   const [isEntering, setIsEntering] = useState(false);
 
-  useEffect(() => {
-    if (!isDragging && !isSeeking) {
-      setCurrentPosition(position);
-    }
-  }, [position, isDragging, isSeeking]);
+  useSyncCurrentPosition(position, isDragging, isSeeking, setCurrentPosition);
 
-  useEffect(() => {
-    if (!isPlaying || isSeeking) {
-      return;
-    }
+  usePlayheadProgress(isPlaying, duration, isDragging, isSeeking, setCurrentPosition);
 
-    const interval = setInterval(() => {
-      if (!isDragging) {
-        setCurrentPosition(prev => Math.min(prev + 1000, duration));
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [isPlaying, duration, isDragging, isSeeking]);
-
-  useEffect(() => {
-    if (isReady) {
-      setTimeout(() => setIsEntering(true), 0);
-    }
-  }, [isReady]);
+  useEnterOnReady(isReady, setIsEntering);
 
   // Ensure we surface player UI when remote playback starts by forcing a refresh on focus/visibility
-  useEffect(() => {
-    const onFocus = () => {
-      refreshPlayback();
-    };
-    const onVisibility = () => {
-      if (!document.hidden) {
-        refreshPlayback();
-      }
-    };
-    window.addEventListener('focus', onFocus);
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => {
-      window.removeEventListener('focus', onFocus);
-      document.removeEventListener('visibilitychange', onVisibility);
-    };
-  }, [refreshPlayback]);
+  useRefreshPlaybackOnAppFocus(refreshPlayback);
 
-  useEffect(() => {
-    const handleGlobalClick = (e: MouseEvent) => {
-      if (showDevices) {
-        const triggers = Array.from(document.querySelectorAll('[data-device-trigger]'));
-        const devicesModal = document.querySelector('.devices-modal');
-        const target = e.target as Node;
-        const clickedInsideAnyTrigger = triggers.some((el) => el.contains(target));
-        const clickedInsideModal = !!devicesModal && devicesModal.contains(target);
-        if (!clickedInsideAnyTrigger && !clickedInsideModal) {
-          setShowDevices(false);
-        }
-      }
-    };
-
-    document.addEventListener('click', handleGlobalClick);
-    return () => {
-      document.removeEventListener('click', handleGlobalClick);
-    };
-  }, [showDevices]);
+  useCloseDevicesOnOutsideClick(showDevices, setShowDevices);
 
   const handleArtistClick = (artistId: string) => {
     navigate(`/artist/${artistId}`);
