@@ -35,7 +35,7 @@ export const DefaultPage = ({ title, subtitle, children, className, isLoading, e
     }
 
     return (
-        <div className={`min-h-[90vh] lg:min-h-screen bg-[#090707] w-full p-6 px-4 overflow-hidden ${className} min-w-[400px] animate-slide-in-left max-lg:mb-32`} {...swipeHandlers}>
+        <div className={`min-h-[90vh] lg:min-h-screen bg-[#090707] w-full p-6 lg:p-12 px-4 overflow-hidden ${className} min-w-[400px] animate-slide-in-left max-lg:mb-32`} {...swipeHandlers}>
             {hasBackButton && <BackButton artistName={title || 'Voltar'} />}
             {title && subtitle && <PageHeader title={title} subtitle={subtitle} />}
             {children}

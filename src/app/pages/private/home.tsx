@@ -10,8 +10,10 @@ import { DefaultPage } from '../../layout/DefaultPage';
 import { UserAvatar } from '../../components/UserAvatar';
 import { CustomHomeSection, QuickPlaylists } from '../../components/home';
 import { useArtistDiscography } from '../../../features/artists/useArtistAlbums';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { usePickRandomTopArtist } from './useHomeEffects';
+import { useAuth } from '../../../core/auth';
+import { fetchSearch } from '../../../core/api/queries/search';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const Home = () => {
   const { playTrack, isReady, deviceId } = usePlayer();
   const { data: recentlyPlayedData, isLoading: isLoadingRecentlyPlayed } = useRecentlyPlayed();
   const { data: userProfile } = useUserProfile();
+  const { accessToken } = useAuth();
 
   const { data: topArtistsData } = useTopArtists();
   const topArtists = (topArtistsData?.pages?.[0]?.items || []).slice(0, 6);
@@ -76,11 +79,160 @@ const Home = () => {
   const hasContent = recentlyPlayedTracks.length > 0 || userPlaylists.length > 0 || topArtists.length > 0 || likedSongsCount > 0;
   const isLoading = isLoadingLikedSongs || isLoadingRecentlyPlayed;
 
+  // Inline search preview state
+  const [searchText, setSearchText] = useState('');
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewTracks, setPreviewTracks] = useState<any[]>([]);
+  const [previewAlbums, setPreviewAlbums] = useState<any[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      window.clearTimeout(searchTimeoutRef.current);
+      searchTimeoutRef.current = null;
+    }
+    const q = searchText.trim();
+    if (!q) {
+      setPreviewTracks([]);
+      setPreviewAlbums([]);
+      return;
+    }
+    searchTimeoutRef.current = window.setTimeout(async () => {
+      if (!accessToken) return;
+      setIsSearching(true);
+      try {
+        const res = await fetchSearch(q, accessToken, ['track', 'album'], 5, 0);
+        setPreviewTracks(res.tracks?.items || []);
+        setPreviewAlbums(res.albums?.items || []);
+      } catch {
+        // ignore
+      } finally {
+        setIsSearching(false);
+      }
+    }, 300);
+    return () => {
+      if (searchTimeoutRef.current) {
+        window.clearTimeout(searchTimeoutRef.current);
+        searchTimeoutRef.current = null;
+      }
+    };
+  }, [searchText, accessToken]);
+
   return (
     <DefaultPage
       className="mb-24"
     >
       <div className="space-y-10">
+        {/* Search on Home with inline preview */}
+        <div className="w-full">
+          <div className="relative">
+            <input
+              type="search"
+              placeholder="Buscar músicas e álbuns"
+              className="w-full bg-transparent border-2 border-gray-700 focus:border-white transition-colors rounded-xl px-4 py-2 text-white placeholder-gray-500 outline-none"
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.currentTarget.value);
+                setShowPreview(true);
+              }}
+              onFocus={() => setShowPreview(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const value = searchText.trim();
+                  if (value) {
+                    navigate(`/search?q=${encodeURIComponent(value)}`);
+                    setShowPreview(false);
+                  }
+                }
+                if (e.key === 'Escape') {
+                  setShowPreview(false);
+                }
+              }}
+              onBlur={() => {
+                // Let clicks inside the preview register before closing
+                setTimeout(() => setShowPreview(false), 120);
+              }}
+            />
+
+            {showPreview && (previewTracks.length > 0 || previewAlbums.length > 0 || isSearching) && (
+              <div className="absolute z-20 mt-2 w-full rounded-xl border border-gray-800 bg-black/90 backdrop-blur-sm shadow-xl overflow-hidden">
+                <div className="max-h-96 overflow-y-auto divide-y divide-gray-800">
+                  {/* Tracks */}
+                  <div className="py-2">
+                    <div className="px-3 text-xs uppercase tracking-wide text-gray-400 mb-2">Músicas</div>
+                    {isSearching && previewTracks.length === 0 ? (
+                      <div className="px-3 py-2 text-gray-500 text-sm">Buscando...</div>
+                    ) : previewTracks.length === 0 ? (
+                      <div className="px-3 py-2 text-gray-500 text-sm">Sem resultados</div>
+                    ) : (
+                      previewTracks.map((t: any) => (
+                        <button
+                          key={t.id}
+                          className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left cursor-pointer"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => {
+                            const trackUri = t.uri || `spotify:track:${t.id}`;
+                            handlePlayItem(trackUri);
+                            setShowPreview(false);
+                          }}
+                        >
+                          <img src={t.album?.images?.[0]?.url || 'https://via.placeholder.com/40x40/333/fff?text=♪'} alt={t.name} className="w-10 h-10 rounded object-cover" />
+                          <div className="min-w-0 flex-1">
+                            <div className="text-white text-sm truncate">{t.name}</div>
+                            <div className="text-gray-400 text-xs truncate">{(t.artists || []).map((a: any) => a.name).join(', ')}</div>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+
+                  {/* Albums */}
+                  <div className="py-2">
+                    <div className="px-3 text-xs uppercase tracking-wide text-gray-400 mb-2">Álbuns</div>
+                    {isSearching && previewAlbums.length === 0 ? (
+                      <div className="px-3 py-2 text-gray-500 text-sm">Buscando...</div>
+                    ) : previewAlbums.length === 0 ? (
+                      <div className="px-3 py-2 text-gray-500 text-sm">Sem resultados</div>
+                    ) : (
+                      previewAlbums.map((a: any) => (
+                        <button
+                          key={a.id}
+                          className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left cursor-pointer"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => {
+                            navigate(`/album/${a.id}`);
+                            setShowPreview(false);
+                          }}
+                        >
+                          <img src={a.images?.[0]?.url || 'https://via.placeholder.com/40x40/333/fff?text=♪'} alt={a.name} className="w-10 h-10 rounded object-cover" />
+                          <div className="min-w-0 flex-1">
+                            <div className="text-white text-sm truncate">{a.name}</div>
+                            <div className="text-gray-400 text-xs truncate">{(a.artists || []).map((ar: any) => ar.name).join(', ')}</div>
+                          </div>
+                        </button>
+                      ))
+                    )}
+                  </div>
+
+                  {/* See all */}
+                  {searchText.trim() && (
+                    <button
+                      className="w-full px-3 py-3 text-sm text-white hover:bg-white/5 cursor-pointer"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => {
+                        navigate(`/search?q=${encodeURIComponent(searchText.trim())}`);
+                        setShowPreview(false);
+                      }}
+                    >
+                      Ver todos os resultados para "{searchText.trim()}"
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
         {/* Welcome Banner */}
         {userProfile && (
           <div className="w-full rounded-2xl bg-[rgb(30,30,30)] p-4 md:p-6 flex items-center gap-4 md:gap-6">
