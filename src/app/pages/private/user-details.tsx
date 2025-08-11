@@ -47,7 +47,7 @@ const UserDetails = () => {
     />
   );
 
-  
+
 
   if (isLoadingProfile || profileError) {
     return (

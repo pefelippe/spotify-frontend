@@ -19,7 +19,7 @@ export const Login = () => {
           variant="spotify"
           label="Entrar"
           size="custom"
-          />
+        />
       </div>
     </DefaultPage>
   );

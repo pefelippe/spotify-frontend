@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { PageHeader } from '../../layout/PageHeader';
+import { CustomButton } from '../../components/CustomButton';
 import { PlusIcon } from '../../components/SpotifyIcons';
 import { usePlayer } from '../../../features/player';
 import PlaylistItem from '../../../features/playlist/PlaylistItem';
@@ -84,16 +85,13 @@ const Playlists = () => {
           title="Minhas Playlists"
           subtitle="Sua coleção pessoal de playlists"
         >
-          <button
-            onClick={() => {
-              console.log('Create playlist button clicked - test');
-              handleCreatePlaylist();
-            }}
-            className="flex items-center space-x-2 bg-green-500 text-black px-4 py-2 rounded-full hover:bg-green-400 transition-colors font-semibold"
-          >
-            <PlusIcon size={16} />
-            <span>Criar Playlist</span>
-          </button>
+          <CustomButton
+            label="Criar Playlist"
+            onClick={handleCreatePlaylist}
+            variant="spotify"
+            customClassName="justify-center gap-2"
+            icon={<PlusIcon size={16} />}
+          />
         </PageHeader>
 
 

@@ -29,7 +29,7 @@ export const CustomButton = ({
     sm: 'px-4 py-2 text-sm h-8',
     md: 'px-6 py-3 text-base h-10',
     lg: 'px-8 py-4 text-lg h-12',
-    custom: ""
+    custom: '',
   };
 
   const variantClasses = {

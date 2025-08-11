@@ -14,9 +14,10 @@ interface QuickPlaylistItem {
 
 interface QuickPlaylistsProps {
   items: QuickPlaylistItem[];
+  variant?: 'default' | 'inCard';
 }
 
-export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
+export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items, variant = 'default' }) => {
   const { isReady, deviceId, isPlaying, playTrack, pauseTrack } = usePlayer();
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -35,6 +36,10 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
     setActiveId(playlistIdOrLiked);
   };
 
+  const itemBg = variant === 'inCard'
+    ? 'bg-white/10 hover:bg-white/20'
+    : 'bg-[rgb(30,30,30)]/60 hover:bg-[rgb(45,45,45)]/70';
+
   return (
     <section className="w-full">
       {/* Mobile/Tablet: horizontal scroll list */}
@@ -43,7 +48,7 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
           {items.map((pl) => (
             <div key={pl.id} className="min-w-[260px]">
               <div
-                className="flex items-center gap-3 rounded-xl p-3 bg-[rgb(30,30,30)]/60 hover:bg-[rgb(45,45,45)]/70 transition-colors cursor-pointer"
+                className={`flex items-center gap-3 rounded-xl p-3 ${itemBg} transition-colors cursor-pointer`}
                 onClick={pl.onClick}
               >
                 <div className="relative">
@@ -82,7 +87,7 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
         {items.map((pl) => (
           <div key={pl.id} className="group">
             <div
-              className="flex items-center gap-3 rounded-xl p-3 bg-[rgb(30,30,30)]/60 hover:bg-[rgb(45,45,45)]/70 transition-colors cursor-pointer"
+              className={`flex items-center gap-3 rounded-xl p-3 ${itemBg} transition-colors cursor-pointer`}
               onClick={pl.onClick}
             >
               <div className="relative">

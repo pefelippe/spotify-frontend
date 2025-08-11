@@ -54,8 +54,8 @@ export const AddToPlaylistModal: React.FC<AddToPlaylistModalProps> = ({
       setIsAdding(true);
       await Promise.allSettled(
         selectedIds.map((playlistId) =>
-          addTrackMutation.mutateAsync({ playlistId, trackUri })
-        )
+          addTrackMutation.mutateAsync({ playlistId, trackUri }),
+        ),
       );
       setSelectedPlaylists({});
       onClose();

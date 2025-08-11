@@ -16,7 +16,7 @@ export const Callback = () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
-        
+
         if (code) {
           await authenticate(code);
           navigate('/');

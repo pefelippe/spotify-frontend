@@ -24,7 +24,7 @@ export const DefaultPage = ({ title, subtitle, children, className, isLoading, e
         () => navigate(-1),
         {
             ignoreFromSelector: 'button, a, input, textarea, [role="button"], [data-swipe-ignore], .overflow-x-auto',
-        }
+        },
     );
     if (isLoading) {
         return <PageWithQueryState isLoading={isLoading} error={error} loadingMessage={loadingMessage} errorMessage={errorMessage} />;

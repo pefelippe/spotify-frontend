@@ -1,4 +1,3 @@
-import { formatYear } from '../../utils/formatYear';
 import { formatAlbumType } from '../../utils/formatAlbumType';
 
 interface ArtistAlbumProps {
@@ -14,7 +13,7 @@ interface ArtistAlbumProps {
 const defaultImage = 'https://via.placeholder.com/300x300/1DB954/FFFFFF?text=Album';
 
 export const ArtistAlbum = ({ name, imageUrl, releaseDate, albumType, onClick, onPlay, albumId }: ArtistAlbumProps) => {
-  
+
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -58,7 +57,7 @@ export const ArtistAlbum = ({ name, imageUrl, releaseDate, albumType, onClick, o
           {name}
         </h4>
         <p className="text-gray-400 text-xs">
-          {formatYear(releaseDate)} • {formatAlbumType(albumType)}
+          {new Date(releaseDate).getFullYear()} • {formatAlbumType(albumType)}
         </p>
       </div>
     </div>

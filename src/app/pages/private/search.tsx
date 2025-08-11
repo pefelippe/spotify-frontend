@@ -21,12 +21,29 @@ const SearchPage = () => {
   const [error, setError] = useState<unknown>(null);
   const [tracks, setTracks] = useState<any[]>([]);
   const [albums, setAlbums] = useState<any[]>([]);
+  const [artists, setArtists] = useState<any[]>([]);
+  const [users, setUsers] = useState<Array<{ id: string; display_name: string }>>([]);
   const [localInput, setLocalInput] = useState('');
   const searchDebounceRef = useRef<number | null>(null);
+
+  const saveRecentSearch = (value: string) => {
+    const v = (value || '').trim();
+    if (!v) return;
+    try {
+      const raw = localStorage.getItem('recent_searches');
+      const arr = raw ? JSON.parse(raw) : [];
+      const base: string[] = Array.isArray(arr) ? arr.filter((s) => typeof s === 'string') : [];
+      const next = [v, ...base.filter((x) => x.toLowerCase() !== v.toLowerCase())].slice(0, 10);
+      localStorage.setItem('recent_searches', JSON.stringify(next));
+    } catch {}
+  };
 
   useEffect(() => {
     setQ(qp);
     setLocalInput(qp);
+    if (qp && qp.trim()) {
+      saveRecentSearch(qp);
+    }
   }, [qp]);
 
   useEffect(() => {
@@ -39,9 +56,20 @@ const SearchPage = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const data = await fetchSearch(q, accessToken, ['track', 'album'], 20, 0);
+        const data = await fetchSearch(q, accessToken, ['track', 'album', 'artist', 'playlist'], 20, 0);
         setTracks(data.tracks?.items || []);
         setAlbums(data.albums?.items || []);
+        setArtists(data.artists?.items || []);
+        const owners: Record<string, string> = {};
+        const playlists = data.playlists?.items || [];
+        for (const p of playlists) {
+          const ownerId = p?.owner?.id;
+          const ownerName = p?.owner?.display_name;
+          if (ownerId && ownerName && !owners[ownerId]) {
+            owners[ownerId] = ownerName;
+          }
+        }
+        setUsers(Object.entries(owners).map(([id, display_name]) => ({ id, display_name })));
       } catch (e) {
         setError(e);
       } finally {
@@ -76,6 +104,9 @@ const SearchPage = () => {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   const next = localInput.trim();
+                  if (next) {
+                    saveRecentSearch(next);
+                  }
                   navigate(`/search?q=${encodeURIComponent(next)}`);
                   if (searchDebounceRef.current) {
                     window.clearTimeout(searchDebounceRef.current);
@@ -135,6 +166,33 @@ const SearchPage = () => {
                   playback: { contextUri: a.uri },
                 }))}
                 onClickData={(albumId) => navigate(`/album/${albumId}`)}
+                hasShowMore={false}
+              />
+            )}
+
+            {artists.length > 0 && (
+              <CustomHomeSection
+                title="Artistas"
+                data={artists.map((a: any) => ({
+                  id: a.id,
+                  title: a.name,
+                  imageSrc: a.images?.[0]?.url || 'https://via.placeholder.com/200x200/333/fff?text=♪',
+                  playback: { contextUri: a.uri },
+                }))}
+                onClickData={(artistId) => navigate(`/artist/${artistId}`)}
+                hasShowMore={false}
+              />
+            )}
+
+            {users.length > 0 && (
+              <CustomHomeSection
+                title="Usuários"
+                data={users.map((u) => ({
+                  id: u.id,
+                  title: u.display_name,
+                  imageSrc: 'https://via.placeholder.com/200x200/333/fff?text=👤',
+                }))}
+                onClickData={(userId) => navigate(`/user/${userId}`)}
                 hasShowMore={false}
               />
             )}

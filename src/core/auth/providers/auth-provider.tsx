@@ -28,7 +28,7 @@ const REQUIRED_SCOPES = [
   'user-follow-modify',
   'user-top-read',
   'streaming',
-  'app-remote-control'
+  'app-remote-control',
 ];
 
 export const AuthContext = createContext<AuthContextData | undefined>(undefined);
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAccessToken(null);
     setTokenScopes(null);
     spotifyClient.clearToken();
-    spotifyClient.clearOnUnauthorized(); 
+    spotifyClient.clearOnUnauthorized();
     navigate('/login');
   }, [navigate]);
 
@@ -99,11 +99,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const authenticate = async (code: string) => {
     try {
       const callbackUrl = buildApiUrl(`auth/callback?code=${code}`);
-    
+
       const response = await axios.get(callbackUrl);
       const token = response.data.data.access_token;
       const scopes = response.data.data.scope;
-      
+
       sessionStorage.setItem('spotify_token', token);
       sessionStorage.setItem('spotify_token_scopes', scopes);
       setAccessToken(token);
@@ -118,12 +118,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ 
-        isAuthenticated: isProperlyAuthenticated, 
-        accessToken, 
-        authenticate, 
+      value={{
+        isAuthenticated: isProperlyAuthenticated,
+        accessToken,
+        authenticate,
         logout,
-        tokenScopes 
+        tokenScopes,
       }}
     >
       {children}

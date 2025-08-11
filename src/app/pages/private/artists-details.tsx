@@ -11,6 +11,8 @@ import { useArtistDetails } from '../../../features/artists/useArtistDetails';
 import { useArtistTopTracks } from '../../../features/artists/useArtistTopTracks';
 import { usePlayer } from '../../../features/player';
 import { DefaultPage } from '../../layout/DefaultPage';
+import { ArtistHeader } from '../../components/artist/ArtistHeader';
+import { DiscographyFilter, DiscographyFilterTabs } from '../../components/artist/DiscographyFilterTabs';
 
 type DiscographyFilter = 'populares' | 'albuns' | 'singles' | 'eps';
 
@@ -169,39 +171,13 @@ const ArtistaDetalhes = () => {
       hasBackButton
     >
       <div className="space-y-8">
-        {/* Artist Info */}
-        <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
-          <img
-            src={artistDetails?.images?.[0]?.url || allDiscography[0]?.images?.[0]?.url || ''}
-            alt={artistName}
-            className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
-          />
-          <div className="flex-1 text-left">
-            <h2 className="text-2xl md:text-3xl font-bold text-white-text mb-2">{artistName}</h2>
-            <div className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4 mb-3">
-              {artistDetails?.followers?.total && (
-                <p className="text-gray-400 text-sm">
-                  {artistDetails.followers.total.toLocaleString()} seguidores
-                </p>
-              )}
-              <p className="text-gray-400 text-sm">{allDiscography.length} lançamentos</p>
-            </div>
-
-            {/* Genres as tags */}
-            {artistDetails?.genres && artistDetails.genres.length > 0 && (
-              <div className="flex flex-wrap gap-2 justify-start">
-                {artistDetails.genres.slice(0, 4).map((genre: string, index: number) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gray-800 text-gray-300 text-sm rounded-full border border-gray-700"
-                  >
-                    {genre}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <ArtistHeader
+          imageUrl={artistDetails?.images?.[0]?.url || allDiscography[0]?.images?.[0]?.url || ''}
+          name={artistName}
+          followers={artistDetails?.followers?.total}
+          releasesCount={allDiscography.length}
+          genres={artistDetails?.genres}
+        />
 
         {/* Popular Tracks */}
         {topTracks.length > 0 && (
@@ -222,27 +198,7 @@ const ArtistaDetalhes = () => {
           <div className="mb-8 md:mb-12">
             <h3 className="text-xl md:text-2xl font-semibold text-white-text mb-4 md:mb-6">Discografia</h3>
 
-            {/* Filter Tabs */}
-            <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-gray-800 p-1 rounded-lg w-fit mx-0">
-              {[
-                { key: 'populares', label: 'Populares' },
-                { key: 'albuns', label: 'Álbuns' },
-                { key: 'singles', label: 'Singles' },
-                { key: 'eps', label: 'EPs' },
-              ].map((filter) => (
-                <button
-                  key={filter.key}
-                  onClick={() => setDiscographyFilter(filter.key as DiscographyFilter)}
-                  className={`px-3 md:px-4 py-2 rounded-md text-xs md:text-sm font-medium transition-colors cursor-pointer ${
-                    discographyFilter === filter.key
-                      ? 'bg-white text-black'
-                      : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              ))}
-            </div>
+            <DiscographyFilterTabs value={discographyFilter} onChange={(v) => setDiscographyFilter(v)} />
 
             <InfiniteScrollList
               items={filteredDiscography}

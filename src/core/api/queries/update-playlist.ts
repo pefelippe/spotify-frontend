@@ -3,7 +3,7 @@ import axios from 'axios';
 export const updatePlaylistDetails = async (
   playlistId: string,
   accessToken: string,
-  payload: { name?: string; description?: string; public?: boolean }
+  payload: { name?: string; description?: string; public?: boolean },
 ) => {
   try {
     const response = await axios.put(
@@ -14,7 +14,7 @@ export const updatePlaylistDetails = async (
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
-      }
+      },
     );
     return response.data;
   } catch (error: any) {

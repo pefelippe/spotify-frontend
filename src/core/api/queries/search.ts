@@ -4,7 +4,7 @@ import type { SpotifySearchResponse } from '../../api/types/spotify';
 export const fetchSearch = async (
   q: string,
   accessToken: string,
-  types: Array<'track' | 'album'> = ['track', 'album'],
+  types: Array<'track' | 'album' | 'artist' | 'playlist'> = ['track', 'album'],
   limit = 20,
   offset = 0,
 ): Promise<SpotifySearchResponse> => {

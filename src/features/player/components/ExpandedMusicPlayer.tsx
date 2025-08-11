@@ -65,7 +65,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
         data-swipe-ignore
         {...swipeHandlers}
       >
-        
+
         {/* Header: 10vh */}
         <div className="h-[10vh] relative flex items-center justify-center px-4">
           <div className="text-center max-w-[80vw] lg:max-w-[50vw]">
@@ -99,7 +99,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
             </div>
           </div>
 
-    
+
           <div className="flex flex-col justify-center items-start w-full lg:flex-1 lg:py-2 lg:py-0 px-4 lg:px-8 max-w-none lg:max-w-2xl text-center">
             <div className="mb-3 lg:mb-4 w-full">
               <div className="flex items-start gap-2 lg:gap-3 justify-between lg:justify-center text-left  w-full">

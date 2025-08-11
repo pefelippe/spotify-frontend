@@ -11,13 +11,13 @@ export const ArtistItem = ({ name, imageUrl, onClick, size = 'md' }: ArtistItemP
   const sizeClasses = {
     sm: 'w-12 h-12',
     md: 'w-16 h-16',
-    lg: 'w-20 h-20'
+    lg: 'w-20 h-20',
   };
 
   const textSizeClasses = {
     sm: 'text-sm',
     md: 'text-base',
-    lg: 'text-lg'
+    lg: 'text-lg',
   };
 
   return (
@@ -36,7 +36,7 @@ export const ArtistItem = ({ name, imageUrl, onClick, size = 'md' }: ArtistItemP
           }}
         />
       </div>
-      
+
       {/* Artist Name */}
       <div className="flex-1 min-w-0">
         <h3 className={`text-white font-semibold ${textSizeClasses[size]} truncate`}>
@@ -47,4 +47,4 @@ export const ArtistItem = ({ name, imageUrl, onClick, size = 'md' }: ArtistItemP
   );
 };
 
-export default ArtistItem; 
+export default ArtistItem;

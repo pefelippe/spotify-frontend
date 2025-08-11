@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { QueryState } from '../../components/QueryState';
 import { TrackList } from '../../../features/tracks/TrackList';
-import { UserAvatar } from '../../components/UserAvatar';
 import { useLikedSongs } from '../../../features/liked-songs/useLikedSongs';
 import { useUserProfile } from '../../../features/user/useUserProfile';
 import { usePlayer } from '../../../features/player';
-import { HeartIcon, PlayIcon } from '../../components/SpotifyIcons';
+import { PlayIcon } from '../../components/SpotifyIcons';
 import { formatTotalDurationFromPages } from '../../../utils/formatTotalDuration';
+import { LikedSongsHeader } from '../../components/user/LikedSongsHeader';
 
 const LikedSongs = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const LikedSongs = () => {
     navigate(`/user/${userId}`);
   };
 
-  
+
 
   if (isLoadingLikedSongs || likedSongsError) {
     return (
@@ -57,43 +57,12 @@ const LikedSongs = () => {
       hasBackButton
     >
       <div className="space-y-8">
-        {/* Liked Songs Header */}
-        <div className="flex flex-col md:flex-row items-center md:items-end space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
-          <div className="w-32 h-32 md:w-48 md:h-48 bg-gradient-to-br from-purple-600 to-blue-500 rounded-lg shadow-2xl flex items-center justify-center">
-            <HeartIcon size={64} className="text-white" filled />
-          </div>
-          <div className="flex-1 text-center md:text-left">
-            <p className="text-gray-400 text-sm font-medium uppercase tracking-wide mb-2">
-              Playlist
-            </p>
-            <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white-text mb-4">
-              Músicas Curtidas
-            </h1>
-            <div className="flex flex-wrap items-center justify-center md:justify-start text-gray-400 text-sm space-x-1">
-              <div className="flex items-center space-x-2">
-                <UserAvatar
-                  userId={userProfile?.id || ''}
-                  displayName={userProfile?.display_name || ''}
-                  size="md"
-                />
-                <span
-                  className="font-medium text-white-text hover:underline cursor-pointer hover:text-green-500"
-                  onClick={() => handleUserClick(userProfile?.id || '')}
-                >
-                  {userProfile?.display_name || 'Você'}
-                </span>
-              </div>
-              <span>•</span>
-              <span>{likedSongsCount} músicas</span>
-              {likedSongsData && (
-                <>
-                  <span>•</span>
-                  <span>{formatTotalDurationFromPages(likedSongsData, (item: any) => item.track?.duration_ms)}</span>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+        <LikedSongsHeader
+          user={userProfile}
+          likedSongsCount={likedSongsCount}
+          totalDurationText={likedSongsData ? formatTotalDurationFromPages(likedSongsData, (item: any) => item.track?.duration_ms) : undefined}
+          onClickUser={handleUserClick}
+        />
 
         {/* Play Button */}
         {likedSongsCount > 0 && (
