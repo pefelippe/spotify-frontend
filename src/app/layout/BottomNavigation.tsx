@@ -4,7 +4,7 @@ import { usePWA } from '../../core/pwa';
 import { SidebarItems } from '../components/Sidebar';
 
 export const BottomNavigation = () => {
-  const { installApp, isInstallable } = usePWA();
+  const { installApp, isInstallable, isInstalled } = usePWA();
 
   const handleInstallClick = async () => {
     console.log('[PWA] Install button clicked (BottomNavigation). isInstallable:', isInstallable);
@@ -28,20 +28,22 @@ export const BottomNavigation = () => {
             <span className="text-xs text-gray-400  font-medium">{item.name}</span>
           </div>
         ))}
-        <div className="flex flex-col items-center ">
-          <button
-            onClick={handleInstallClick}
-            className={`flex flex-col items-center justify-center p-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
-              !isInstallable
-                ? 'text-gray-600'
-                : 'text-gray-400 hover:text-white-text hover:bg-gray-800/40'
-            }`}
-            aria-label="Instalar PWA"
-          >
-            <DownloadIcon size={20} />
-          </button>
-          <span className="text-xs text-gray-400 font-medium">PWA</span>
-        </div>
+        {!isInstalled && (
+          <div className="flex flex-col items-center ">
+            <button
+              onClick={handleInstallClick}
+              className={`flex flex-col items-center justify-center p-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
+                !isInstallable
+                  ? 'text-gray-600'
+                  : 'text-gray-400 hover:text-white-text hover:bg-gray-800/40'
+              }`}
+              aria-label="Instalar PWA"
+            >
+              <DownloadIcon size={20} />
+            </button>
+            <span className="text-xs text-gray-400 font-medium">PWA</span>
+          </div>
+        )}
       </div>
     </div>
   );

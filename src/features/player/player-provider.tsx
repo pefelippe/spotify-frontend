@@ -24,6 +24,29 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     repeatModeRef.current = repeatMode;
   }, [repeatMode]);
 
+  // Store a minimal snapshot of the track needed to render the player UI on refresh
+  const minifyTrack = (track: any) => {
+    try {
+      return {
+        id: track?.id,
+        name: track?.name,
+        duration_ms: track?.duration_ms,
+        album: track?.album
+          ? {
+              id: track.album.id,
+              name: track.album.name,
+              images: Array.isArray(track.album.images) ? track.album.images : [],
+            }
+          : undefined,
+        artists: Array.isArray(track?.artists)
+          ? track.artists.map((a: any) => ({ id: a.id, name: a.name }))
+          : [],
+      };
+    } catch {
+      return track;
+    }
+  };
+
   useEffect(() => {
     if (!accessToken) {
       return;
@@ -70,6 +93,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         setCurrentTrack(state.track_window.current_track);
         setPosition(state.position);
         setDuration(state.track_window.current_track.duration_ms);
+
+        // Persist snapshot to localStorage to restore player UI on refresh
+        try {
+          localStorage.setItem('last_played_track', JSON.stringify(minifyTrack(state.track_window.current_track)));
+        } catch {}
 
 
         setIsPlaying(!state.paused);
@@ -131,6 +159,41 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       if (currentTrack) {
         return;
       }
+
+      // Try to hydrate from localStorage snapshot
+      try {
+        const raw = localStorage.getItem('last_played_track');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.id) {
+            setCurrentTrack(parsed as any);
+            setDuration(parsed.duration_ms || 0);
+            setPosition(0);
+            setIsPlaying(false);
+            return;
+          }
+        }
+      } catch {}
+
+      // Fallback: fetch user's recently played track (no autoplay)
+      try {
+        const res = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=1', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const item = data?.items?.[0]?.track;
+          if (item && item.id) {
+            setCurrentTrack(item as any);
+            setDuration(item.duration_ms || 0);
+            setPosition(0);
+            setIsPlaying(false);
+            try {
+              localStorage.setItem('last_played_track', JSON.stringify(minifyTrack(item)));
+            } catch {}
+          }
+        }
+      } catch {}
     };
 
     prefillLastPlayed();
@@ -156,6 +219,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         if (playback.item) {
           setCurrentTrack(playback.item);
           setDuration(playback.item.duration_ms || 0);
+          try {
+            localStorage.setItem('last_played_track', JSON.stringify(minifyTrack(playback.item)));
+          } catch {}
         }
         setPosition(playback.progress_ms || 0);
         if (playback.device) {
@@ -342,6 +408,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           setPosition(trackData.progress_ms || 0);
           setDuration(trackData.item.duration_ms || 0);
           setIsPlaying(true);
+          try {
+            localStorage.setItem('last_played_track', JSON.stringify(minifyTrack(trackData.item)));
+          } catch {}
         }
       }
 

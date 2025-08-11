@@ -43,15 +43,17 @@ export const Sidebar = () => {
         </nav>
       </div>
 
-      <div className="p-6 border-t border-gray-800/30">
-        <CustomButton
-          label="Instalar PWA"
-          icon={<DownloadIcon size={18} />}
-          onClick={handleInstallClick}
-          variant="pwa"
-          className="w-full justify-start"
-        />
-      </div>
+      {!isInstalled && (
+        <div className="p-6 border-t border-gray-800/30">
+          <CustomButton
+            label="Instalar PWA"
+            icon={<DownloadIcon size={18} />}
+            onClick={handleInstallClick}
+            variant="pwa"
+            className="w-full justify-start"
+          />
+        </div>
+      )}
     </div>
   );
 };

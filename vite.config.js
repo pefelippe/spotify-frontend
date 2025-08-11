@@ -21,6 +21,21 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         runtimeCaching: [
           {
+            urlPattern: /^https:\/\/api\.spotify\.com\/v1\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'spotify-api',
+              networkTimeoutSeconds: 3,
+              expiration: {
+                maxEntries: 200,
+                maxAgeSeconds: 60 * 60 * 24, // 1 day
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
             urlPattern: /^https:\/\/i\.scdn\.co\/.*/i,
             handler: 'CacheFirst',
             options: {
@@ -76,7 +91,7 @@ export default defineConfig({
   ],
   server: {
     host: true,
-    allowedHosts: ['all', 'd35f04a2c751.ngrok-free.app'],
+    allowedHosts: ['all', '31846c667d2e.ngrok-free.app'],
   },
   preview: {
     host: true,

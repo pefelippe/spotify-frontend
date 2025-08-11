@@ -109,7 +109,7 @@ export const SearchInput: React.FC = () => {
                         <div className="text-gray-400 text-xs truncate">{(t.artists || []).map((a: any) => a.name).join(', ')}</div>
                       </div>
                       <button
-                        className="ml-auto bg-green-500 text-black rounded-full p-2 shadow"
+                        className="ml-auto bg-green-500 text-black rounded-full w-9 h-9 flex items-center justify-center leading-none shadow"
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => {
                           if (!isReady || !deviceId) return;
@@ -118,7 +118,7 @@ export const SearchInput: React.FC = () => {
                         }}
                         aria-label="Reproduzir"
                       >
-                        ▶
+                        <span className="text-lg">▶</span>
                       </button>
                     </div>
                   ))}

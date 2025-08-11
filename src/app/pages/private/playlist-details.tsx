@@ -18,7 +18,7 @@ import { usePlayer } from '../../../features/player';
 const PlaylistDetalhes = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
-  usePlayer();
+  const { playTrack, isReady, deviceId } = usePlayer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editName, setEditName] = useState('');
@@ -121,7 +121,11 @@ const PlaylistDetalhes = () => {
               return;
             }
             const contextUri = `spotify:playlist:${playlistId}`;
-            usePlayer().playTrack('', contextUri);
+            // Optional readiness check; playTrack also guards internally
+            if (!isReady || !deviceId) {
+              return;
+            }
+            playTrack('', contextUri);
           }}
         />
 
