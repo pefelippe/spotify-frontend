@@ -8,6 +8,11 @@ Interface web inspirada no Spotify, construída com React + Vite + TailwindCSS e
 
 https://spotify-frontend-zeta-blue.vercel.app/login
 
+
+## Sonar
+
+https://sonarcloud.io/project/overview?id=pefelippe_spotify-frontend
+
 ## Funcionalidades
 
 - Autenticação via Spotify (OAuth) com fluxo de callback
