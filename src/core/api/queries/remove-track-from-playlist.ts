@@ -6,8 +6,6 @@ export const removeTrackFromPlaylist = async (
   accessToken: string,
 ) => {
   try {
-    console.log('Removing track from playlist:', { playlistId, trackUri });
-
     const response = await axios.delete(
       `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
       {
@@ -20,8 +18,6 @@ export const removeTrackFromPlaylist = async (
         },
       },
     );
-
-    console.log('Track removed successfully');
     return response.data;
   } catch (error: any) {
     console.error('Error removing track from playlist:', error);

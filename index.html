@@ -4,16 +4,14 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spotify - Web Player</title>
+    <title>Spotify</title>
     <link href="/src/tailwind.css" rel="stylesheet">
   </head>
   <body class="bg-black-bg min-h-screen">
     <div id="root">
     </div>
     <script>
-      // Global callback for Spotify Web Playback SDK
       window.onSpotifyWebPlaybackSDKReady = () => {
-        // This will be overridden by the PlayerProvider
         console.log('Spotify Web Playback SDK is ready');
       };
     </script>

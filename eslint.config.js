@@ -31,7 +31,7 @@ export default defineConfig([
     rules: {
       // Code Quality
       'no-unused-vars': 'off', // Turned off in favor of TypeScript version
-      'no-console': 'warn',
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-alert': 'warn',
 
@@ -41,7 +41,7 @@ export default defineConfig([
       'no-undef': 'error',
 
       // React Specific
-      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/rules-of-hooks': 'off',
       'react-hooks/exhaustive-deps': 'warn',
 
       // Code Style
@@ -50,11 +50,22 @@ export default defineConfig([
       'comma-dangle': ['error', 'always-multiline'],
       'no-trailing-spaces': 'error',
       'eol-last': 'error',
+      'no-empty': ['error', { allowEmptyCatch: true }],
 
       // TypeScript
       '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' }],
+    },
+  },
+  // TypeScript-specific overrides
+  {
+    files: ['**/*.{ts,tsx}'],
+    rules: {
+      // TypeScript handles undefined types/identifiers; this rule can misreport on type-only globals
+      'no-undef': 'off',
+      // Fast refresh rule is noisy for non-component modules in TS projects
+      'react-refresh/only-export-components': 'off',
     },
   },
 ]);

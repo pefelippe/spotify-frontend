@@ -15,7 +15,7 @@ import AlbumDetalhes from '../pages/private/album-details';
 import ArtistaDetalhes from '../pages/private/artists-details';
 import PlaylistDetalhes from '../pages/private/playlist-details';
 import LikedSongs from '../pages/private/liked-songs';
-import SearchPage from '../pages/private/search';
+import SearchPage from '../../features/search/SearchPage';
 
 interface ProtectedRouteConfig {
     path: string;

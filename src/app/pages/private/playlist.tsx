@@ -1,6 +1,6 @@
-import { useUserPlaylists } from '../../../features/user/useUserPlaylists';
-import { useCreatePlaylist } from '../../../features/playlist/useCreatePlaylist';
-import CreatePlaylistModal from '../../components/playlist/CreatePlaylistModal';
+import { useUserPlaylists } from '../../../core/api/hooks/useUserPlaylists';
+import { useCreatePlaylist } from '../../../core/api/hooks/useCreatePlaylist';
+import CreatePlaylistModal from '../../../features/playlists/CreatePlaylistModal';
 import { InfiniteScrollList } from '../../components/InfiniteScrollList';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
@@ -9,8 +9,8 @@ import { PageHeader } from '../../layout/PageHeader';
 import { CustomButton } from '../../components/CustomButton';
 import { PlusIcon } from '../../components/SpotifyIcons';
 import { usePlayer } from '../../../features/player';
-import PlaylistItem from '../../../features/playlist/PlaylistItem';
-//
+import PlaylistItem from '../../../features/playlists/PlaylistItem';
+
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,7 +41,9 @@ const Playlists = () => {
   };
 
   const handleSubmitPlaylist = async (name: string) => {
-    if (!name.trim()) return;
+    if (!name.trim()) {
+      return;
+    }
     try {
       const result = await createPlaylistMutation.mutateAsync({
         name: name.trim(),
@@ -80,7 +82,6 @@ const Playlists = () => {
   return (
     <DefaultPage isLoading={isLoading} error={error} loadingMessage="Carregando playlists..." errorMessage="Erro ao carregar playlists. Tente novamente.">
       <div className="space-y-8">
-        {/* Custom Header with Create Button */}
         <PageHeader
           title="Minhas Playlists"
           subtitle="Sua coleção pessoal de playlists"
@@ -93,8 +94,6 @@ const Playlists = () => {
             icon={<PlusIcon size={16} />}
           />
         </PageHeader>
-
-
         <InfiniteScrollList
           items={allPlaylists}
           renderItem={renderPlaylistItem}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../../features/player';
-import { useLikedTracks } from '../liked-songs/liked-tracks-provider';
+import { useLikedTracks } from '../../features/liked-songs/liked-tracks-provider';
 import { ExpandedMusicPlayer } from './components/ExpandedMusicPlayer';
 import { CompactMusicPlayer } from './components/CompactMusicPlayer';
 import {
@@ -59,7 +59,6 @@ export const MusicPlayer = () => {
 
   useEnterOnReady(isReady, setIsEntering);
 
-  // Ensure we surface player UI when remote playback starts by forcing a refresh on focus/visibility
   useRefreshPlaybackOnAppFocus(refreshPlayback);
 
   useCloseDevicesOnOutsideClick(showDevices, setShowDevices);

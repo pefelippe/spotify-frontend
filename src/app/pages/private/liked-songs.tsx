@@ -2,13 +2,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { DefaultPage } from '../../layout/DefaultPage';
 import { QueryState } from '../../components/QueryState';
-import { TrackList } from '../../../features/tracks/TrackList';
-import { useLikedSongs } from '../../../features/liked-songs/useLikedSongs';
-import { useUserProfile } from '../../../features/user/useUserProfile';
+import { TrackList } from '../../components/TrackList';
+import { useLikedSongs } from '../../../core/api/hooks/useLikedSongs';
+import { useUserProfile } from '../../../core/api/hooks/useUserProfile';
 import { usePlayer } from '../../../features/player';
 import { PlayIcon } from '../../components/SpotifyIcons';
 import { formatTotalDurationFromPages } from '../../../utils/formatTotalDuration';
-import { LikedSongsHeader } from '../../components/user/LikedSongsHeader';
+import { LikedSongsHeader } from '../../../features/liked-songs/LikedSongsHeader';
 
 const LikedSongs = () => {
   const navigate = useNavigate();
@@ -34,26 +34,12 @@ const LikedSongs = () => {
     navigate(`/user/${userId}`);
   };
 
-
-
-  if (isLoadingLikedSongs || likedSongsError) {
-    return (
-      <DefaultPage
-        title={isLoadingLikedSongs ? 'Carregando músicas curtidas...' : 'Erro ao carregar músicas curtidas'}
-        subtitle="Aguarde enquanto carregamos suas músicas curtidas"
-        isLoading={isLoadingLikedSongs}
-        error={likedSongsError}
-        loadingMessage="Carregando músicas curtidas..."
-        errorMessage="Erro ao carregar músicas curtidas. Tente novamente."
-        hasBackButton
-      >
-        <div></div>
-      </DefaultPage>
-    );
-  }
-
   return (
     <DefaultPage
+      isLoading={isLoadingLikedSongs}
+      error={likedSongsError}
+      loadingMessage="Carregando músicas curtidas..."
+      errorMessage="Erro ao carregar músicas curtidas. Tente novamente."
       hasBackButton
     >
       <div className="space-y-8">

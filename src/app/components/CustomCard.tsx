@@ -18,6 +18,9 @@ interface CustomCardProps {
   playback?: PlaybackIntent;
   isActive?: boolean;
   onTogglePlay?: () => void;
+  imageClassName?: string;
+  titleClassName?: string;
+  align?: 'left' | 'center';
 }
 
 export const CustomCard: React.FC<CustomCardProps> = ({
@@ -31,6 +34,9 @@ export const CustomCard: React.FC<CustomCardProps> = ({
   playback,
   isActive,
   onTogglePlay,
+  imageClassName,
+  titleClassName,
+  align = 'left',
 }) => {
   const { isReady, deviceId, playTrack, pauseTrack } = usePlayer();
   const [isSelfPlaying, setIsSelfPlaying] = useState(false);
@@ -69,7 +75,7 @@ export const CustomCard: React.FC<CustomCardProps> = ({
 
   return (
     <div
-      className={`group w-full text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 rounded-xl p-1 lg:p-4 transition-colors duration-200 hover:bg-[rgb(30,30,30)] ${className || ''}`}
+      className={`group w-full ${align === 'center' ? 'text-center' : 'text-left'} cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 rounded-xl p-1 lg:p-4 transition-colors duration-200 hover:bg-[rgb(30,30,30)] ${className || ''}`}
       role="button"
       tabIndex={0}
       onClick={handleNavigate}
@@ -81,13 +87,13 @@ export const CustomCard: React.FC<CustomCardProps> = ({
           <img
             src={imageSrc}
             alt={imageAlt}
-            className="w-full aspect-square rounded-md object-cover"
+            className={`w-full aspect-square object-cover ${imageClassName || 'rounded-md'}`}
             loading="lazy"
           />
         ) : (
           <div
             aria-hidden
-            className="w-full aspect-square rounded-md bg-black"
+            className={`w-full aspect-square bg-black ${imageClassName || 'rounded-md'}`}
           />
         )}
         {playback && (
@@ -109,11 +115,11 @@ export const CustomCard: React.FC<CustomCardProps> = ({
           </button>
         )}
       </div>
-      <h4 className="text-white font-medium text-sm md:text-base truncate" title={title}>
+      <h4 className={`text-white font-medium text-sm md:text-base truncate ${titleClassName || ''}`} title={title}>
         {title}
       </h4>
       {subtitle && (
-        <p className="text-gray-400 text-xs md:text-sm truncate mt-0.5" title={subtitle}>
+        <p className={`text-gray-400 text-xs md:text-sm truncate mt-0.5 ${align === 'center' ? 'mx-auto' : ''}`} title={subtitle}>
           {subtitle}
         </p>
       )}

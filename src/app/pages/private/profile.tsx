@@ -1,6 +1,6 @@
 
 
-import { useUserProfile } from '../../../features/user/useUserProfile';
+import { useUserProfile } from '../../../core/api/hooks/useUserProfile';
 import { CustomButton } from '../../components/CustomButton';
 import { useAuth } from '../../../core/auth';
 

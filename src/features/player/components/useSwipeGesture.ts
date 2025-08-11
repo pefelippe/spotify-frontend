@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import React, { useRef, useCallback } from 'react';
 
 type SwipeHandlers<T = HTMLElement> = {
   onTouchStart: React.TouchEventHandler<T>;

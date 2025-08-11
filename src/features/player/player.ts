@@ -1,3 +1,6 @@
+// These global interfaces are declared in `src/app/types/spotify-player.d.ts`.
+// If your editor marks them as undefined, ensure tsconfig includes the `src` folder.
+
 export interface PlayerContextData {
   player: SpotifyPlayer | null;
   isReady: boolean;

@@ -1,17 +1,20 @@
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { QueryState } from '../../components/QueryState';
-import { TrackList } from '../../../features/tracks/TrackList';
-import { useAlbumDetails, useAlbumTracks } from '../../../features/artists/useAlbumDetails';
-import { useArtistDetails } from '../../../features/artists/useArtistDetails';
+import { TrackList } from '../../components/TrackList';
+import { useAlbumDetails, useAlbumTracks } from '../../../core/api/hooks/useAlbumDetails';
+import { useArtistDetails } from '../../../core/api/hooks/useArtistDetails';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { formatTotalDurationFromPages } from '../../../utils/formatTotalDuration';
-import { AlbumHeader } from '../../components/album/AlbumHeader';
+import TrackInfoDetailed from '../../components/TrackInfoDetailed';
+import { formatDatePtBR } from '../../../utils/formatDatePtBR';
+import { usePlayer } from '../../../features/player';
 
 const AlbumDetalhes = () => {
   const { albumId } = useParams();
   const navigate = useNavigate();
   const { data: albumDetails, isLoading: isLoadingDetails, error: detailsError } = useAlbumDetails(albumId!);
+  const { playTrack, isReady, deviceId } = usePlayer();
   const {
     data: tracksData,
     isLoading: isLoadingTracks,
@@ -24,55 +27,46 @@ const AlbumDetalhes = () => {
   const primaryArtistId = albumDetails?.artists?.[0]?.id || '';
   const { data: primaryArtist } = useArtistDetails(primaryArtistId);
 
-  if (!albumId) {
-    return (
-      <DefaultPage
-        title="Álbum não encontrado"
-        subtitle="O álbum que você está procurando não foi encontrado"
-        hasBackButton
-      >
-        <div className="text-center py-12 text-gray-400">
-          Álbum não encontrado
-        </div>
-      </DefaultPage>
-    );
-  }
-
-  if (isLoadingDetails || detailsError) {
-    return (
-      <DefaultPage
-        title={isLoadingDetails ? 'Carregando álbum...' : 'Erro ao carregar álbum'}
-        subtitle="Aguarde enquanto carregamos as informações do álbum"
-        isLoading={isLoadingDetails}
-        error={detailsError}
-        loadingMessage="Carregando detalhes do álbum..."
-        errorMessage="Tente novamente mais tarde."
-        hasBackButton
-      >
-        <div></div>
-      </DefaultPage>
-    );
-  }
-
   const handleArtistClick = (artistId: string) => {
     navigate(`/artist/${artistId}`);
   };
 
-
-
   return (
     <DefaultPage
+      isLoading={isLoadingDetails}
+      error={detailsError || !albumId}
+      loadingMessage="Carregando detalhes do álbum..."
+      errorMessage="Tente novamente mais tarde."
       hasBackButton
     >
       <div className="space-y-8">
-        <AlbumHeader
-          album={albumDetails}
-          primaryArtist={primaryArtist}
-          onClickArtist={handleArtistClick}
-          totalDurationText={tracksData ? formatTotalDurationFromPages(tracksData, (item: any) => item.duration_ms) : undefined}
-        />
+        {(() => {
+          const imageUrl = albumDetails?.images?.[0]?.url || '';
+          const typeLabel = albumDetails?.album_type === 'album' ? 'Álbum' : (albumDetails?.album_type === 'single' ? 'Single' : albumDetails?.album_type);
+          const primaryLabel = albumDetails?.artists?.[0]?.name || '';
+          const primaryAvatarUrl = primaryArtist?.images?.[0]?.url || '';
+          const metaItems = [
+            formatDatePtBR(albumDetails?.release_date),
+            ...(tracksData ? [formatTotalDurationFromPages(tracksData, (item: any) => item?.duration_ms)] : []),
+          ];
+          return (
+            <TrackInfoDetailed
+              imageUrl={imageUrl}
+              title={albumDetails?.name}
+              typeLabel={typeLabel}
+              primaryLabel={primaryLabel}
+              primaryAvatarUrl={primaryAvatarUrl}
+              onClickPrimaryLabel={() => handleArtistClick(albumDetails?.artists?.[0]?.id)}
+              metaItems={metaItems}
+              onClickPlay={() => {
+                const contextUri = `spotify:album:${albumId}`;
+                if (!isReady || !deviceId) return;
+                playTrack('', contextUri);
+              }}
+            />
+          );
+        })()}
 
-        {/* Tracks */}
         <div>
           {isLoadingTracks ? (
             <QueryState

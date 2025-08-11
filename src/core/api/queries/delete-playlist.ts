@@ -5,8 +5,6 @@ export const deletePlaylist = async (
   accessToken: string,
 ) => {
   try {
-    console.log('Deleting playlist:', playlistId);
-
     const response = await axios.delete(
       `https://api.spotify.com/v1/playlists/${playlistId}/followers`,
       {
@@ -15,8 +13,6 @@ export const deletePlaylist = async (
         },
       },
     );
-
-    console.log('Playlist deleted successfully');
     return response.data;
   } catch (error: any) {
     console.error('Error deleting playlist:', error);

@@ -77,7 +77,6 @@ export const InfiniteScrollList = ({
         </div>
       ))}
 
-      {/* Loading trigger and indicator */}
       <div ref={loadingRef} className="flex justify-center py-4">
         {isFetchingNextPage && (
           loadingComponent || (

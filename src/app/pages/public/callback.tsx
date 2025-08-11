@@ -9,7 +9,9 @@ export const Callback = () => {
   const hasProcessed = useRef(false);
 
   useEffect(() => {
-    if (hasProcessed.current) return;
+    if (hasProcessed.current) {
+      return;
+    }
     hasProcessed.current = true;
 
     const processCallback = async () => {

@@ -16,7 +16,6 @@ export const fetchLikedSongs = async (accessToken: string, limit = 20, offset = 
   } catch (error: any) {
     if (error.response?.status === 403) {
       console.error('Forbidden: Token may not have the required scopes for liked songs');
-      // Return empty data structure instead of throwing
       return {
         items: [],
         total: 0,

@@ -25,7 +25,6 @@ export const ArtistItem = ({ name, imageUrl, onClick, size = 'md' }: ArtistItemP
       onClick={onClick}
       className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-800 cursor-pointer transition-colors duration-200"
     >
-      {/* Artist Image */}
       <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gray-800 flex-shrink-0`}>
         <img
           src={imageUrl || defaultImage}
@@ -37,7 +36,6 @@ export const ArtistItem = ({ name, imageUrl, onClick, size = 'md' }: ArtistItemP
         />
       </div>
 
-      {/* Artist Name */}
       <div className="flex-1 min-w-0">
         <h3 className={`text-white font-semibold ${textSizeClasses[size]} truncate`}>
           {name}

@@ -1,7 +1,5 @@
-
-import { useTopArtists } from '../../../features/user/useTopArtists';
+import { useTopArtists } from '../../../core/api/hooks/useTopArtists';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../core/auth';
 import { InfiniteScrollList } from '../../components/InfiniteScrollList';
 import { ArtistItem } from '../../../features/artists/ArtistItem';
 import { useMemo } from 'react';

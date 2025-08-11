@@ -8,11 +8,6 @@ interface HorizontalScrollProps {
   ariaLabel?: string;
 }
 
-/**
- * A simple horizontal scroller that renders its children in a single row.
- * - Hides native scrollbars
- * - Enables smooth horizontal scrolling with optional snap behavior
- */
 export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
   children,
   className,
@@ -29,7 +24,7 @@ export const HorizontalScroll: React.FC<HorizontalScrollProps> = ({
     if (!el) {
       return;
     }
-    const overflow = el.scrollWidth > el.clientWidth + 1; // tolerance
+    const overflow = el.scrollWidth > el.clientWidth + 1;
     setHasOverflow(overflow);
     setCanScrollLeft(el.scrollLeft > 2);
     setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);

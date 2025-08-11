@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { useLikedSongs, useAddToLikedSongs, useRemoveFromLikedSongs } from './useLikedSongs';
+import { useLikedSongs, useAddToLikedSongs, useRemoveFromLikedSongs } from '../../core/api/hooks/useLikedSongs';
 
 interface LikedTracksContextData {
   likedTracks: Set<string>;
@@ -44,7 +44,6 @@ export const LikedTracksProvider = ({ children }: { children: ReactNode }) => {
         return newSet;
       });
     } else {
-      // Add to  songs
       addToLikedSongsMutation.mutate([trackId]);
       setLikedTracks(prev => {
         const newSet = new Set(prev);

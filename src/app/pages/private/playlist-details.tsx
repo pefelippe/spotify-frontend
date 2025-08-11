@@ -1,17 +1,16 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { QueryState } from '../../components/QueryState';
-import { TrackList } from '../../../features/tracks/TrackList';
-import { usePlaylistDetails, usePlaylistTracks } from '../../../features/playlist/usePlaylistDetails';
-import { useDeletePlaylist } from '../../../features/playlist/useDeletePlaylist';
-import { useUpdatePlaylist } from '../../../features/playlist/useUpdatePlaylist';
-import { useRemoveTrackFromPlaylist } from '../../../features/playlist/useRemoveTrackFromPlaylist';
-import { useUserProfile } from '../../../features/user/useUserProfile';
+import { TrackList } from '../../components/TrackList';
+import { usePlaylistDetails, usePlaylistTracks } from '../../../core/api/hooks/usePlaylistDetails';
+import { useDeletePlaylist } from '../../../core/api/hooks/useDeletePlaylist';
+import { useUpdatePlaylist } from '../../../core/api/hooks/useUpdatePlaylist';
+import { useRemoveTrackFromPlaylist } from '../../../core/api/hooks/useRemoveTrackFromPlaylist';
+import { useUserProfile } from '../../../core/api/hooks/useUserProfile';
 import { DefaultPage } from '../../layout/DefaultPage';
-import EditPlaylistModal from '../../components/playlist/EditPlaylistModal';
-import DeletePlaylistModal from '../../components/playlist/DeletePlaylistModal';
-import { PlaylistHeader } from '../../components/playlist/PlaylistHeader';
-// removed page-level header buttons; handled in PlaylistHeader
+import EditPlaylistModal from '../../../features/playlists/EditPlaylistModal';
+import DeletePlaylistModal from '../../../features/playlists/DeletePlaylistModal';
+import TrackInfoDetailed from '../../components/TrackInfoDetailed';
 import { formatTotalDurationFromPages } from '../../../utils/formatTotalDuration';
 import { usePlayer } from '../../../features/player';
 
@@ -19,7 +18,7 @@ import { usePlayer } from '../../../features/player';
 const PlaylistDetalhes = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
-  const { playTrack, isReady, deviceId } = usePlayer();
+  usePlayer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editName, setEditName] = useState('');
@@ -40,12 +39,6 @@ const PlaylistDetalhes = () => {
   } = usePlaylistTracks(playlistId!);
 
   const isOwner = userProfile?.id === playlistDetails?.owner?.id;
-
-  const openEditModal = () => {
-    setEditName(playlistDetails?.name || '');
-    setEditDescription(playlistDetails?.description || '');
-    setShowEditModal(true);
-  };
 
   const handleSaveEdit = async () => {
     if (!playlistId) {
@@ -95,65 +88,43 @@ const PlaylistDetalhes = () => {
     }
   };
 
-  const handlePlayPlaylist = () => {
-    if (!playlistId) {
-      return;
-    }
-    if (!isReady || !deviceId) {
-      return;
-    }
-    const contextUri = `spotify:playlist:${playlistId}`;
-    playTrack('', contextUri);
-  };
-
-  if (!playlistId) {
-    return (
-      <DefaultPage
-        title="Playlist não encontrada"
-        subtitle="A playlist que você está procurando não foi encontrada"
-        hasBackButton
-      >
-        <div className="text-center py-12 text-gray-400">
-          Playlist não encontrada
-        </div>
-      </DefaultPage>
-    );
-  }
-
-  if (isLoadingDetails || detailsError) {
-    return (
-      <DefaultPage
-        title={isLoadingDetails ? 'Carregando playlist...' : 'Erro ao carregar playlist'}
-        subtitle="Aguarde enquanto carregamos as informações da playlist"
-        isLoading={isLoadingDetails}
-        error={detailsError}
-        loadingMessage="Carregando detalhes da playlist..."
-        errorMessage="Tente novamente mais tarde."
-        hasBackButton
-      >
-        <div></div>
-      </DefaultPage>
-    );
-  }
-
-
-
   return (
     <DefaultPage
+      isLoading={isLoadingDetails}
+      error={detailsError || !playlistId}
+      loadingMessage="Carregando detalhes da playlist..."
+      errorMessage="Tente novamente mais tarde."
       hasBackButton
     >
       <div className="space-y-8">
-        <PlaylistHeader
-          playlist={playlistDetails}
-          isOwner={isOwner}
-          onClickOwner={handleOwnerClick}
-          onClickPlay={handlePlayPlaylist}
-          onClickEdit={openEditModal}
-          onClickDelete={() => setShowDeleteModal(true)}
-          totalDurationText={tracksData ? formatTotalDurationFromPages(tracksData, (item: any) => item.track?.duration_ms) : undefined}
+        <TrackInfoDetailed
+          imageUrl={playlistDetails?.images?.[0]?.url || 'https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36'}
+          title={playlistDetails?.name}
+          typeLabel="Playlist"
+          primaryLabel={playlistDetails?.owner?.display_name}
+          primaryUserId={playlistDetails?.owner?.id}
+          primaryDisplayName={playlistDetails?.owner?.display_name}
+          onClickPrimaryLabel={() => handleOwnerClick(playlistDetails?.owner?.id)}
+          metaItems={[
+            ...(playlistDetails?.followers?.total ? [`${playlistDetails?.followers?.total?.toLocaleString()} seguidores`] : []),
+            `${playlistDetails?.tracks?.total} músicas`,
+            ...(tracksData ? [formatTotalDurationFromPages(tracksData, (item: any) => item?.track?.duration_ms)] : []),
+          ]}
+          onClickEdit={isOwner ? () => {
+            setEditName(playlistDetails?.name || '');
+            setEditDescription(playlistDetails?.description || '');
+            setShowEditModal(true);
+          } : undefined}
+          onClickDelete={isOwner ? () => setShowDeleteModal(true) : undefined}
+          onClickPlay={() => {
+            if (!playlistId) {
+              return;
+            }
+            const contextUri = `spotify:playlist:${playlistId}`;
+            usePlayer().playTrack('', contextUri);
+          }}
         />
 
-        {/* Tracks */}
         <div>
           {isLoadingTracks ? (
             <QueryState
@@ -184,7 +155,7 @@ const PlaylistDetalhes = () => {
       <DeletePlaylistModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        playlistName={playlistDetails.name}
+        playlistName={playlistDetails?.name}
         onConfirm={handleDeletePlaylist}
         isDeleting={deletePlaylistMutation.isPending}
       />
