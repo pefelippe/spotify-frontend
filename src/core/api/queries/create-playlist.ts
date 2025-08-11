@@ -12,6 +12,7 @@ export const createPlaylist = async (
       `https://api.spotify.com/v1/users/${userId}/playlists`,
       {
         name,
+        description: 'Adicione uma descrição',
         public: false,
       },
       {

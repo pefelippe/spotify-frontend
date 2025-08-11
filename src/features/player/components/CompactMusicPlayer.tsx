@@ -142,7 +142,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
                 data-device-trigger
               >
                 <DevicesIcon size={14} />
-                <span className="truncate">{activeDeviceName === 'Spotify Clone Player' ? 'Este dispositivo' : activeDeviceName}</span>
+                <span className="truncate max-xl:hidden">{activeDeviceName === 'Spotify Clone Player' ? 'Este dispositivo' : activeDeviceName}</span>
               </button>
               {showDevices && (
                 <DevicesModal

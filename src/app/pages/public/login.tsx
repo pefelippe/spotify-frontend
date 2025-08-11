@@ -7,7 +7,7 @@ export const Login = () => {
   return (
     <DefaultPage className="max-lg:min-h-screen relative flex flex-col items-center justify-center">
       <div className="flex flex-col items-center  justify-center text-center h-full gap-[16px]">
-        <SpotifyLogo className="w-[164px] h-[50px] object-contain" />
+        <SpotifyLogo className="w-[184px] h-[56px] md:w-[200px] md:h-[64px] object-contain" />
         <p className="text-white-text font-rubik font-medium text-[14px] leading-[20px] ">
           Entre com sua conta Spotify clicando no botão abaixo
         </p>

@@ -9,15 +9,17 @@ import { useUpdatePlaylist } from '../../../features/playlist/useUpdatePlaylist'
 import { useRemoveTrackFromPlaylist } from '../../../features/playlist/useRemoveTrackFromPlaylist';
 import { useUserProfile } from '../../../features/user/useUserProfile';
 import { DefaultPage } from '../../layout/DefaultPage';
-import { Modal } from '../../components/CustomModal';
-import { CustomButton } from '../../components/CustomButton';
-import { PencilIcon } from '../../components/SpotifyIcons';
+import EditPlaylistModal from '../../components/playlist/EditPlaylistModal';
+import DeletePlaylistModal from '../../components/playlist/DeletePlaylistModal';
+import { PencilIcon, PlayIcon, TrashIcon } from '../../components/SpotifyIcons';
 import { formatTotalDurationFromPages } from '../../../utils/formatTotalDuration';
+import { usePlayer } from '../../../features/player';
 
 
 const PlaylistDetalhes = () => {
   const { playlistId } = useParams();
   const navigate = useNavigate();
+  const { playTrack, isReady, deviceId } = usePlayer();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editName, setEditName] = useState('');
@@ -93,6 +95,13 @@ const PlaylistDetalhes = () => {
     }
   };
 
+  const handlePlayPlaylist = () => {
+    if (!playlistId) return;
+    if (!isReady || !deviceId) return;
+    const contextUri = `spotify:playlist:${playlistId}`;
+    playTrack('', contextUri);
+  };
+
   if (!playlistId) {
     return (
       <DefaultPage
@@ -142,30 +151,39 @@ const PlaylistDetalhes = () => {
                 />
               </div>
               <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/60 via-black/70 to-transparent" />
-              <div className="flex flex-col md:flex-row items-center md:justify-start gap-12 p-4 md:p-6 lg:p-8
-               mx-auto">
-                <div className="w-full md:w-auto">
+              <div className="flex flex-col md:flex-row items-center md:items-start md:justify-start gap-12 p-4 md:p-6 lg:p-8 mx-auto">
+                <div className="w-full md:w-auto flex-shrink-0">
                   <img
                     src={headerImageUrl}
                     alt={playlistDetails.name}
-                    className="mx-auto w-48 h-48 sm:w-56 sm:h-56 md:w-[320px] md:h-[320px] aspect-square rounded-2xl object-cover shadow-2xl ring-1 ring-white/10"
+                    className="mx-auto w-48 h-48 sm:w-56 sm:h-56 md:w-[320px] md:h-[320px] lg:w-[400px] lg:h-[400px] aspect-square rounded-2xl object-cover shadow-2xl ring-1 ring-white/10"
                   />
                 </div>
-                <div className="">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-start gap-2 text-white/80 text-xs md:text-sm font-medium uppercase tracking-[0.14em] mb-2">
                     <span>Playlist</span>
                     {isOwner && (
-                      <button
-                        aria-label="Editar playlist"
-                        title="Editar playlist"
-                        onClick={openEditModal}
-                        className="inline-flex items-center justify-center p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-                      >
-                        <PencilIcon size={16} />
-                      </button>
+                      <>
+                        <button
+                          aria-label="Editar playlist"
+                          title="Editar playlist"
+                          onClick={openEditModal}
+                          className="inline-flex items-center justify-center p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                        >
+                          <PencilIcon size={16} />
+                        </button>
+                        <button
+                          aria-label="Deletar playlist"
+                          title="Deletar playlist"
+                          onClick={() => setShowDeleteModal(true)}
+                          className="inline-flex items-center justify-center p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                        >
+                          <TrashIcon size={16} />
+                        </button>
+                      </>
                     )}
                   </div>
-                  <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white-text mb-3 md:mb-4">
+                  <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white-text mb-3 md:mb-4 break-words">
                     {playlistDetails.name}
                   </h1>
                   {playlistDetails.description ? (
@@ -202,6 +220,15 @@ const PlaylistDetalhes = () => {
                       </>
                     ) : null}
                   </div>
+                  <div className="mt-4 flex items-center gap-3">
+                    <button
+                      onClick={handlePlayPlaylist}
+                      className="inline-flex items-center gap-2 bg-green-500 text-black px-5 py-2 rounded-full hover:bg-green-400 transition-colors cursor-pointer"
+                    >
+                      <PlayIcon size={18} className="ml-0.5" />
+                      <span>Reproduzir</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -236,108 +263,27 @@ const PlaylistDetalhes = () => {
         </div>
       </div>
 
-      {/* Delete Playlist Modal */}
-      <Modal
+      <DeletePlaylistModal
         isOpen={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}
-        title=""
-      >
-        <div className="space-y-6">
-          {/* Header with X button */}
-          <div className="flex justify-end">
-            <button
-              onClick={() => setShowDeleteModal(false)}
-              className="text-gray-400 hover:text-white transition-colors text-xl font-bold"
-            >
-              ✕
-            </button>
-          </div>
+        playlistName={playlistDetails.name}
+        onConfirm={handleDeletePlaylist}
+        isDeleting={deletePlaylistMutation.isPending}
+      />
 
-          {/* Title */}
-          <div className="text-center">
-            <span className="text-white text-xl font-semibold">
-              Deletar playlist
-            </span>
-            <p className="text-gray-400 text-sm mt-2">
-              Tem certeza que deseja deletar "{playlistDetails.name}"?
-            </p>
-            <p className="text-gray-400 text-xs mt-1">
-              Esta ação não pode ser desfeita.
-            </p>
-          </div>
-
-          {/* Actions */}
-          <div className="flex space-x-3 pt-4">
-            <CustomButton
-              label="Cancelar"
-              onClick={() => setShowDeleteModal(false)}
-              variant="outline"
-              customClassName="flex-1"
-            />
-            <CustomButton
-              label={deletePlaylistMutation.isPending ? 'Deletando...' : 'Deletar'}
-              onClick={handleDeletePlaylist}
-              variant="primary"
-              customClassName="flex-1 bg-red-600 hover:bg-red-700"
-              disabled={deletePlaylistMutation.isPending}
-            />
-          </div>
-        </div>
-      </Modal>
-
-      {/* Edit Playlist Modal */}
-      <Modal
+      <EditPlaylistModal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
-        title="Editar Playlist"
-      >
-        <div className="space-y-6">
-          {/* Form */}
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Nome</label>
-              <input
-                type="text"
-                value={editName || ''}
-                onChange={(e) => setEditName(e.target.value)}
-                className="w-full px-3 py-2 bg-transparent border-2 border-gray-600 text-white rounded-md placeholder-gray-400 focus:outline-none focus:border-white transition-colors"
-                maxLength={100}
-                placeholder="Nome da playlist"
-                autoFocus
-              />
-            </div>
-            <div>
-              <label className="block text-sm text-gray-400 mb-1">Descrição</label>
-              <textarea
-                value={editDescription || ''}
-                onChange={(e) => setEditDescription(e.target.value)}
-                className="w-full px-3 py-2 bg-transparent border-2 border-gray-600 text-white rounded-md placeholder-gray-400 focus:outline-none focus:border-white transition-colors"
-                rows={4}
-                maxLength={300}
-                placeholder="Descrição da playlist"
-              />
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex flex-col pt-2 w-full">
-            <CustomButton
-              label={updatePlaylistMutation.isPending ? 'Salvando...' : 'Salvar'}
-              onClick={handleSaveEdit}
-              variant="spotify"
-              customClassName="mx-auto w-full text-center flex justify-center"
-              disabled={updatePlaylistMutation.isPending}
-            />
-            <div className="border-b border-gray-700 my-4 mt-10" />
-            <CustomButton
-              label="Deletar Playlist"
-              onClick={() => setShowDeleteModal(true)}
-              variant="ghost"
-              customClassName="w-full text-red-500 hover:text-red-400 hover:bg-transparent mx-auto justify-center flex"
-            />
-          </div>
-        </div>
-      </Modal>
+        initialName={editName}
+        initialDescription={editDescription}
+        onSave={async ({ name, description }) => {
+          setEditName(name || '');
+          setEditDescription(description || 'Adicione uma descrição');
+          await handleSaveEdit();
+        }}
+        isSaving={updatePlaylistMutation.isPending}
+        onRequestDelete={() => setShowDeleteModal(true)}
+      />
     </DefaultPage>
   );
 };

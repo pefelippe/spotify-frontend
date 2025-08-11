@@ -1,6 +1,6 @@
 import { useUserPlaylists } from '../../../features/user/useUserPlaylists';
 import { useCreatePlaylist } from '../../../features/playlist/useCreatePlaylist';
-import { Modal } from '../../components/CustomModal';
+import CreatePlaylistModal from '../../components/playlist/CreatePlaylistModal';
 import { InfiniteScrollList } from '../../components/InfiniteScrollList';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
@@ -13,7 +13,6 @@ import PlaylistItem from '../../../features/playlist/PlaylistItem';
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [playlistName, setPlaylistName] = useState('');
   const navigate = useNavigate();
 
   const { playTrack } = usePlayer();
@@ -32,24 +31,19 @@ const Playlists = () => {
     return data?.pages.flatMap(page => page.items) || [];
   }, [data]);
 
-  // Filtering removed per request; show all playlists
-
   const handleCreatePlaylist = () => {
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setPlaylistName('');
   };
 
-  const handleSubmitPlaylist = async () => {
-    if (!playlistName.trim()) {
-      return;
-    }
+  const handleSubmitPlaylist = async (name: string) => {
+    if (!name.trim()) return;
     try {
       const result = await createPlaylistMutation.mutateAsync({
-        name: playlistName.trim(),
+        name: name.trim(),
       });
 
       console.log('Playlist created successfully:', result);
@@ -119,70 +113,12 @@ const Playlists = () => {
         />
       </div>
 
-      <Modal
+      <CreatePlaylistModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        title=""
-      >
-        <div className="space-y-4">
-          <div className="flex justify-end">
-            <button
-              onClick={handleCloseModal}
-              className="text-gray-400 hover:text-white transition-colors text-xl font-bold"
-            >
-              ✕
-            </button>
-          </div>
-
-          {/* Title */}
-          <div className="text-center">
-            <span className="text-white text-lg font-semibold">
-              Dê um nome a sua playlist
-            </span>
-          </div>
-
-          {/* Input with bottom border only */}
-          <div className="space-y-2">
-            <input
-              type="text"
-              value={playlistName}
-              onChange={(e) => {
-                console.log('Playlist name changed:', e.target.value);
-                setPlaylistName(e.target.value);
-              }}
-              placeholder="Digite o nome da playlist..."
-              className="w-full px-0 py-3 bg-transparent border-b-2 border-gray-600 text-white justify-center text-center
-              placeholder-gray-400 focus:outline-none focus:border-white transition-colors text-lg font-bold"
-              maxLength={100}
-              autoFocus
-            />
-          </div>
-
-          {/* Centered Create Button */}
-          <div className="flex justify-center pt-4">
-            <button
-              onClick={() => {
-                console.log('Create button clicked, playlist name:', playlistName);
-                handleSubmitPlaylist();
-              }}
-              disabled={!playlistName.trim() || createPlaylistMutation.isPending}
-              className={`px-8 py-3 rounded-full font-bold text-lg transition-all duration-200 ${
-                playlistName.trim() && !createPlaylistMutation.isPending
-                  ? 'bg-green-500 text-black hover:bg-green-400 cursor-pointer'
-                  : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-              }`}
-            >
-              {createPlaylistMutation.isPending ? 'Criando...' : 'Criar'}
-            </button>
-          </div>
-
-          {createPlaylistMutation.isError && (
-            <div className="text-red-400 text-sm text-center">
-              Erro ao criar playlist. Tente novamente.
-            </div>
-          )}
-        </div>
-      </Modal>
+        onSubmit={handleSubmitPlaylist}
+        isSubmitting={createPlaylistMutation.isPending}
+      />
     </DefaultPage>
   );
 };
