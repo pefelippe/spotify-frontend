@@ -13,6 +13,7 @@ import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import localforage from 'localforage';
 import { PlayerProvider } from './features/player';
+import { registerSW } from 'virtual:pwa-register';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -58,3 +59,13 @@ createRoot(document.getElementById('root') as HTMLElement).render(
     </QueryClientProvider>
   </React.StrictMode>,
 );
+
+// Register service worker for PWA (supports iOS/Safari when served over HTTPS)
+if ('serviceWorker' in navigator) {
+  // waits for app to be stable before registering
+  window.addEventListener('load', () => {
+    const updateSW = registerSW({ immediate: true, onNeedRefresh() {}, onOfflineReady() {} });
+    // expose if you want to trigger update elsewhere
+    (window as any).__pwa_update = updateSW;
+  });
+}
