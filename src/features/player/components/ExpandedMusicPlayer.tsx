@@ -88,7 +88,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
         <div className="h-[80vh] flex flex-col lg:flex-row justify-start lg:justify-center items-center w-full px-4 sm:px-6 lg:px-12 xl:px-16 lg:gap-16 max-w-[600px] mx-auto lg:max-w-none">
 
           <div className="flex-shrink-0 flex justify-center lg:justify-start items-start w-full lg:w-auto mt-10 mb-8 lg:my-0">
-            <div className="w-[80vw] sm:w-[72vw] md:w-[62vw] lg:w-[38vw] xl:w-[34vw] max-w-none aspect-square h-full lg:mt-0 max-h-[46vh] sm:max-h-[52vh] md:max-h-[58vh] lg:max-h-[64vh]">
+            <div className="w-[80vw] sm:w-[72vw] md:w-[62vw] lg:w-[38vw] xl:w-[34vw] max-w-none aspect-square h-full lg:mt-0 max-h-[46vh] sm:max-h-[50vh] md:max-h-[58vh] lg:max-h-[64vh]">
               <button className="w-full h-full" onClick={onClose} aria-label="Collapse player">
                 <img
                   src={currentTrack.album.images[0]?.url}
@@ -103,9 +103,9 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
           <div className="flex flex-col justify-center items-start w-full lg:flex-1 lg:py-2 lg:py-0 px-4 lg:px-8 max-w-none lg:max-w-2xl text-center">
             <div className="mb-3 lg:mb-4 w-full">
               <div className="flex items-start gap-2 lg:gap-3 justify-between lg:justify-center text-left  w-full">
-                <div className="flex-1 min-w-0">
-                  <TextMarquee text={currentTrack.name} className="text-2xl lg:text-5xl xl:text-6xl font-bold text-white" speedMs={14000} />
-                </div>
+             
+                <TextMarquee text={currentTrack.name} className="text-2xl lg:text-5xl xl:text-6xl font-bold text-white" speedMs={14000} />
+              
                 <button
                   onClick={onToggleLike}
                   className={` rounded-full transition-all duration-200 cursor-pointer flex-shrink-0 mt-1 hover:scale-110 ${
@@ -116,7 +116,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
                   <HeartIcon size={28} filled={isCurrentTrackLiked} />
                 </button>
               </div>
-              <div className="lg:mt-3 mb-1 w-full overflow-hidden text-left">
+              <div className="lg:mt-3 mb-1 w-full overflow-hidden max-lg:text-left">
                 <TextMarquee
                   text={currentTrack.artists.map((a: any) => a.name).join(', ')}
                   className="text-sm sm:text-base lg:text-lg text-gray-400"
@@ -125,7 +125,7 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
               </div>
             </div>
 
-            <div className="flex flex-col lg:gap-6 w-full items-start">
+            <div className="flex flex-col lg:gap-6 w-full items-start lg:items-center">
               <ProgressBar
                 currentPosition={currentPosition}
                 duration={duration}

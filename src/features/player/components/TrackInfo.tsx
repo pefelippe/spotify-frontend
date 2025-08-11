@@ -41,7 +41,10 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
     <span key={artist.uri || index}>
       <span
         className="hover:underline hover:text-white cursor-pointer transition-colors duration-200"
-        onClick={() => onArtistClick?.(extractIdFromUri(artist.uri))}
+        onClick={(e) => {
+          e.stopPropagation();
+          onArtistClick?.(extractIdFromUri(artist.uri));
+        }}
       >
         {artist.name}
       </span>
@@ -54,7 +57,16 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
     : 'w-full h-full rounded-lg shadow-2xl object-cover animate-fade-in-scale';
 
   return (
-    <div className="flex items-center space-x-3 lg:space-x-4 flex-1 min-w-0  lg:max-w-[25%] track-info-area">
+    <div
+      className="flex items-center space-x-3 lg:space-x-4 flex-1 min-w-0  lg:max-w-[25%] track-info-area cursor-pointer"
+      onClick={(e) => {
+        const target = e.target as HTMLElement | null;
+        if (target && target.closest('button')) {
+          return;
+        }
+        onImageClick?.();
+      }}
+    >
       <button className="relative overflow-hidden rounded-md group focus:outline-none" onClick={onImageClick} aria-label="Expand player">
         <img
           src={track.album.images[0]?.url}
