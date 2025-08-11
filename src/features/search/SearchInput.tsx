@@ -26,7 +26,7 @@ export const SearchInput: React.FC = () => {
         <div className="absolute z-999 left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">🔍</div>
         <input
           type="search"
-          placeholder="O que você deseja ouvir?"
+          placeholder="O que você deseja ouvir hoje?"
           className="w-full bg-[rgb(30,30,30)]/60 border-2 border-gray-700 focus:border-white transition-colors rounded-xl pl-10 pr-4 py-2 text-white placeholder-gray-500 outline-none"
           value={searchText}
           onChange={(e) => {
