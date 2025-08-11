@@ -9,11 +9,11 @@ export const useTopArtists = () => {
     queryKey: ['topArtists'],
     queryFn: ({ pageParam = 0 }) => fetchTopArtists(accessToken!, 20, pageParam),
     enabled: !!accessToken,
-    staleTime: 30 * 60 * 1000, // 30 minutes
+    staleTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.next) {
-        return allPages.length * 20; // offset for next page
+        return allPages.length * 20;
       }
       return undefined;
     },

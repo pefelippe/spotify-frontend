@@ -9,10 +9,10 @@ export const useRecentlyPlayed = () => {
     queryKey: ['recentlyPlayed'],
     queryFn: () => fetchRecentlyPlayed(accessToken!, 20),
     enabled: !!accessToken,
-    staleTime: 30 * 1000, // 30 seconds
-    refetchInterval: 30 * 1000, // Refetch every 30 seconds
-    refetchIntervalInBackground: true, // Continue refetching even when tab is not active
-    refetchOnWindowFocus: true, // Refetch when window gains focus
+    staleTime: 30 * 1000,
+    refetchInterval: 30 * 1000,
+    refetchIntervalInBackground: true,
+    refetchOnWindowFocus: true,
     retry: (failureCount, error: any) => {
       if (error?.response?.status === 403) {
         return false;

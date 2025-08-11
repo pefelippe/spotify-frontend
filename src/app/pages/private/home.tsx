@@ -7,6 +7,7 @@ import { useTopArtists } from '../../../features/user/useTopArtists';
 import { useRecentlyPlayed } from '../../../features/user/useRecentlyPlayed';
 import { useUserProfile } from '../../../features/user/useUserProfile';
 import { DefaultPage } from '../../layout/DefaultPage';
+import { UserAvatar } from '../../components/UserAvatar';
 import { CustomHomeSection, QuickPlaylists } from '../../components/home';
 import { useArtistDiscography } from '../../../features/artists/useArtistAlbums';
 import { useMemo, useState } from 'react';
@@ -80,6 +81,24 @@ const Home = () => {
       className="mb-24"
     >
       <div className="space-y-10">
+        {/* Welcome Banner */}
+        {userProfile && (
+          <div className="w-full rounded-2xl bg-[rgb(30,30,30)] p-4 md:p-6 flex items-center gap-4 md:gap-6">
+            <div className="hidden sm:block">
+              <UserAvatar
+                userId={userProfile.id}
+                displayName={userProfile.display_name || 'Você'}
+                size="lg"
+                className="w-12 h-12 md:w-16 md:h-16"
+              />
+            </div>
+            <div className="flex-1 min-w-0 text-left">
+              <div className="text-gray-300 text-xs md:text-sm">Bem-vindo de volta</div>
+              <div className="text-white text-lg md:text-2xl font-extrabold truncate">{userProfile.display_name || 'Você'}</div>
+              <div className="text-gray-400 text-xs md:text-sm mt-1 truncate">Pronto para continuar ouvindo?</div>
+            </div>
+          </div>
+        )}
         {!isLoading && hasContent && (
           <>
             {(likedSongsCount > 0 || userPlaylists.length > 0) && (

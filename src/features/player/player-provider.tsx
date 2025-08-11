@@ -243,7 +243,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
     if (contextUri) {
       if (contextUri.startsWith('spotify:artist:')) {
-        body = { context_uri: contextUri };
+        // Spotify API does not support offset for ARTIST context. If a specific track URI is provided,
+        // play just that track. Otherwise, play the artist context.
+        body = uri && uri.trim() !== ''
+          ? { uris: [uri] }
+          : { context_uri: contextUri };
       } else if (contextUri === 'spotify:user:collection:tracks') {
         try {
           const likedTracksResponse = await fetch('https://api.spotify.com/v1/me/tracks?limit=50', {

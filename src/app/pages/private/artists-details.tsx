@@ -170,15 +170,15 @@ const ArtistaDetalhes = () => {
     >
       <div className="space-y-8">
         {/* Artist Info */}
-        <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
+        <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
           <img
             src={artistDetails?.images?.[0]?.url || allDiscography[0]?.images?.[0]?.url || ''}
             alt={artistName}
             className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
           />
-          <div className="flex-1 text-center md:text-left">
+          <div className="flex-1 text-left">
             <h2 className="text-2xl md:text-3xl font-bold text-white-text mb-2">{artistName}</h2>
-            <div className="flex flex-col md:flex-row items-center md:items-center space-y-2 md:space-y-0 md:space-x-4 mb-3">
+            <div className="flex flex-col md:flex-row items-start space-y-2 md:space-y-0 md:space-x-4 mb-3">
               {artistDetails?.followers?.total && (
                 <p className="text-gray-400 text-sm">
                   {artistDetails.followers.total.toLocaleString()} seguidores
@@ -189,7 +189,7 @@ const ArtistaDetalhes = () => {
 
             {/* Genres as tags */}
             {artistDetails?.genres && artistDetails.genres.length > 0 && (
-              <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+              <div className="flex flex-wrap gap-2 justify-start">
                 {artistDetails.genres.slice(0, 4).map((genre: string, index: number) => (
                   <span
                     key={index}
@@ -212,6 +212,7 @@ const ArtistaDetalhes = () => {
               isPlaylist={false}
               contextUri={`spotify:artist:${artistId}`}
               showIndex={false}
+              showAddedDate={false}
             />
           </div>
         )}
@@ -222,7 +223,7 @@ const ArtistaDetalhes = () => {
             <h3 className="text-xl md:text-2xl font-semibold text-white-text mb-4 md:mb-6">Discografia</h3>
 
             {/* Filter Tabs */}
-            <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-gray-800 p-1 rounded-lg w-fit mx-auto md:mx-0">
+            <div className="flex flex-wrap gap-1 mb-4 md:mb-6 bg-gray-800 p-1 rounded-lg w-fit mx-0">
               {[
                 { key: 'populares', label: 'Populares' },
                 { key: 'albuns', label: 'Álbuns' },

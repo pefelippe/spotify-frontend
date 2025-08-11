@@ -9,7 +9,7 @@ export const useUserDetails = (userId: string) => {
     queryKey: ['userProfile', userId],
     queryFn: () => fetchUserProfile(userId),
     enabled: !!accessToken && !!userId,
-    staleTime: 30 * 60 * 1000, // 30 minutes
+    staleTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 };
@@ -21,11 +21,11 @@ export const useUserPublicPlaylists = (userId: string) => {
     queryKey: ['userPlaylists', userId],
     queryFn: ({ pageParam = 0 }) => fetchUserPlaylists(userId, 20, pageParam),
     enabled: !!accessToken && !!userId,
-    staleTime: 30 * 60 * 1000, // 30 minutes
+    staleTime: 30 * 60 * 1000,
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.next) {
-        return allPages.length * 20; // offset for next page
+        return allPages.length * 20;
       }
       return undefined;
     },

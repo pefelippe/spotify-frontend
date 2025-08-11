@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PlayIcon, PauseIcon, HeartIcon } from '../SpotifyIcons';
 import { usePlayer } from '../../../features/player/usePlayer';
 import TextMarquee from '../../../features/player/components/TextMarquee';
+import HorizontalScroll from '../HorizontalScroll';
 
 interface QuickPlaylistItem {
   id: string;
@@ -35,8 +36,49 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
   };
 
   return (
-    <section className="w-full flex max-w-[100%] overflow-hidden ">
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 max-lg:hidden">
+    <section className="w-full">
+      {/* Mobile/Tablet: horizontal scroll list */}
+      <div className="lg:hidden">
+        <HorizontalScroll ariaLabel="Playlists rápidas" gapClassName="gap-2">
+          {items.map((pl) => (
+            <div key={pl.id} className="min-w-[260px]">
+              <div
+                className="flex items-center gap-3 rounded-xl p-3 bg-[rgb(30,30,30)]/60 hover:bg-[rgb(45,45,45)]/70 transition-colors cursor-pointer"
+                onClick={pl.onClick}
+              >
+                <div className="relative">
+                  {pl.isLiked ? (
+                    <div className="w-12 h-12 rounded-md bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
+                      <HeartIcon size={18} className="text-white" filled />
+                    </div>
+                  ) : pl.image ? (
+                    <img src={pl.image} alt={pl.name} className="w-12 h-12 rounded-md object-cover" loading="lazy" />
+                  ) : (
+                    <div aria-hidden className="w-12 h-12 rounded-md bg-black" />
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <TextMarquee text={pl.name} />
+                </div>
+                <button
+                  className="ml-auto bg-green-500 text-black rounded-full p-2 shadow"
+                  aria-label={isPlaying && activeId === pl.id ? 'Pause' : 'Play'}
+                  onClick={handlePlayPause(pl.id, pl.isLiked)}
+                >
+                  {isPlaying && activeId === pl.id ? (
+                    <PauseIcon size={16} />
+                  ) : (
+                    <PlayIcon size={16} className="ml-0.5" />
+                  )}
+                </button>
+              </div>
+            </div>
+          ))}
+        </HorizontalScroll>
+      </div>
+
+      {/* Desktop: grid */}
+      <div className="hidden lg:grid grid-cols-3 xl:grid-cols-4 gap-3">
         {items.map((pl) => (
           <div key={pl.id} className="group">
             <div
@@ -48,12 +90,10 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
                   <div className="w-12 h-12 rounded-md bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center">
                     <HeartIcon size={18} className="text-white" filled />
                   </div>
+                ) : pl.image ? (
+                  <img src={pl.image} alt={pl.name} className="w-12 h-12 rounded-md object-cover" loading="lazy" />
                 ) : (
-                  pl.image ? (
-                    <img src={pl.image} alt={pl.name} className="w-12 h-12 rounded-md object-cover" loading="lazy" />
-                  ) : (
-                    <div aria-hidden className="w-12 h-12 rounded-md bg-black" />
-                  )
+                  <div aria-hidden className="w-12 h-12 rounded-md bg-black" />
                 )}
               </div>
               <div className="min-w-0 flex-1">

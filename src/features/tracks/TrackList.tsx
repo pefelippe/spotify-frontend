@@ -39,6 +39,8 @@ interface TrackListProps {
   defaultAlbumName?: string;
   // Controls whether the index number column displays numbers
   showIndex?: boolean;
+  // Controls whether the "Adicionado em" column is visible
+  showAddedDate?: boolean;
 }
 
  
@@ -54,6 +56,7 @@ export const TrackList = ({
   defaultAlbumImageUrl,
   defaultAlbumName,
   showIndex = true,
+  showAddedDate = true,
 }: TrackListProps) => {
   const navigate = useNavigate();
   const { playTrack, currentTrack, isPlaying } = usePlayer();
@@ -157,31 +160,43 @@ export const TrackList = ({
         className="flex items-center px-2 lg:px-4 py-1 lg:py-3 rounded-md hover:bg-gray-800 hover:bg-opacity-50 group cursor-pointer transition-colors"
         onMouseEnter={() => setHoveredTrack(track.id)}
         onMouseLeave={() => setHoveredTrack(null)}
+        onClick={() => handlePlayTrack(track)}
       >
-        {/* Track Number / Play Button - Mobile: Always visible */}
-        <div className="w-8 mr-3 flex justify-center flex-shrink-0">
-          {isCurrentTrackPlaying(track) ? (
-            <div className="text-green-500">
-              <PlayingIcon size={16} />
-            </div>
-          ) : isCurrentTrack(track) ? (
-            <div className="text-green-500">
-              <PlayIcon size={16} />
-            </div>
-          ) : hoveredTrack === track.id ? (
-            <button
-              className="text-white hover:text-green-500 cursor-pointer"
-              onClick={() => handlePlayTrack(track)}
-            >
-              <PlayIcon size={16} />
-            </button>
-          ) : showIndex ? (
-            <span className="text-gray-400 text-sm font-medium">
-              {trackNumber}
-            </span>
-          ) : (
-            <span className="text-gray-400 text-sm font-medium opacity-0">-</span>
-          )}
+        {/* Track Number / Play Button */}
+        <div className="w-8 mr-3 flex justify-center flex-shrink-0 max-lg:hidden">
+          {/* Desktop (lg+): show playing indicator and hover play button */}
+          <div className="hidden lg:block">
+            {isCurrentTrackPlaying(track) ? (
+              <div className="text-green-500">
+                <PlayingIcon size={16} />
+              </div>
+            ) : isCurrentTrack(track) ? (
+              <div className="text-green-500">
+                <PlayIcon size={16} />
+              </div>
+            ) : hoveredTrack === track.id ? (
+              <button
+                className="text-white hover:text-green-500 cursor-pointer"
+                onClick={() => handlePlayTrack(track)}
+              >
+                <PlayIcon size={16} />
+              </button>
+            ) : showIndex ? (
+              <span className="text-gray-400 text-sm font-medium">
+                {trackNumber}
+              </span>
+            ) : (
+              <span className="text-gray-400 text-sm font-medium opacity-0">-</span>
+            )}
+          </div>
+          {/* Mobile/Tablet (<lg): hide icons/buttons; show index only */}
+          <div className="lg:hidden">
+            {showIndex ? (
+              <span className="text-gray-400 text-sm font-medium">{trackNumber}</span>
+            ) : (
+              <span className="text-gray-400 text-sm font-medium opacity-0">-</span>
+            )}
+          </div>
         </div>
 
         {/* Track Image - Mobile: Always visible */}
@@ -233,11 +248,13 @@ export const TrackList = ({
         </div>
 
         {/* Added Date - Desktop only */}
-        <div className="hidden lg:block w-32 mr-4 flex-shrink-0">
-          <div className="text-gray-400 text-sm">
-            {(track as any).added_at ? formatAddedDate((track as any).added_at) : 'Data desconhecida'}
+        {showAddedDate && (
+          <div className="hidden lg:block w-32 mr-4 flex-shrink-0">
+            <div className="text-gray-400 text-sm">
+              {(track as any).added_at ? formatAddedDate((track as any).added_at) : 'Data desconhecida'}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Like Button - Mobile: tighter spacing */}
         <div className="w-6 lg:w-8 flex justify-center mr-1.5 lg:mr-3 flex-shrink-0">
@@ -300,16 +317,16 @@ export const TrackList = ({
   return (
     <div>
       {/* Header - Desktop only */}
-      <div className="hidden lg:flex items-center px-4 py-2 border-b border-gray-800 text-gray-400 text-sm font-normal mb-4">
-        <div className="w-8 mr-3 text-center">#</div>
+      <div className="flex items-center px-2 lg:px-4 py-2 border-b border-gray-800 text-gray-400 text-sm font-normal mb-4">
+        <div className="hidden lg:block w-8 mr-3 text-center">#</div>
         <div className="w-12 mr-3">Imagem</div>
         <div className="flex-1 mr-3">Título</div>
-        <div className="w-48 mr-4">Álbum</div>
-        <div className="w-32 mr-4">Adicionado em</div>
-        <div className="w-8 mr-3"></div>
-        <div className="w-8 mr-3"></div>
-        {onRemoveTrack && <div className="w-8 mr-3"></div>}
-        <div className="w-12 flex justify-end">
+        <div className="hidden lg:block w-48 mr-4">Álbum</div>
+        {showAddedDate && <div className="hidden lg:block w-32 mr-4">Adicionado em</div>}
+        <div className="hidden lg:block w-8 mr-3"></div>
+        <div className="hidden lg:block w-8 mr-3"></div>
+        {onRemoveTrack && <div className="hidden lg:block w-8 mr-3"></div>}
+        <div className="hidden lg:flex w-12 justify-end">
           <TimeIcon size={16} className="opacity-50" />
         </div>
       </div>

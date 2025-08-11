@@ -9,11 +9,11 @@ export const useUserPlaylists = () => {
     queryKey: ['userPlaylists'],
     queryFn: ({ pageParam = 0 }) => fetchUserPlaylists(accessToken!, 20, pageParam),
     enabled: !!accessToken,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.next) {
-        return allPages.length * 20; // offset for next page
+        return allPages.length * 20;
       }
       return undefined;
     },

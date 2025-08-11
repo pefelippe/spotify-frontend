@@ -9,7 +9,7 @@ export const useUserProfile = () => {
     queryKey: ['userProfile'],
     queryFn: () => fetchUserProfile(accessToken!),
     enabled: !!accessToken,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 };
