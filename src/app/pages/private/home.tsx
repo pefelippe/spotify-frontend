@@ -28,7 +28,7 @@ const Home = () => {
   const { data: userProfile } = useUserProfile();
 
   const { data: topArtistsData } = useTopArtists();
-  const topArtists = (topArtistsData?.pages?.[0]?.items || []).slice(0, 6);
+  const topArtists = (topArtistsData?.pages?.[0]?.items || []).slice(0, 10);
   const [randomTopArtist, setRandomTopArtist] = useState<any | null>(null);
 
   usePickRandomTopArtist(topArtists, userProfile?.id, setRandomTopArtist);
