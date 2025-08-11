@@ -15,6 +15,8 @@ export const SearchInput: React.FC = () => {
     previewArtists,
     recentSearches,
     addRecentSearch,
+    removeRecentSearch,
+    clearRecentSearches,
   } = useHomeSearchPreview();
   const { playTrack, isReady, deviceId } = usePlayer();
 
@@ -55,22 +57,43 @@ export const SearchInput: React.FC = () => {
             <div className="max-h-96 overflow-y-auto divide-y divide-gray-800">
               {(!searchText.trim() && recentSearches.length > 0) && (
                 <div className="py-2">
-                  <div className="px-3 text-xs uppercase tracking-wide text-gray-400 mb-2">Buscas recentes</div>
-                  {recentSearches.map((term) => (
+                  <div className="px-3 flex items-center justify-between mb-2">
+                    <div className="text-xs uppercase tracking-wide text-gray-400">Buscas recentes</div>
                     <button
-                      key={term}
-                      className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left cursor-pointer"
+                      className="text-xs text-gray-400 hover:text-white cursor-pointer"
                       onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => {
-                        setSearchText(term);
-                        navigate(`/search?q=${encodeURIComponent(term)}`);
-                        addRecentSearch(term);
-                        setShowPreview(false);
-                      }}
+                      onClick={() => clearRecentSearches()}
                     >
-                      <span className="text-gray-400">🔍</span>
-                      <span className="text-white">{term}</span>
+                      Limpar tudo
                     </button>
+                  </div>
+                  {recentSearches.map((term) => (
+                    <div
+                      key={term}
+                      className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left"
+                    >
+                      <button
+                        className="flex-1 flex items-center gap-3 cursor-pointer"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setSearchText(term);
+                          navigate(`/search?q=${encodeURIComponent(term)}`);
+                          addRecentSearch(term);
+                          setShowPreview(false);
+                        }}
+                      >
+                        <span className="text-gray-400">🔍</span>
+                        <span className="text-white">{term}</span>
+                      </button>
+                      <button
+                        className="text-gray-400 hover:text-white text-sm px-2"
+                        aria-label={`Remover ${term} das buscas recentes`}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => removeRecentSearch(term)}
+                      >
+                        ✕
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}

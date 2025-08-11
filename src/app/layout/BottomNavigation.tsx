@@ -1,7 +1,7 @@
-import { NavigationButton } from './NavigationButton';
-import { DownloadIcon } from './SpotifyIcons';
+import { NavigationButton } from '../components/NavigationButton';
+import { DownloadIcon } from '../components/SpotifyIcons';
 import { usePWA } from '../../core/pwa';
-import { SidebarItems } from './Sidebar';
+import { SidebarItems } from '../components/Sidebar';
 
 export const BottomNavigation = () => {
   const { installApp, isInstallable } = usePWA();

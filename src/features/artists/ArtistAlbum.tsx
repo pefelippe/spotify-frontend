@@ -14,7 +14,6 @@ const defaultImage = 'https://via.placeholder.com/300x300/1DB954/FFFFFF?text=Alb
 
 export const ArtistAlbum = ({ name, imageUrl, releaseDate, albumType, onClick, onPlay }: ArtistAlbumProps) => {
 
-
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 

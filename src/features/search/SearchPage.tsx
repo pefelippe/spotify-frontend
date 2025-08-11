@@ -6,6 +6,8 @@ import { CustomHomeSection } from '../../features/home/CustomHomeSection';
 import { useAuth } from '../../core/auth';
 import { fetchSearch } from '../../core/api/queries/search';
 import { TrackList } from '../../app/components/TrackList';
+import { usePlayer } from '../../features/player';
+import { fetchUserProfile } from '../../core/api/queries/user-details';
 
 function useQueryParam(name: string) {
   const { search } = useLocation();
@@ -22,9 +24,10 @@ const SearchPage = () => {
   const [tracks, setTracks] = useState<any[]>([]);
   const [albums, setAlbums] = useState<any[]>([]);
   const [artists, setArtists] = useState<any[]>([]);
-  const [users, setUsers] = useState<Array<{ id: string; display_name: string }>>([]);
+  const [users, setUsers] = useState<Array<{ id: string; display_name: string; image?: string }>>([]);
   const [localInput, setLocalInput] = useState('');
   const searchDebounceRef = useRef<number | null>(null);
+  const { playTrack, isReady, deviceId } = usePlayer();
 
   const saveRecentSearch = (value: string) => {
     const v = (value || '').trim();
@@ -62,16 +65,29 @@ const SearchPage = () => {
         setTracks(data.tracks?.items || []);
         setAlbums(data.albums?.items || []);
         setArtists(data.artists?.items || []);
-        const owners: Record<string, string> = {};
+        const owners: Record<string, { name: string; id: string }> = {} as any;
         const playlists = data.playlists?.items || [];
         for (const p of playlists) {
           const ownerId = p?.owner?.id;
           const ownerName = p?.owner?.display_name;
           if (ownerId && ownerName && !owners[ownerId]) {
-            owners[ownerId] = ownerName;
+            owners[ownerId] = { id: ownerId, name: ownerName };
           }
         }
-        setUsers(Object.entries(owners).map(([id, display_name]) => ({ id, display_name })));
+        // Attempt to enrich users with images
+        const ownerEntries = Object.values(owners);
+        const enriched = await Promise.all(
+          ownerEntries.slice(0, 12).map(async (o) => {
+            try {
+              const profile = await fetchUserProfile(o.id);
+              const image = profile?.images?.[0]?.url;
+              return { id: o.id, display_name: o.name, image };
+            } catch {
+              return { id: o.id, display_name: o.name };
+            }
+          }),
+        );
+        setUsers(enriched);
       } catch (e) {
         setError(e);
       } finally {
@@ -125,27 +141,7 @@ const SearchPage = () => {
         {!isLoading && !error && q && (
           <>
             {tracks.length > 0 && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-1">
-                  <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-3">Resultado principal</h3>
-                  {(() => {
-                    const t = tracks[0];
-                    return (
-                      <button
-                        className="w-full text-left rounded-2xl bg-[rgb(25,25,25)] hover:bg-[rgb(35,35,35)] transition-colors p-4 cursor-pointer flex items-center gap-4"
-                        onClick={() => {
-                          navigate(`/search?q=${encodeURIComponent(q)}`);
-                        }}
-                      >
-                        <img src={t.album?.images?.[0]?.url || 'https://via.placeholder.com/80x80/333/fff?text=♪'} alt={t.name} className="w-20 h-20 rounded object-cover" />
-                        <div className="min-w-0">
-                          <div className="text-white text-lg font-semibold truncate">{t.name}</div>
-                          <div className="text-gray-400 text-sm truncate">{(t.artists || []).map((a: any) => a.name).join(', ')}</div>
-                        </div>
-                      </button>
-                    );
-                  })()}
-                </div>
+              <div className="grid gap-6">
                 <div className="lg:col-span-2">
                   <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-3">Músicas</h3>
                   <TrackList data={{ pages: [{ items: tracks.slice(0, 10) }] }} isPlaylist={false} contextUri={undefined} showAddedDate={false} />
@@ -188,7 +184,7 @@ const SearchPage = () => {
                 data={users.map((u) => ({
                   id: u.id,
                   title: u.display_name,
-                  imageSrc: 'https://via.placeholder.com/200x200/333/fff?text=👤',
+                  imageSrc: u.image || 'https://via.placeholder.com/200x200/333/fff?text=👤',
                 }))}
                 onClickData={(userId) => navigate(`/user/${userId}`)}
                 hasShowMore={false}
@@ -202,4 +198,5 @@ const SearchPage = () => {
 };
 
 export default SearchPage;
+
 

@@ -28,7 +28,9 @@ export function useHomeSearchPreview() {
 
   const addRecentSearch = (q: string) => {
     const value = (q || '').trim();
-    if (!value) return;
+    if (!value) {
+      return;
+    }
     setRecentSearches((prev) => {
       const next = [value, ...prev.filter((x) => x.toLowerCase() !== value.toLowerCase())].slice(0, 10);
       try {
@@ -36,6 +38,27 @@ export function useHomeSearchPreview() {
       } catch {}
       return next;
     });
+  };
+
+  const removeRecentSearch = (q: string) => {
+    const value = (q || '').trim();
+    if (!value) {
+      return;
+    }
+    setRecentSearches((prev) => {
+      const next = prev.filter((x) => x.toLowerCase() !== value.toLowerCase());
+      try {
+        localStorage.setItem('recent_searches', JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  const clearRecentSearches = () => {
+    setRecentSearches([]);
+    try {
+      localStorage.removeItem('recent_searches');
+    } catch {}
   };
 
   useEffect(() => {
@@ -50,7 +73,9 @@ export function useHomeSearchPreview() {
       return;
     }
     searchTimeoutRef.current = window.setTimeout(async () => {
-      if (!accessToken) return;
+      if (!accessToken) {
+        return;
+      }
       setIsSearching(true);
       try {
         const res = await fetchSearch(q, accessToken, ['track', 'album', 'artist', 'playlist'], 5, 0);
@@ -92,6 +117,8 @@ export function useHomeSearchPreview() {
     isSearching,
     recentSearches,
     addRecentSearch,
+    removeRecentSearch,
+    clearRecentSearches,
   } as const;
 }
 

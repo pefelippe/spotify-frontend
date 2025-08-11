@@ -4,7 +4,7 @@ import ScrollToTop from '../components/ScrollToTop';
 
 import { Sidebar } from '../components/Sidebar';
 import { MobileHeader } from '../layout/MobileHeader';
-import { BottomNavigation } from '../components/BottomNavigation';
+import { BottomNavigation } from '../layout/BottomNavigation';
 
 import Home from '../pages/private/home';
 import Perfil from '../pages/private/profile';
