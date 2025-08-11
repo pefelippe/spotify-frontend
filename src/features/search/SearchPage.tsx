@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DefaultPage } from '../../app/layout/DefaultPage';
 import { QueryState } from '../../app/components/QueryState';
-import { CustomHomeSection } from '../../features/home/CustomHomeSection';
+import { CustomSection } from '../../app/components/CustomSection';
 import { useAuth } from '../../core/auth';
 import { fetchSearch } from '../../core/api/queries/search';
 import { TrackList } from '../../app/components/TrackList';
-import { usePlayer } from '../../features/player';
+
 import { fetchUserProfile } from '../../core/api/queries/user-details';
 
 function useQueryParam(name: string) {
@@ -27,7 +27,6 @@ const SearchPage = () => {
   const [users, setUsers] = useState<Array<{ id: string; display_name: string; image?: string }>>([]);
   const [localInput, setLocalInput] = useState('');
   const searchDebounceRef = useRef<number | null>(null);
-  const { playTrack, isReady, deviceId } = usePlayer();
 
   const saveRecentSearch = (value: string) => {
     const v = (value || '').trim();
@@ -74,7 +73,6 @@ const SearchPage = () => {
             owners[ownerId] = { id: ownerId, name: ownerName };
           }
         }
-        // Attempt to enrich users with images
         const ownerEntries = Object.values(owners);
         const enriched = await Promise.all(
           ownerEntries.slice(0, 12).map(async (o) => {
@@ -150,7 +148,7 @@ const SearchPage = () => {
             )}
 
             {albums.length > 0 && (
-              <CustomHomeSection
+              <CustomSection
                 title="Álbuns"
                 data={albums.map((a: any) => ({
                   id: a.id,
@@ -165,7 +163,7 @@ const SearchPage = () => {
             )}
 
             {artists.length > 0 && (
-              <CustomHomeSection
+              <CustomSection
                 title="Artistas"
                 data={artists.map((a: any) => ({
                   id: a.id,
@@ -179,7 +177,7 @@ const SearchPage = () => {
             )}
 
             {users.length > 0 && (
-              <CustomHomeSection
+              <CustomSection
                 title="Usuários"
                 data={users.map((u) => ({
                   id: u.id,

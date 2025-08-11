@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomHomeSection, CustomHomeSectionItem } from './CustomHomeSection';
+import { CustomSection, CustomHomeSectionItem } from './CustomSection';
 
 interface RecentlyPlayedSectionProps {
   items: Array<{ track: any }>;
@@ -25,7 +25,7 @@ export const RecentlyPlayedSection: React.FC<RecentlyPlayedSectionProps> = ({ it
   }).filter(Boolean) as CustomHomeSectionItem[];
 
   return (
-    <CustomHomeSection
+    <CustomSection
       title="Tocadas Recentemente"
       data={data}
       onClickData={(id: string) => {

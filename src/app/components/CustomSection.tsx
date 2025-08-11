@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { SectionHeader } from './SectionHeader';
-import { HorizontalScroll } from '../../app/components/HorizontalScroll';
-import { CustomCard, PlaybackIntent } from '../../app/components/CustomCard';
+import { HorizontalScroll } from '../layout/HorizontalScroll';
+import { CustomCard, PlaybackIntent } from './CustomCard';
 
 export interface CustomHomeSectionItem {
   id: string;
@@ -9,6 +8,7 @@ export interface CustomHomeSectionItem {
   subtitle?: string;
   imageSrc: string;
   playback?: PlaybackIntent;
+  placeholder?: React.ReactNode;
 }
 
 interface CustomHomeSectionProps {
@@ -27,7 +27,23 @@ interface CustomHomeSectionProps {
   align?: 'left' | 'center';
 }
 
-export const CustomHomeSection: React.FC<CustomHomeSectionProps> = ({
+export const SectionHeader: React.FC<{ title: string; onAction?: () => void; actionText?: string; className?: string }> = ({ title, onAction, actionText = 'Ver tudo', className }) => {
+  return (
+    <div className={`lg:ml-4 mb-2 flex items-center justify-between ${className || ''}`}>
+      <h2 onClick={onAction} className={` text-white text-xl lg:text-2xl font-bold tracking-tight ${actionText ? 'cursor-pointer hover:underline' : ''}`}>{title}</h2>
+      {onAction && (
+        <button
+          onClick={onAction}
+          className="text-gray-400 hover:text-white text-sm md:text-base font-medium flex items-center transition-colors duration-200 group cursor-pointer"
+        >
+          {actionText}
+        </button>
+      )}
+    </div>
+  );
+};
+
+export const CustomSection: React.FC<CustomHomeSectionProps> = ({
   title,
   data,
   onClickData,
@@ -77,6 +93,7 @@ export const CustomHomeSection: React.FC<CustomHomeSectionProps> = ({
                   imageClassName={imageClassName}
                   titleClassName={titleClassName}
                   align={align}
+                  placeholder={item.placeholder}
                   onTogglePlay={() => {
                     if (activeId === item.id) {
                       setActiveId(null);
@@ -92,5 +109,5 @@ export const CustomHomeSection: React.FC<CustomHomeSectionProps> = ({
   );
 };
 
-export default CustomHomeSection;
+export default CustomSection;
 

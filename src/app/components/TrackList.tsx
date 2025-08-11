@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { InfiniteScrollList } from './InfiniteScrollList';
+import { InfiniteScrollList } from '../layout/InfiniteScrollList';
 import { usePlayer } from '../../features/player';
 import { useLikedTracks } from '../../features/liked-songs/liked-tracks-provider';
 import { useAddToLikedSongs, useRemoveFromLikedSongs } from '../../core/api/hooks/useLikedSongs';

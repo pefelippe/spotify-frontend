@@ -1,4 +1,4 @@
-import { NavigationButton } from '../components/NavigationButton';
+import { NavigationButton } from './NavigationButton';
 import { DownloadIcon } from '../components/SpotifyIcons';
 import { usePWA } from '../../core/pwa';
 import { SidebarItems } from '../components/Sidebar';

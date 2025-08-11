@@ -1,7 +1,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { CustomButton } from './CustomButton';
-import { NavigationButton } from './NavigationButton';
+import { NavigationButton } from '../layout/NavigationButton';
 import { HomeIcon, ArtistIcon, PlaylistIcon, UserIcon, DownloadIcon, SpotifyLogo } from './SpotifyIcons';
 import { usePWA } from '../../core/pwa';
 

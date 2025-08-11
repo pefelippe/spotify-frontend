@@ -31,6 +31,7 @@ const AlbumDetalhes = () => {
     navigate(`/artist/${artistId}`);
   };
 
+
   return (
     <DefaultPage
       isLoading={isLoadingDetails}

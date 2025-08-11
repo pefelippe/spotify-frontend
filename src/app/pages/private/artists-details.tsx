@@ -9,7 +9,7 @@ import { useFollowArtist, useIsFollowingArtist, useUnfollowArtist } from '../../
 import { usePlayer } from '../../../features/player';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { ArtistHeader } from '../../../features/artists/ArtistHeader';
-import { CustomHomeSection, CustomHomeSectionItem } from '../../../features/home/CustomHomeSection';
+import { CustomSection, CustomHomeSectionItem } from '../../components/CustomSection';
 
 const ArtistaDetalhes = () => {
   const { artistId } = useParams();
@@ -138,7 +138,7 @@ const ArtistaDetalhes = () => {
         )}
 
         {albumItems.length > 0 && (
-          <CustomHomeSection
+          <CustomSection
             title="Álbuns"
             data={albumItems}
             onClickData={(albumId) => navigate(`/album/${albumId}`)}
@@ -147,7 +147,7 @@ const ArtistaDetalhes = () => {
         )}
 
         {singleItems.length > 0 && (
-          <CustomHomeSection
+          <CustomSection
             title="Singles"
             data={singleItems}
             onClickData={(albumId) => navigate(`/album/${albumId}`)}

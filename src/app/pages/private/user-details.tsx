@@ -2,11 +2,10 @@ import { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { QueryState } from '../../components/QueryState';
-import { UserHeader } from '../../../features/user/UserHeader';
+import { UserHeader } from '../../layout/UserHeader';
 import { useUserDetails, useUserPublicPlaylists } from '../../../core/api/hooks/useUserDetails';
-import { ArtistsSection } from '../../../features/home/ArtistsSection';
-import { CustomHomeSection } from '../../../features/home/CustomHomeSection';
-import { useTopArtists } from '../../../core/api/hooks/useTopArtists';
+import { ArtistsSection } from '../../components/ArtistsSection';
+import { CustomSection } from '../../components/CustomSection';
 import { useUserProfile } from '../../../core/api/hooks/useUserProfile';
 import { useUserFollowingArtists } from '../../../core/api/hooks/useUserFollowing';
 import { useLikedSongs } from '../../../core/api/hooks/useLikedSongs';
@@ -20,8 +19,6 @@ const UserDetails = () => {
   const { data: playlistsData, isLoading: isLoadingPlaylists, error: playlistsError } = useUserPublicPlaylists(userId!);
 
   const showPrivateSections = !!(currentUser?.id && userProfile?.id && currentUser.id === userProfile.id);
-  const { data: topArtistsData } = useTopArtists();
-  const topArtists = useMemo(() => (topArtistsData?.pages?.[0]?.items || []).slice(0, 12), [topArtistsData]);
 
   const { data: followingData } = useUserFollowingArtists(showPrivateSections, 20);
   const followingArtists = useMemo(
@@ -55,13 +52,6 @@ const UserDetails = () => {
             likedSongs: likedSongsTotal,
           }}
         />
-        {showPrivateSections && topArtists.length > 0 && (
-          <ArtistsSection
-            title="Top artistas do usuário"
-            artists={topArtists}
-            onClickArtist={(artistId) => navigate(`/artist/${artistId}`)}
-          />
-        )}
         {publicPlaylists.length > 0 && (
           <div className="mb-8 mt-10">
             {isLoadingPlaylists ? (
@@ -69,7 +59,7 @@ const UserDetails = () => {
             ) : playlistsError ? (
               <QueryState error={playlistsError} errorMessage="Erro ao carregar playlists." centered={false} />
             ) : (
-              <CustomHomeSection
+              <CustomSection
                 title="Playlists Públicas"
                 data={publicPlaylists.slice(0, 12).map((pl: any) => ({
                   id: pl.id,
@@ -78,14 +68,12 @@ const UserDetails = () => {
                   imageSrc: pl.images?.[0]?.url || '',
                   playback: { contextUri: `spotify:playlist:${pl.id}` },
                 }))}
-                onClickData={(playlistId) => handlePlaylistClick(playlistId)}
+                onClickData={(playlistId: string) => handlePlaylistClick(playlistId)}
                 hasShowMore={false}
               />
             )}
           </div>
         )}
-
-
         {showPrivateSections && followingArtists.length > 0 && (
           <ArtistsSection
             title="Seguindo"

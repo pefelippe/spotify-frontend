@@ -1,6 +1,6 @@
 import { useTopArtists } from '../../../core/api/hooks/useTopArtists';
 import { useNavigate } from 'react-router-dom';
-import { InfiniteScrollList } from '../../components/InfiniteScrollList';
+import { InfiniteScrollList } from '../../layout/InfiniteScrollList';
 import { ArtistItem } from '../../../features/artists/ArtistItem';
 import { useMemo } from 'react';
 import { DefaultPage } from '../../layout/DefaultPage';

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ChevronRightIcon } from './SpotifyIcons';
+import { ChevronRightIcon } from '../components/SpotifyIcons';
 
 interface HorizontalScrollProps {
   children: React.ReactNode;

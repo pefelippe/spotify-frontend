@@ -2,22 +2,21 @@ import { useNavigate } from 'react-router-dom';
 import { useUserPlaylists } from '../../../core/api/hooks/useUserPlaylists';
 import { useLikedSongs } from '../../../core/api/hooks/useLikedSongs';
 import { usePlayer } from '../../../features/player';
-
+import WelcomeBanner from '../../components/WelcomeBanner';
+import { CustomSection } from '../../components/CustomSection';
+import { ArtistsSection } from '../../components/ArtistsSection';
 import { useTopArtists } from '../../../core/api/hooks/useTopArtists';
 import { useRecentlyPlayed } from '../../../core/api/hooks/useRecentlyPlayed';
 import { useUserProfile } from '../../../core/api/hooks/useUserProfile';
 import { DefaultPage } from '../../layout/DefaultPage';
+
 import {
-  WelcomeBanner,
-  QuickPlaylistsStandalone,
-  RecentlyPlayedSection,
-  ArtistsSection,
   UserPlaylistsSection,
-  ForFansFromArtistSection,
-} from '../../../features/home';
+} from '../../components/UserPlaylistsSection';
+
 import { useArtistDiscography } from '../../../core/api/hooks/useArtistAlbums';
 import { useMemo, useState } from 'react';
-import { usePickRandomTopArtist } from '../../../features/home';
+import { usePickRandomTopArtist } from '../../hooks/useHomeEffects';
 import SearchInput from '../../../features/search/SearchInput';
 
 const Home = () => {
@@ -35,6 +34,7 @@ const Home = () => {
   usePickRandomTopArtist(topArtists, userProfile?.id, setRandomTopArtist);
 
   const { data: discogData } = useArtistDiscography(randomTopArtist?.id || '');
+  
   const discographyItems = useMemo(() => {
     const items = discogData?.pages?.flatMap((p: any) => p.items) || [];
     return items.slice(0, 12).map((a: any) => ({
@@ -100,16 +100,52 @@ const Home = () => {
         )}
         {!isLoading && hasContent && (
           <>
-            {!userProfile && (likedSongsCount > 0 || userPlaylists.length > 0) && (
-              <QuickPlaylistsStandalone
-                likedSongsCount={likedSongsCount}
-                userPlaylists={userPlaylists}
-                onClickLikedSongs={() => navigate('/playlists/liked-songs')}
-                onClickPlaylist={(id: string) => navigate(`/playlist/${id}`)}
-              />
+            {userPlaylists.length > 0 && (
+              <>
+                <UserPlaylistsSection
+                  playlists={userPlaylists}
+                  onClickPlaylist={(id: string) => navigate(`/playlist/${id}`)}
+                  onShowMore={() => navigate('/playlists')}
+                  likedSongsCount={likedSongsCount}
+                  onClickLikedSongs={() => navigate('/playlists/liked-songs')}
+                  currentUserName={userProfile?.display_name}
+                />
+              </>
             )}
             {uniqueRecentlyPlayed.length > 0 && (
-              <RecentlyPlayedSection items={uniqueRecentlyPlayed} onPlayTrack={handlePlayTrack} />
+              <CustomSection
+                title="Tocadas Recentemente"
+                data={uniqueRecentlyPlayed.slice(0, 12).map((item: any, index: number) => {
+                  const track = item?.track;
+                  if (!track) {
+                    return null as any;
+                  }
+                  return {
+                    id: `${track.id}-${index}`,
+                    title: track.name,
+                    subtitle: (track.artists || []).map((a: any) => a.name).join(', '),
+                    imageSrc: track.album?.images?.[0]?.url || 'https://via.placeholder.com/56x56/333/fff?text=♪',
+                    playback: { uri: track.uri || `spotify:track:${track.id}` },
+                  };
+                }).filter(Boolean)}
+                onClickData={(id: string) => {
+                  const match = uniqueRecentlyPlayed
+                    .map((rp: any, idx: number) => ({ rp, idx }))
+                    .find(({ rp, idx }: { rp: any; idx: number }) => `${rp.track?.id}-${idx}` === id);
+                  const track = match?.rp?.track;
+                  if (!track) return;
+                  handlePlayTrack(track);
+                }}
+                hasShowMore={false}
+              />
+            )}
+            {randomTopArtist && discographyItems.length > 0 && (
+              <CustomSection
+                title={`Para fãs de ${randomTopArtist.name}`}
+                data={discographyItems}
+                onClickData={(albumId: string) => navigate(`/album/${albumId}`)}
+                hasShowMore={false}
+              />
             )}
             {topArtists.length > 0 && (
               <ArtistsSection
@@ -117,22 +153,6 @@ const Home = () => {
                 onClickArtist={(id: string) => navigate(`/artist/${id}`)}
                 onShowMore={() => navigate('/artists')}
               />
-            )}
-            {userPlaylists.length > 0 && (
-              <>
-                <UserPlaylistsSection
-                  playlists={userPlaylists}
-                  onClickPlaylist={(id: string) => navigate(`/playlist/${id}`)}
-                  onShowMore={() => navigate('/playlists')}
-                />
-                {randomTopArtist && discographyItems.length > 0 && (
-                  <ForFansFromArtistSection
-                    artistName={randomTopArtist.name}
-                    items={discographyItems}
-                    onClickAlbum={(albumId: string) => navigate(`/album/${albumId}`)}
-                  />
-                )}
-              </>
             )}
           </>
         )}

@@ -8,29 +8,28 @@ export const Callback = () => {
   const navigate = useNavigate();
   const hasProcessed = useRef(false);
 
+  const processCallback = async () => {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+
+      if (code) {
+        await authenticate(code);
+        navigate('/');
+      } else {
+        throw new Error('No authorization code found');
+      }
+    } catch (error: unknown) {
+      console.error('Error during callback:', error);
+      navigate('/login');
+    }
+  };
+
   useEffect(() => {
     if (hasProcessed.current) {
       return;
     }
     hasProcessed.current = true;
-
-    const processCallback = async () => {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-
-        if (code) {
-          await authenticate(code);
-          navigate('/');
-        } else {
-          throw new Error('No authorization code found');
-        }
-      } catch (error: unknown) {
-        console.error('Error during callback:', error);
-        navigate('/login');
-      }
-    };
-
     processCallback();
   }, [authenticate, navigate]);
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { CustomButton } from './CustomButton';
-import { PlayIcon, PencilIcon, TrashIcon } from './SpotifyIcons';
-import { UserAvatar } from '../../features/user/UserAvatar';
+import { PlayIcon, PencilIcon, TrashIcon, HeartIcon } from './SpotifyIcons';
+import { UserAvatar } from '../hooks/UserAvatar';
 
 interface TrackInfoDetailedProps {
   imageUrl: string;
@@ -35,12 +35,17 @@ export const TrackInfoDetailed: React.FC<TrackInfoDetailedProps> = ({
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
       <div className="w-full md:w-auto flex-shrink-0 flex flex-col items-center">
-        <img
-          src={imageUrl}
-          alt={title}
-          className="mx-auto w-32 h-32 md:w-48 md:h-48 rounded-lg object-cover shadow-2xl"
-        />
-
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={title}
+            className="mx-auto w-32 h-32 md:w-48 md:h-48 rounded-lg object-cover shadow-2xl"
+          />
+        ) : (
+          <div className="mx-auto w-32 h-32 md:w-48 md:h-48 rounded-lg shadow-2xl bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
+            <HeartIcon size={48} className="text-white" filled />
+          </div>
+        )}
       </div>
       <div className="flex-1 text-center md:text-left">
         <div className="flex items-center justify-center md:justify-start gap-2 mb-2">

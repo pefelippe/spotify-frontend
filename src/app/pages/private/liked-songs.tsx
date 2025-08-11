@@ -6,9 +6,8 @@ import { TrackList } from '../../components/TrackList';
 import { useLikedSongs } from '../../../core/api/hooks/useLikedSongs';
 import { useUserProfile } from '../../../core/api/hooks/useUserProfile';
 import { usePlayer } from '../../../features/player';
-import { PlayIcon } from '../../components/SpotifyIcons';
 import { formatTotalDurationFromPages } from '../../../utils/formatTotalDuration';
-import { LikedSongsHeader } from '../../../features/liked-songs/LikedSongsHeader';
+import TrackInfoDetailed from '../../components/TrackInfoDetailed';
 
 const LikedSongs = () => {
   const navigate = useNavigate();
@@ -43,25 +42,20 @@ const LikedSongs = () => {
       hasBackButton
     >
       <div className="space-y-8">
-        <LikedSongsHeader
-          user={userProfile}
-          likedSongsCount={likedSongsCount}
-          totalDurationText={likedSongsData ? formatTotalDurationFromPages(likedSongsData, (item: any) => item.track?.duration_ms) : undefined}
-          onClickUser={handleUserClick}
+        <TrackInfoDetailed
+          imageUrl={''}
+          title="Músicas Curtidas"
+          typeLabel="Playlist"
+          primaryLabel={userProfile?.display_name || 'Você'}
+          primaryUserId={userProfile?.id}
+          primaryDisplayName={userProfile?.display_name}
+          onClickPrimaryLabel={() => handleUserClick(userProfile?.id || '')}
+          metaItems={[
+            `${likedSongsCount} músicas`,
+            ...(likedSongsData ? [formatTotalDurationFromPages(likedSongsData, (item: any) => item.track?.duration_ms)] : []),
+          ]}
+          onClickPlay={likedSongsCount > 0 ? handlePlayLikedSongs : undefined}
         />
-
-        {/* Play Button */}
-        {likedSongsCount > 0 && (
-          <div className="mb-6">
-            <button
-              onClick={handlePlayLikedSongs}
-              className="bg-green-500 text-black px-6 py-3 rounded-full hover:scale-105 transition-transform cursor-pointer flex items-center justify-center"
-            >
-              <PlayIcon size={24} className="ml-0.5" />
-              <span className="ml-2">Reproduzir</span>
-            </button>
-          </div>
-        )}
 
         {/* Tracks */}
         <div>

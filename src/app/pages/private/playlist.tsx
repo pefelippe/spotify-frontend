@@ -1,7 +1,7 @@
 import { useUserPlaylists } from '../../../core/api/hooks/useUserPlaylists';
 import { useCreatePlaylist } from '../../../core/api/hooks/useCreatePlaylist';
 import CreatePlaylistModal from '../../../features/playlists/CreatePlaylistModal';
-import { InfiniteScrollList } from '../../components/InfiniteScrollList';
+import { InfiniteScrollList } from '../../layout/InfiniteScrollList';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { DefaultPage } from '../../layout/DefaultPage';

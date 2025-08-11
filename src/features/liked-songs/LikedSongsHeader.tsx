@@ -1,5 +1,5 @@
 import React from 'react';
-import { UserAvatar } from '../../features/user/UserAvatar';
+import { UserAvatar } from '../../app/hooks/UserAvatar';
 import { HeartIcon } from '../../app/components/SpotifyIcons';
 
 interface LikedSongsHeaderProps {

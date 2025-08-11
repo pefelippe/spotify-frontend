@@ -19,6 +19,7 @@ interface CustomCardProps {
   isActive?: boolean;
   onTogglePlay?: () => void;
   imageClassName?: string;
+  placeholder?: React.ReactNode;
   titleClassName?: string;
   align?: 'left' | 'center';
 }
@@ -35,6 +36,7 @@ export const CustomCard: React.FC<CustomCardProps> = ({
   isActive,
   onTogglePlay,
   imageClassName,
+  placeholder,
   titleClassName,
   align = 'left',
 }) => {
@@ -91,10 +93,14 @@ export const CustomCard: React.FC<CustomCardProps> = ({
             loading="lazy"
           />
         ) : (
-          <div
-            aria-hidden
-            className={`w-full aspect-square bg-black ${imageClassName || 'rounded-md'}`}
-          />
+          placeholder ? (
+            <div className={`w-full aspect-square overflow-hidden ${imageClassName || 'rounded-md'}`}>{placeholder}</div>
+          ) : (
+            <div
+              aria-hidden
+              className={`w-full aspect-square bg-black ${imageClassName || 'rounded-md'}`}
+            />
+          )
         )}
         {playback && (
           <button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomHomeSection, CustomHomeSectionItem } from './CustomHomeSection';
+import { CustomSection, CustomHomeSectionItem } from './CustomSection';
 
 interface ArtistsSectionProps {
   artists: Array<{ id: string; name: string; images?: { url: string }[] }>;
@@ -20,7 +20,7 @@ export const ArtistsSection: React.FC<ArtistsSectionProps> = ({ artists, onClick
   }));
 
   return (
-    <CustomHomeSection
+    <CustomSection
       title={title}
       data={data}
       onClickData={onClickArtist}
