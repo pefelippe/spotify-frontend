@@ -28,7 +28,8 @@ export const ArtistsSection: React.FC<ArtistsSectionProps> = ({ artists, onClick
       onShowMore={onShowMore}
       actionText="Mostrar tudo"
       imageClassName="rounded-full"
-      titleClassName="text-center"
+      titleClassName="text-xs lg:text-sm text-center"
+      itemWidthClassName="w-[120px] md:w-[160px] lg:w-[180px] xl:w-[200px] 2xl:w-[220px]"
       align="center"
     />
   );

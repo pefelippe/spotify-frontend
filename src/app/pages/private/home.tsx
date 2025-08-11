@@ -137,6 +137,8 @@ const Home = () => {
                   handlePlayTrack(track);
                 }}
                 hasShowMore={false}
+                itemWidthClassName="w-[160px] md:w-[200px] lg:w-[220px] xl:w-[240px] 2xl:w-[260px]"
+                titleClassName="text-xs lg:text-sm"
               />
             )}
             {randomTopArtist && discographyItems.length > 0 && (
@@ -145,6 +147,8 @@ const Home = () => {
                 data={discographyItems}
                 onClickData={(albumId: string) => navigate(`/album/${albumId}`)}
                 hasShowMore={false}
+                itemWidthClassName="w-[160px] md:w-[200px] lg:w-[220px] xl:w-[240px] 2xl:w-[260px]"
+                titleClassName="text-xs lg:text-sm"
               />
             )}
             {topArtists.length > 0 && (

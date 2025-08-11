@@ -19,9 +19,9 @@ export const ArtistHeader: React.FC<ArtistHeaderProps> = ({ imageUrl, name, foll
       <img
         src={imageUrl}
         alt={name}
-        className="h-28 md:h-40 lg:h-[230px] lg:w-[230px] rounded-full object-cover bg-black/50 shadow-2xl border-2 border-white/10"
+        className="h-40 lg:h-[230px] lg:w-[230px] rounded-full object-cover bg-black/50 shadow-2xl border-2 border-white/10"
       />
-      <div className="flex-1 text-left">
+      <div className="flex-1 text-center lg:text-left">
         <h2 className="text-3xl md:text-5xl lg:text-7xl font-extrabold text-white-text mb-2">{name}</h2>
         <div className="mb-3">
           {followers ? <p className="text-gray-400 text-sm">{followers.toLocaleString()} seguidores</p> : null}

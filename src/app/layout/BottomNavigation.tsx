@@ -1,49 +1,23 @@
 import { NavigationButton } from './NavigationButton';
-import { DownloadIcon } from '../components/SpotifyIcons';
-import { usePWA } from '../../core/pwa';
 import { SidebarItems } from '../components/Sidebar';
 
 export const BottomNavigation = () => {
-  const { installApp, isInstallable, isInstalled } = usePWA();
-
-  const handleInstallClick = async () => {
-    console.log('[PWA] Install button clicked (BottomNavigation). isInstallable:', isInstallable);
-    const ok = await installApp();
-    console.log('[PWA] installApp result:', ok);
-  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700/30 z-40 lg:hidden">
-      <div className="flex justify-between items-start h-16 lg:h-24 px-4">
+      <div className="flex justify-between items-start h-16 lg:h-24 px-4 max-w-[90%] mx-auto">
         {SidebarItems.map((item) => (
-          <div key={item.name} className="flex flex-col items-center ">
+          <div key={item.name} className="flex flex-col items-center">
             <NavigationButton
-              name=""
+              name={item.name}
               path={item.path}
               icon={item.icon}
               baseClassName="flex flex-col items-center justify-center p-2.5 rounded-lg transition-all duration-200 cursor-pointer"
               activeClassName="text-white-text bg-gray-800/40"
               inactiveClassName="text-gray-400 hover:text-white-text"
             />
-            <span className="text-xs text-gray-400  font-medium">{item.name}</span>
           </div>
         ))}
-        {!isInstalled && (
-          <div className="flex flex-col items-center ">
-            <button
-              onClick={handleInstallClick}
-              className={`flex flex-col items-center justify-center p-2.5 rounded-lg transition-all duration-200 cursor-pointer ${
-                !isInstallable
-                  ? 'text-gray-600'
-                  : 'text-gray-400 hover:text-white-text hover:bg-gray-800/40'
-              }`}
-              aria-label="Instalar PWA"
-            >
-              <DownloadIcon size={20} />
-            </button>
-            <span className="text-xs text-gray-400 font-medium">PWA</span>
-          </div>
-        )}
       </div>
     </div>
   );

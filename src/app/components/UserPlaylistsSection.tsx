@@ -48,7 +48,8 @@ export const UserPlaylistsSection: React.FC<UserPlaylistsSectionProps> = ({ play
       onShowMore={onShowMore}
       actionText="Mostrar tudo"
       imageClassName="rounded-md"
-      titleClassName="text-sm"
+      titleClassName="text-xs lg:text-sm"
+      itemWidthClassName="w-[160px] md:w-[200px] lg:w-[220px] xl:w-[240px] 2xl:w-[260px]"
     />
   );
 };

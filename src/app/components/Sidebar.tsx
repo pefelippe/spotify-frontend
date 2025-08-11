@@ -50,7 +50,7 @@ export const Sidebar = () => {
             icon={<DownloadIcon size={18} />}
             onClick={handleInstallClick}
             variant="pwa"
-            className="w-full justify-start"
+            className="w-full justify-start hidden lg:flex"
           />
         </div>
       )}

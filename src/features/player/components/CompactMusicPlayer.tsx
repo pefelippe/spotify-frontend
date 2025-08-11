@@ -81,9 +81,10 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
   } as React.CSSProperties;
   return (
     <div
-      className={`fixed bottom-[70px] border-2 border-gray-300/20 rounded-2xl max-lg:mx-2  
+      className={`fixed bottom-[70px] max-lg:mx-3 rounded-2xl border border-gray-700/40 
         lg:bottom-0 left-0 lg:left-[250px] right-0 lg:border-t lg:border-gray-700/30 z-50 
-        shadow-2xl transform transition-transform duration-300 ease-out 
+        shadow-[0_10px_30px_rgba(0,0,0,0.6)] backdrop-blur supports-backdrop-blur:bg-black/70 bg-black/80 
+        transform transition-transform duration-300 ease-out 
         ${isEntering ? 'translate-y-0' : 'translate-y-full'}`}
       data-swipe-ignore
       onClick={(e) => {
@@ -100,7 +101,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
       style={bgStyle}
     >
       <div className="flex flex-col">
-        <div className="flex items-center justify-between px-3 lg:px-5 py-2 lg:py-3 hover:bg-gray-900/20 transition-colors duration-200">
+        <div className="flex items-center justify-between px-3 lg:px-6 py-2.5 lg:py-3.5">
           <TrackInfo
             track={currentTrack}
             isLiked={isCurrentTrackLiked}
@@ -109,7 +110,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
             onImageClick={onExpand}
           />
 
-          <div className="hidden lg:flex flex-col items-center justify-center flex-1 max-w-[40%] lg:max-w-[50%] pt-2">
+          <div className="hidden lg:flex flex-col items-center justify-center flex-1 max-w-[48%] pt-1.5">
             <PlayerControls
               isPlaying={isPlaying}
               shuffle={shuffle}
@@ -131,7 +132,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
             />
           </div>
 
-          <div className="flex items-center space-x-2 lg:space-x-3 flex-1 justify-end max-w-[30%] lg:max-w-[25%]">
+          <div className="flex items-center space-x-2 lg:space-x-3 flex-1 justify-end max-w-[34%] lg:max-w-[28%]">
             <div className="hidden lg:flex items-center space-x-2 relative">
               <button
                 type="button"
@@ -152,7 +153,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
               )}
               <button
                 onClick={onMuteToggle}
-                className="text-gray-300 hover:text-white tSpotify Clone Playerransition-colors cursor-pointer"
+              className="text-gray-300 hover:text-white transition-colors cursor-pointer"
               >
                 {isMuted ? <VolumeMuteIcon size={16} /> : <VolumeIcon size={16} />}
               </button>
@@ -162,7 +163,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
                 max="100"
                 value={volumeState}
                 onChange={(e) => onVolumeChange(parseInt(e.target.value))}
-                className="w-16 lg:w-24 h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                className="w-20 lg:w-28 h-1.5 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: `linear-gradient(to right, #22c55e 0%, #22c55e ${volumeState}%, #4b5563 ${volumeState}%, #4b5563 100%)`,
                 }}
@@ -170,14 +171,14 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
             </div>
             <button
               onClick={onPlayPause}
-              className="inline-flex lg:hidden p-2 mr-1 text-white bg-green-500 hover:bg-green-400 rounded-full transition-colors cursor-pointer"
+            className="inline-flex lg:hidden p-2.5 mr-1.5 text-black bg-green-500 hover:bg-green-400 rounded-full transition-colors cursor-pointer shadow-md"
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
               {isPlaying ? <PauseIcon size={18} /> : <PlayIcon size={18} />}
             </button>
             <button
               onClick={onExpand}
-              className="hidden lg:inline-flex p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer"
+            className="hidden lg:inline-flex p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer"
               aria-label="Expand player"
             >
               <FullscreenIcon size={16} />

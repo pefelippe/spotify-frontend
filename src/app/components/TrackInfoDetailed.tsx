@@ -21,7 +21,6 @@ interface TrackInfoDetailedProps {
 export const TrackInfoDetailed: React.FC<TrackInfoDetailedProps> = ({
   imageUrl,
   title,
-  typeLabel,
   primaryLabel,
   primaryAvatarUrl,
   onClickPrimaryLabel,
@@ -33,23 +32,22 @@ export const TrackInfoDetailed: React.FC<TrackInfoDetailedProps> = ({
   onClickDelete,
 }) => {
   return (
-    <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
+    <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-6 mb-6 md:mb-8">
       <div className="w-full md:w-auto flex-shrink-0 flex flex-col items-center">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={title}
-            className="mx-auto w-32 h-32 md:w-48 md:h-48 rounded-lg object-cover shadow-2xl"
+            className="mx-auto w-full min-w-48 lg:min-w-64 lg:w-64 h-48 lg:h-64 rounded-lg object-cover shadow-2xl"
           />
         ) : (
-          <div className="mx-auto w-32 h-32 md:w-48 md:h-48 rounded-lg shadow-2xl bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
-            <HeartIcon size={48} className="text-white" filled />
+          <div className="mx-auto w-full min-w-64 lg:w-64 h-64 rounded-lg shadow-2xl bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
+            <HeartIcon size={64} className="text-white" filled />
           </div>
         )}
       </div>
-      <div className="flex-1 text-center md:text-left">
-        <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-          <p className="text-gray-400 text-sm font-medium uppercase tracking-wide">{typeLabel}</p>
+      <div className="flex-1 text-left">
+        <div className="flex items-center justify-start gap-2 mb-2">
           {(onClickEdit || onClickDelete) && (
             <div className="flex items-center gap-1">
               {onClickEdit ? (
@@ -75,8 +73,8 @@ export const TrackInfoDetailed: React.FC<TrackInfoDetailedProps> = ({
             </div>
           )}
         </div>
-        <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold text-white-text mb-4">{title}</h1>
-        <div className="flex flex-wrap items-center justify-center md:justify-start text-gray-400 text-sm space-x-1 mb-2">
+        <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-white-text mb-4">{title}</h1>
+        <div className="flex flex-wrap items-center justify-start text-gray-400 text-sm space-x-1 mb-2">
           {primaryLabel && (
             <div className="flex items-center space-x-2">
               {primaryUserId ? (
@@ -103,7 +101,7 @@ export const TrackInfoDetailed: React.FC<TrackInfoDetailedProps> = ({
           ))}
         </div>
         {onClickPlay ? (
-          <div className="mt-4 flex items-center gap-3 justify-center md:justify-start">
+          <div className="mt-4 flex items-center gap-3 justify-start">
             <CustomButton
               label="Reproduzir"
               onClick={onClickPlay}

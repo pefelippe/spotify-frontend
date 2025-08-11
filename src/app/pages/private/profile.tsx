@@ -13,7 +13,7 @@ const Perfil = () => {
   }
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-20 lg:pt-0 pb-[96px] lg:pb-12">
+    <div className="min-h-[calc(100vh-70px)] lg:min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-6 lg:pt-0 pb-[96px] lg:pb-12">
       <div className="w-full max-w-screen-sm text-center">
         <div className="mb-8">
           <img
