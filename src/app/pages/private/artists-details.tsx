@@ -96,6 +96,7 @@ const ArtistaDetalhes = () => {
 
   return (
     <DefaultPage
+      title={artistName}
       isLoading={isAnyLoading}
       error={hasAnyError}
       loadingMessage="Carregando detalhes do artista..."

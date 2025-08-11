@@ -40,6 +40,7 @@ const UserDetails = () => {
 
   return (
     <DefaultPage
+      title={userProfile?.display_name}
       hasBackButton
     >
       <div className="space-y-8">

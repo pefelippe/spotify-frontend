@@ -7,7 +7,8 @@ import { useMemo, useState } from 'react';
 import { DefaultPage } from '../../layout/DefaultPage';
 import { PageHeader } from '../../layout/PageHeader';
 import { CustomButton } from '../../components/CustomButton';
-import { PlusIcon } from '../../components/SpotifyIcons';
+// PlusIcon no longer used in header button
+import { useLikedSongs } from '../../../core/api/hooks/useLikedSongs';
 import { usePlayer } from '../../../features/player';
 import PlaylistItem from '../../../features/playlists/PlaylistItem';
 
@@ -17,6 +18,7 @@ const Playlists = () => {
   const navigate = useNavigate();
 
   const { playTrack } = usePlayer();
+  const { data: likedSongsData } = useLikedSongs();
   const {
     data,
     isLoading,
@@ -29,8 +31,17 @@ const Playlists = () => {
   const createPlaylistMutation = useCreatePlaylist();
 
   const allPlaylists = useMemo(() => {
-    return data?.pages.flatMap(page => page.items) || [];
-  }, [data]);
+    const base = data?.pages.flatMap(page => page.items) || [];
+    const likedCount = likedSongsData?.pages?.[0]?.total || 0;
+    const likedTile = likedCount > 0 ? [{
+      id: 'liked',
+      name: 'Músicas Curtidas',
+      owner: { display_name: '' },
+      images: [{ url: '' }],
+      _isLikedTile: true,
+    }] : [];
+    return [...likedTile, ...base];
+  }, [data, likedSongsData]);
 
   const handleCreatePlaylist = () => {
     setIsModalOpen(true);
@@ -60,22 +71,27 @@ const Playlists = () => {
   };
 
   const handlePlaylistClick = (playlistId: string) => {
+    if (playlistId === 'liked') {
+      navigate('/playlists/liked-songs');
+      return;
+    }
     navigate(`/playlist/${playlistId}`);
   };
 
   const handlePlaylistPlay = (playlistId: string) => {
-    const contextUri = `spotify:playlist:${playlistId}`;
+    const contextUri = playlistId === 'liked' ? 'spotify:user:collection:tracks' : `spotify:playlist:${playlistId}`;
     playTrack('', contextUri);
   };
 
   const renderPlaylistItem = (playlist: any) => (
     <PlaylistItem
       name={playlist.name}
-      imageUrl={playlist.images?.[0]?.url}
-      ownerName={playlist.owner.display_name}
+      imageUrl={playlist._isLikedTile ? '' : playlist.images?.[0]?.url}
+      ownerName={playlist._isLikedTile ? '' : playlist.owner.display_name}
       playlistId={playlist.id}
       onClick={() => handlePlaylistClick(playlist.id)}
       onPlay={() => handlePlaylistPlay(playlist.id)}
+      isLikedTile={!!playlist._isLikedTile}
     />
   );
 
@@ -91,7 +107,6 @@ const Playlists = () => {
             onClick={handleCreatePlaylist}
             variant="spotify"
             customClassName="justify-center gap-2"
-            icon={<PlusIcon size={16} />}
           />
         </PageHeader>
         <InfiniteScrollList

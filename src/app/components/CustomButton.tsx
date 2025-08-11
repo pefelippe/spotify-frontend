@@ -23,7 +23,7 @@ export const CustomButton = ({
   className,
 }: CustomButtonProps) => {
 
-  const baseClasses = 'font-bold cursor-pointer flex items-center transition-all duration-200';
+  const baseClasses = 'font-bold cursor-pointer flex items-center transition-all duration-200 gap-4';
 
   const sizeClasses = {
     sm: 'px-4 py-2 text-sm h-8',
@@ -34,7 +34,7 @@ export const CustomButton = ({
 
   const variantClasses = {
     primary: 'bg-blue-600 text-white hover:bg-blue-700 rounded-lg',
-    pwa: 'text-gray-300 hover:text-white hover:bg-gray-700/60 rounded-lg font-medium text-sm gap-3 px-4 py-2.5',
+    pwa: 'text-gray-300 hover:text-white hover:bg-gray-700/60 rounded-lg font-medium text-sm gap-4 px-4 py-2.5 text-[2',
     outline: 'border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg',
     ghost: 'text-gray-700 hover:bg-gray-100 rounded-lg',
     spotify: 'font-rubik bg-green-spotify text-black-text rounded-[24px] font-medium h-[50px] cursor-pointer px-10  transition-all hover:underline hover:opacity-80',
@@ -44,7 +44,7 @@ export const CustomButton = ({
 
   const renderIcon = () => {
     if (typeof icon === 'string') {
-      return <span className="text-xl">{icon}</span>;
+      return <span className={`${variant === 'pwa' ? 'text-[20px]' : 'text-xl'}`}>{icon}</span>;
     }
     return icon;
   };

@@ -8,11 +8,12 @@ interface PlaylistItemProps {
   onClick?: () => void;
   onPlay?: () => void;
   playlistId?: string;
+  isLikedTile?: boolean;
 }
 
 const defaultImage = 'https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36';
 
-const PlaylistItem = ({ name, imageUrl, ownerName, onClick, onPlay }: PlaylistItemProps) => {
+const PlaylistItem = ({ name, imageUrl, ownerName, onClick, onPlay, isLikedTile }: PlaylistItemProps) => {
   const handlePlayClick = (e: MouseEvent) => {
     e.stopPropagation();
     if (onPlay) {
@@ -25,17 +26,25 @@ const PlaylistItem = ({ name, imageUrl, ownerName, onClick, onPlay }: PlaylistIt
       className="group flex items-center gap-3 cursor-pointer w-full transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-lg"
       onClick={onClick}
     >
-      <div className="relative w-[72px] h-[72px] flex-shrink-0">
-        <img
-          src={imageUrl || defaultImage}
-          alt={name}
-          className="w-[72px] h-[72px] object-cover rounded-md"
-        />
+      <div className="relative w-[88px] h-[88px] lg:w-[96px] lg:h-[96px] flex-shrink-0">
+        {isLikedTile ? (
+          <div className="w-full h-full rounded-md bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
+            <svg width="32" height="32" viewBox="0 0 256 256" fill="white">
+              <path d="M128 216s-84-48-84-108a52 52 0 0 1 92-32 52 52 0 0 1 92 32c0 60-84 108-84 108Z" />
+            </svg>
+          </div>
+        ) : (
+          <img
+            src={imageUrl || defaultImage}
+            alt={name}
+            className="w-full h-full object-cover rounded-md"
+          />
+        )}
         <button
           onClick={handlePlayClick}
-          className="absolute bottom-1 right-1 w-8 h-8 bg-green-500 hover:bg-green-400 rounded-full flex items-center justify-center shadow-lg transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
+          className="absolute bottom-1 right-1 w-9 h-9 bg-green-500 hover:bg-green-400 rounded-full flex items-center justify-center shadow-lg transform translate-y-1 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer"
         >
-          <svg width="12" height="12" viewBox="0 0 16 16" fill="black">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="black">
             <path d="M3 1.713a.7.7 0 0 1 1.05-.607l10.89 6.288a.7.7 0 0 1 0 1.212L4.05 14.894A.7.7 0 0 1 3 14.287V1.713z"/>
           </svg>
         </button>
@@ -43,7 +52,7 @@ const PlaylistItem = ({ name, imageUrl, ownerName, onClick, onPlay }: PlaylistIt
 
       <div className="flex flex-col flex-1 min-w-0">
         <TextMarquee text={name} className="text-white-text font-semibold text-sm" />
-        <TextMarquee text={ownerName} className="text-gray-400 text-xs" />
+        {!isLikedTile && <TextMarquee text={ownerName} className="text-gray-400 text-xs" />}
       </div>
     </div>
   );

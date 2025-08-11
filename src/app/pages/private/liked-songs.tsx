@@ -35,6 +35,7 @@ const LikedSongs = () => {
 
   return (
     <DefaultPage
+      title="Músicas Curtidas"
       isLoading={isLoadingLikedSongs}
       error={likedSongsError}
       loadingMessage="Carregando músicas curtidas..."

@@ -90,6 +90,7 @@ const PlaylistDetalhes = () => {
 
   return (
     <DefaultPage
+      title={playlistDetails?.name}
       isLoading={isLoadingDetails}
       error={detailsError || !playlistId}
       loadingMessage="Carregando detalhes da playlist..."

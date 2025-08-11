@@ -5,7 +5,8 @@ import { QueryState } from '../../app/components/QueryState';
 import { CustomSection } from '../../app/components/CustomSection';
 import { useAuth } from '../../core/auth';
 import { fetchSearch } from '../../core/api/queries/search';
-import { TrackList } from '../../app/components/TrackList';
+// Custom render for tracks in search to avoid play overlays and keep context
+import { usePlayer } from '../../features/player';
 
 import { fetchUserProfile } from '../../core/api/queries/user-details';
 
@@ -16,6 +17,7 @@ function useQueryParam(name: string) {
 
 const SearchPage = () => {
   const navigate = useNavigate();
+  const { playTrack } = usePlayer();
   const { accessToken } = useAuth();
   const [q, setQ] = useState('');
   const qp = useQueryParam('q');
@@ -139,10 +141,30 @@ const SearchPage = () => {
         {!isLoading && !error && q && (
           <>
             {tracks.length > 0 && (
-              <div className="grid gap-6">
-                <div className="lg:col-span-2">
-                  <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-3">Músicas</h3>
-                  <TrackList data={{ pages: [{ items: tracks.slice(0, 10) }] }} isPlaylist={false} contextUri={undefined} showAddedDate={false} />
+              <div>
+                <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-3">Músicas</h3>
+                <div className="space-y-1">
+                  {tracks.slice(0, 10).map((t: any) => {
+                    const img = t?.album?.images?.[0]?.url || 'https://via.placeholder.com/64x64/333/fff?text=♪';
+                    if (!t?.id) return null;
+                    const trackUri = t.uri || `spotify:track:${t.id}`;
+                    return (
+                      <div key={t.id} className="flex items-center gap-3 px-2 lg:px-3 py-2 rounded-md hover:bg-gray-800/50">
+                        <img src={img} alt={t.name} className="w-12 h-12 rounded object-cover" />
+                        <div className="min-w-0 flex-1">
+                          <div className="text-white text-sm font-medium truncate">{t.name}</div>
+                          <div className="text-gray-400 text-xs truncate">{(t.artists || []).map((a: any) => a.name).join(', ')}</div>
+                        </div>
+                        <button
+                          className="ml-auto bg-green-500 text-black rounded-full w-9 h-9 flex items-center justify-center leading-none shadow cursor-pointer"
+                          onClick={() => playTrack(trackUri)}
+                          aria-label="Reproduzir"
+                        >
+                          <span className="text-lg">▶</span>
+                        </button>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}

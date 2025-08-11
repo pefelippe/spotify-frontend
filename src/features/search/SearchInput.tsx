@@ -18,6 +18,9 @@ export const SearchInput: React.FC = () => {
     removeRecentSearch,
     clearRecentSearches,
   } = useHomeSearchPreview();
+  // Keep player available if later we want inline play on preview
+  // const { playTrack, isReady, deviceId } = usePlayer();
+
   const { playTrack, isReady, deviceId } = usePlayer();
 
   return (
@@ -47,13 +50,18 @@ export const SearchInput: React.FC = () => {
               setShowPreview(false);
             }
           }}
-          onBlur={() => {
+          onBlur={(e) => {
+            // Do not close when clicking inside the preview dropdown
+            const next = e.relatedTarget as HTMLElement | null;
+            if (next && next.closest && next.closest('[data-search-preview]')) {
+              return;
+            }
             setTimeout(() => setShowPreview(false), 120);
           }}
         />
 
         {showPreview && (
-          <div className="absolute z-20 mt-2 w-full rounded-xl border border-gray-800 bg-black/90 backdrop-blur-sm shadow-xl overflow-hidden">
+          <div className="absolute z-20 mt-2 w-full rounded-xl border border-gray-800 bg-black/90 backdrop-blur-sm shadow-xl overflow-hidden" data-search-preview>
             <div className="max-h-96 overflow-y-auto divide-y divide-gray-800">
               {(!searchText.trim() && recentSearches.length > 0) && (
                 <div className="py-2">
@@ -79,7 +87,7 @@ export const SearchInput: React.FC = () => {
                           setSearchText(term);
                           navigate(`/search?q=${encodeURIComponent(term)}`);
                           addRecentSearch(term);
-                          setShowPreview(false);
+                          // keep preview open on selection
                         }}
                       >
                         <span className="text-gray-400">🔍</span>
@@ -102,14 +110,19 @@ export const SearchInput: React.FC = () => {
                 <div className="py-2">
                   <div className="px-3 text-xs uppercase tracking-wide text-gray-400 mb-2">Músicas</div>
                   {previewTracks.map((t: any) => (
-                    <div key={t.id} className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left">
+                    <div
+                      key={t.id}
+                      className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left"
+                      tabIndex={0}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
                       <img src={t.album?.images?.[0]?.url || 'https://via.placeholder.com/40x40/333/fff?text=♪'} alt={t.name} className="w-10 h-10 rounded object-cover" />
                       <div className="min-w-0 flex-1">
                         <div className="text-white text-sm truncate">{t.name}</div>
                         <div className="text-gray-400 text-xs truncate">{(t.artists || []).map((a: any) => a.name).join(', ')}</div>
                       </div>
                       <button
-                        className="ml-auto bg-green-500 text-black rounded-full w-9 h-9 flex items-center justify-center leading-none shadow"
+                        className="ml-auto bg-green-500 text-black rounded-full w-8 h-8 flex items-center justify-center leading-none shadow cursor-pointer"
                         onMouseDown={(e) => e.preventDefault()}
                         onClick={() => {
                           if (!isReady || !deviceId) return;
@@ -118,7 +131,7 @@ export const SearchInput: React.FC = () => {
                         }}
                         aria-label="Reproduzir"
                       >
-                        <span className="text-lg">▶</span>
+                        <span className="text-base">▶</span>
                       </button>
                     </div>
                   ))}
@@ -129,21 +142,30 @@ export const SearchInput: React.FC = () => {
                 <div className="py-2">
                   <div className="px-3 text-xs uppercase tracking-wide text-gray-400 mb-2">Álbuns</div>
                   {previewAlbums.map((a: any) => (
-                    <button
+                    <div
                       key={a.id}
                       className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left cursor-pointer"
                       onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => {
-                        navigate(`/album/${a.id}`);
-                        setShowPreview(false);
-                      }}
+                      onClick={() => navigate(`/album/${a.id}`)}
                     >
                       <img src={a.images?.[0]?.url || 'https://via.placeholder.com/40x40/333/fff?text=♪'} alt={a.name} className="w-10 h-10 rounded object-cover" />
                       <div className="min-w-0 flex-1">
                         <div className="text-white text-sm truncate">{a.name}</div>
                         <div className="text-gray-400 text-xs truncate">{(a.artists || []).map((ar: any) => ar.name).join(', ')}</div>
                       </div>
-                    </button>
+                      <button
+                        className="ml-auto bg-green-500 text-black rounded-full w-8 h-8 flex items-center justify-center leading-none shadow cursor-pointer"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!isReady || !deviceId) return;
+                          playTrack('', a.uri);
+                        }}
+                        aria-label="Reproduzir álbum"
+                      >
+                        <span className="text-base">▶</span>
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}
@@ -152,21 +174,30 @@ export const SearchInput: React.FC = () => {
                 <div className="py-2">
                   <div className="px-3 text-xs uppercase tracking-wide text-gray-400 mb-2">Artistas</div>
                   {previewArtists.map((a: any) => (
-                    <button
+                    <div
                       key={a.id}
                       className="w-full px-3 py-2 flex items-center gap-3 hover:bg-white/5 text-left cursor-pointer"
                       onMouseDown={(e) => e.preventDefault()}
-                      onClick={() => {
-                        navigate(`/artist/${a.id}`);
-                        setShowPreview(false);
-                      }}
+                      onClick={() => navigate(`/artist/${a.id}`)}
                     >
                       <img src={a.images?.[0]?.url || 'https://via.placeholder.com/40x40/333/fff?text=♪'} alt={a.name} className="w-10 h-10 rounded-full object-cover" />
                       <div className="min-w-0 flex-1">
                         <div className="text-white text-sm truncate">{a.name}</div>
                         <div className="text-gray-400 text-xs truncate">Artista</div>
                       </div>
-                    </button>
+                      <button
+                        className="ml-auto bg-green-500 text-black rounded-full w-8 h-8 flex items-center justify-center leading-none shadow cursor-pointer"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!isReady || !deviceId) return;
+                          playTrack('', `spotify:artist:${a.id}`);
+                        }}
+                        aria-label="Reproduzir artista"
+                      >
+                        <span className="text-base">▶</span>
+                      </button>
+                    </div>
                   ))}
                 </div>
               )}
@@ -178,7 +209,7 @@ export const SearchInput: React.FC = () => {
                   onClick={() => {
                     navigate(`/search?q=${encodeURIComponent(searchText.trim())}`);
                     addRecentSearch(searchText.trim());
-                    setShowPreview(false);
+                    // keep preview open to continue searching
                   }}
                 >
                   Ver todos os resultados para "{searchText.trim()}"

@@ -34,6 +34,7 @@ const AlbumDetalhes = () => {
 
   return (
     <DefaultPage
+      title={albumDetails?.name}
       isLoading={isLoadingDetails}
       error={detailsError || !albumId}
       loadingMessage="Carregando detalhes do álbum..."

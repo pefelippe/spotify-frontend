@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { ComponentType } from 'react';
+import { HomeIcon, HomeIconActive } from '../components/SpotifyIcons';
 
 interface NavigationButtonProps {
   name: string;
@@ -35,9 +36,10 @@ export const NavigationButton = ({
     }
 
     const IconComponent = icon;
+    const RenderIcon = (IconComponent === HomeIcon && isActive) ? HomeIconActive : IconComponent;
     return (
       <div className={`transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`}>
-        <IconComponent size={20} className="flex-shrink-0" />
+        <RenderIcon size={20} className="flex-shrink-0" />
       </div>
     );
   };

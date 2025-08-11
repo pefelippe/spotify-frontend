@@ -73,9 +73,10 @@ export const PlayingIcon = ({ size = 16, className = '' }: { size?: number; clas
   </svg>
 );
 
-export const UserIcon = ({ size = 16, className = '' }: { size?: number; className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 16 16" fill="currentColor" className={className}>
-    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+export const UserIcon = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
+  <svg width={size} height={Math.round((size/24)*25)} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M20 21.2503V19.2503C20 18.1895 19.5786 17.1721 18.8284 16.4219C18.0783 15.6718 17.0609 15.2503 16 15.2503H8C6.93913 15.2503 5.92172 15.6718 5.17157 16.4219C4.42143 17.1721 4 18.1895 4 19.2503V21.2503" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 11.2503C14.2091 11.2503 16 9.45947 16 7.25034C16 5.0412 14.2091 3.25034 12 3.25034C9.79086 3.25034 8 5.0412 8 7.25034C8 9.45947 9.79086 11.2503 12 11.2503Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
@@ -93,8 +94,22 @@ export const TimeIcon = ({ size = 16, className = '' }: { size?: number; classNa
 
 // Navigation Icons
 export const HomeIcon = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M13.5 1.515a3 3 0 0 0-3 0L3 5.845a2 2 0 0 0-1 1.732V21a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6h4v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7.577a2 2 0 0 0-1-1.732l-7.5-4.33z"/>
+  <svg width={size} height={Math.round((size/24)*27)} viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <g clipPath="url(#clip0_1_2433)">
+      <path d="M12 15.3401C11.2044 15.3401 10.4413 15.683 9.87868 16.2932C9.31607 16.9035 9 17.7312 9 18.5942V26.2153H15V18.5942C15 17.7312 14.6839 16.9035 14.1213 16.2932C13.5587 15.683 12.7956 15.3401 12 15.3401Z" fill="#949EA2"/>
+      <path d="M13.338 1.05839C12.9707 0.699826 12.4941 0.501423 12 0.501423C11.5059 0.501423 11.0293 0.699826 10.662 1.05839L0 11.4671V22.748C0 23.6685 0.337142 24.5514 0.937258 25.2024C1.53737 25.8533 2.35131 26.219 3.2 26.219H7V18.5947C7 17.1563 7.52678 15.7768 8.46447 14.7597C9.40215 13.7426 10.6739 13.1712 12 13.1712C13.3261 13.1712 14.5979 13.7426 15.5355 14.7597C16.4732 15.7768 17 17.1563 17 18.5947V26.2157H20.8C21.6487 26.2157 22.4626 25.85 23.0627 25.1991C23.6629 24.5482 24 23.6653 24 22.7447V11.4639L13.338 1.05839Z" fill="#949EA2"/>
+    </g>
+    <defs>
+      <clipPath id="clip0_1_2433">
+        <rect width="24" height="26.0327" fill="white" transform="translate(0 0.154716)"/>
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+export const HomeIconActive = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
+  <svg width={size} height={Math.round((size/24)*27)} viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M13.338 1.05839C12.9707 0.699826 12.4941 0.501423 12 0.501423C11.5059 0.501423 11.0293 0.699826 10.662 1.05839L0 11.4671V22.748C0 23.6685 0.337142 24.5514 0.937258 25.2024C1.53737 25.8533 2.35131 26.219 3.2 26.219H7V18.5947C7 17.1563 7.52678 15.7768 8.46447 14.7597C9.40215 13.7426 10.6739 13.1712 12 13.1712C13.3261 13.1712 14.5979 13.7426 15.5355 14.7597C16.4732 15.7768 17 17.1563 17 18.5947V26.2157H20.8C21.6487 26.2157 22.4626 25.85 23.0627 25.1991C23.6629 24.5482 24 23.6653 24 22.7447V11.4639L13.338 1.05839Z" fill="white"/>
   </svg>
 );
 
@@ -112,20 +127,21 @@ export const LibraryIcon = ({ size = 24, className = '' }: { size?: number; clas
 );
 
 export const ArtistIcon = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"/>
+  <svg width={size} height={Math.round((size/24)*25)} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M12 22.1874C17.5228 22.1874 22 17.7103 22 12.1874C22 6.66458 17.5228 2.18742 12 2.18742C6.47715 2.18742 2 6.66458 2 12.1874C2 17.7103 6.47715 22.1874 12 22.1874Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 15.1874C13.6569 15.1874 15 13.8443 15 12.1874C15 10.5306 13.6569 9.18742 12 9.18742C10.3431 9.18742 9 10.5306 9 12.1874C9 13.8443 10.3431 15.1874 12 15.1874Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
 export const PlaylistIcon = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M15 6H3v2h12V6zm0 4H3v2h12v-2zM3 16h8v-2H3v2zM17 6v8.18c-.31-.11-.65-.18-1-.18-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3V8h3V6h-5z"/>
+  <svg width={size} height={Math.round((size/24)*25)} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M5 3.21887L19 12.2189L5 21.2189V3.21887Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
 export const DownloadIcon = ({ size = 24, className = '' }: { size?: number; className?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+  <svg width={size} height={Math.round((size/24)*25)} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M17 12.9673L12 17.9736L7 12.9673M12 6.95978V16.9724V6.95978ZM12 1.95349C18.075 1.95349 23 6.88469 23 12.9673C23 19.05 18.075 23.9812 12 23.9812C5.925 23.9812 1 19.05 1 12.9673C1 6.88469 5.925 1.95349 12 1.95349Z" stroke="currentColor" strokeWidth="2"/>
   </svg>
 );
 
