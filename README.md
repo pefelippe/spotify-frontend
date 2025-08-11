@@ -1,6 +1,10 @@
 ## Spotify – Frontend
 
-## Home
+## Deploy
+
+https://spotify-frontend-zeta-blue.vercel.app/login
+
+## Screens
 
 ![Home](screens/home.png)
 ![Home (Mobile)](screens/home-mobile.png)
@@ -9,6 +13,9 @@
 
 ![Player Expandido](screens/expandenplayer.png)
 ![Player Expandido (Mobile)](screens/expandedplayer-mobile.png)
+
+## Login
+![Login](screens/Login.jpg)
 
 ## Álbum
 
