@@ -9,7 +9,7 @@ export const useArtistDiscography = (artistId: string) => {
     queryKey: ['artistDiscography', artistId],
     queryFn: ({ pageParam = 0 }) => fetchArtistAlbums(artistId, accessToken!, 50, pageParam, 'album,single'),
     enabled: !!accessToken && !!artistId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.next) {
@@ -29,7 +29,7 @@ export const useArtistAlbums = (artistId: string) => {
     queryKey: ['artistAlbums', artistId],
     queryFn: ({ pageParam = 0 }) => fetchArtistAlbums(artistId, accessToken!, 20, pageParam, 'album'),
     enabled: !!accessToken && !!artistId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.next) {
@@ -48,7 +48,7 @@ export const useArtistSingles = (artistId: string) => {
     queryKey: ['artistSingles', artistId],
     queryFn: ({ pageParam = 0 }) => fetchArtistAlbums(artistId, accessToken!, 20, pageParam, 'single'),
     enabled: !!accessToken && !!artistId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.next) {
@@ -67,7 +67,7 @@ export const useArtistCollaborations = (artistId: string) => {
     queryKey: ['artistCollaborations', artistId],
     queryFn: ({ pageParam = 0 }) => fetchArtistAlbums(artistId, accessToken!, 20, pageParam, 'appears_on'),
     enabled: !!accessToken && !!artistId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.next) {

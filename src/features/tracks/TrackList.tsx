@@ -5,7 +5,10 @@ import { usePlayer } from '../player';
 import { useLikedTracks } from '../liked-songs/liked-tracks-provider';
 import { useAddToLikedSongs, useRemoveFromLikedSongs } from '../liked-songs/useLikedSongs';
 import { AddToPlaylistModal } from '../../app/components/AddToPlaylistModal';
+import { formatDuration } from '../../utils/formatDuration';
+import { formatAddedDate } from '../../utils/formatAddedDate';
 import { PlayIcon, HeartIcon, PlayingIcon, TimeIcon, PlusIcon } from '../../app/components/SpotifyIcons';
+import { extractIdFromUri } from '../../utils/spotify/extractIdFromUri';
 
 interface Track {
   id: string;
@@ -31,46 +34,14 @@ interface TrackListProps {
   isPlaylist?: boolean;
   contextUri?: string;
   onRemoveTrack?: (trackUri: string) => Promise<void>;
+  // Used when tracks don't include album info (e.g., album tracks endpoint)
+  defaultAlbumImageUrl?: string;
+  defaultAlbumName?: string;
+  // Controls whether the index number column displays numbers
+  showIndex?: boolean;
 }
 
-const formatDuration = (ms: number) => {
-  if (!ms || isNaN(ms)) {
-    return '0:00';
-  }
-  const minutes = Math.floor(ms / 60000);
-  const seconds = Math.floor((ms % 60000) / 1000);
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-};
-
-const formatAddedDate = (dateString: string) => {
-  if (!dateString) {
-    return 'Data desconhecida';
-  }
-
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    return 'Data inválida';
-  }
-
-  const now = new Date();
-  const diffTime = Math.abs(now.getTime() - date.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays === 1) {
-    return 'há 1 dia';
-  } else if (diffDays < 7) {
-    return `há ${diffDays} dias`;
-  } else if (diffDays < 30) {
-    const weeks = Math.floor(diffDays / 7);
-    return weeks === 1 ? 'há 1 semana' : `há ${weeks} semanas`;
-  } else if (diffDays < 365) {
-    const months = Math.floor(diffDays / 30);
-    return months === 1 ? 'há 1 mês' : `há ${months} meses`;
-  } else {
-    const years = Math.floor(diffDays / 365);
-    return years === 1 ? 'há 1 ano' : `há ${years} anos`;
-  }
-};
+ 
 
 export const TrackList = ({
   data,
@@ -80,6 +51,9 @@ export const TrackList = ({
   isPlaylist = false,
   contextUri,
   onRemoveTrack,
+  defaultAlbumImageUrl,
+  defaultAlbumName,
+  showIndex = true,
 }: TrackListProps) => {
   const navigate = useNavigate();
   const { playTrack, currentTrack, isPlaying } = usePlayer();
@@ -173,11 +147,14 @@ export const TrackList = ({
     }
 
     const trackNumber = isPlaylist ? index + 1 : (track.track_number || index + 1);
-    const trackImage = track.album?.images?.[0]?.url || 'https://via.placeholder.com/64x64/333/fff?text=♪';
+    const trackImage =
+      track.album?.images?.[0]?.url ||
+      defaultAlbumImageUrl ||
+      'https://via.placeholder.com/64x64/333/fff?text=♪';
 
     return (
       <div
-        className="flex items-center px-4 py-3 rounded-md hover:bg-gray-800 hover:bg-opacity-50 group cursor-pointer transition-colors"
+        className="flex items-center px-2 lg:px-4 py-1 lg:py-3 rounded-md hover:bg-gray-800 hover:bg-opacity-50 group cursor-pointer transition-colors"
         onMouseEnter={() => setHoveredTrack(track.id)}
         onMouseLeave={() => setHoveredTrack(null)}
       >
@@ -198,10 +175,12 @@ export const TrackList = ({
             >
               <PlayIcon size={16} />
             </button>
-          ) : (
+          ) : showIndex ? (
             <span className="text-gray-400 text-sm font-medium">
               {trackNumber}
             </span>
+          ) : (
+            <span className="text-gray-400 text-sm font-medium opacity-0">-</span>
           )}
         </div>
 
@@ -214,8 +193,8 @@ export const TrackList = ({
           />
         </div>
 
-        {/* Track Info - Mobile: Main content */}
-        <div className="flex-1 min-w-0 mr-3">
+        {/* Track Info - expand on small screens */}
+        <div className="flex-1 min-w-0 mr-1.5 lg:mr-3">
           <div className="flex items-center space-x-2 mb-1">
             <h4 className={`font-medium text-sm truncate ${
               isCurrentTrack(track) ? 'text-green-500' : 'text-white'
@@ -235,7 +214,7 @@ export const TrackList = ({
                   className="hover:underline hover:text-white cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleArtistClick(artist.uri?.split(':')[2] || '');
+                    handleArtistClick(extractIdFromUri(artist.uri));
                   }}
                 >
                   {artist.name || 'Artista desconhecido'}
@@ -249,7 +228,7 @@ export const TrackList = ({
         {/* Album Name - Desktop only */}
         <div className="hidden lg:block w-48 mr-4 min-w-0 flex-shrink-0">
           <div className="text-gray-400 text-sm truncate hover:underline hover:text-white cursor-pointer">
-            {track.album?.name || 'Álbum desconhecido'}
+            {track.album?.name || defaultAlbumName || 'Álbum desconhecido'}
           </div>
         </div>
 
@@ -260,8 +239,8 @@ export const TrackList = ({
           </div>
         </div>
 
-        {/* Like Button - Mobile: Always visible */}
-        <div className="w-8 flex justify-center mr-3 flex-shrink-0">
+        {/* Like Button - Mobile: tighter spacing */}
+        <div className="w-6 lg:w-8 flex justify-center mr-1.5 lg:mr-3 flex-shrink-0">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -277,8 +256,8 @@ export const TrackList = ({
           </button>
         </div>
 
-        {/* Add to Playlist Button - Mobile: Always visible */}
-        <div className="w-8 flex justify-center mr-3 flex-shrink-0">
+        {/* Add to Playlist Button - Mobile: tighter spacing */}
+        <div className="w-6 lg:w-8 flex justify-center mr-1.5 lg:mr-3 flex-shrink-0">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -308,8 +287,8 @@ export const TrackList = ({
           </div>
         )}
 
-        {/* Duration - Mobile: Always visible */}
-        <div className="w-12 text-right flex-shrink-0">
+        {/* Duration - hidden on small screens */}
+        <div className="hidden lg:block w-12 text-right flex-shrink-0">
           <span className="text-gray-400 text-sm font-normal">
             {formatDuration(track.duration_ms || 0)}
           </span>

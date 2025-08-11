@@ -8,6 +8,7 @@ import { useLikedSongs } from '../../../features/liked-songs/useLikedSongs';
 import { useUserProfile } from '../../../features/user/useUserProfile';
 import { usePlayer } from '../../../features/player';
 import { HeartIcon, PlayIcon } from '../../components/SpotifyIcons';
+import { formatTotalDurationFromPages } from '../../../utils/formatTotalDuration';
 
 const LikedSongs = () => {
   const navigate = useNavigate();
@@ -33,25 +34,7 @@ const LikedSongs = () => {
     navigate(`/user/${userId}`);
   };
 
-  const formatTotalDuration = (tracks: any) => {
-    if (!tracks?.pages) {
-      return '';
-    }
-
-    const totalMs = tracks.pages.reduce((total: number, page: any) => {
-      return total + page.items.reduce((pageTotal: number, item: any) => {
-        return pageTotal + (item.track?.duration_ms || 0);
-      }, 0);
-    }, 0);
-
-    const hours = Math.floor(totalMs / 3600000);
-    const minutes = Math.floor((totalMs % 3600000) / 60000);
-
-    if (hours > 0) {
-      return `${hours}h ${minutes}min`;
-    }
-    return `${minutes} min`;
-  };
+  
 
   if (isLoadingLikedSongs || likedSongsError) {
     return (
@@ -105,7 +88,7 @@ const LikedSongs = () => {
               {likedSongsData && (
                 <>
                   <span>•</span>
-                  <span>{formatTotalDuration(likedSongsData)}</span>
+                  <span>{formatTotalDurationFromPages(likedSongsData, (item: any) => item.track?.duration_ms)}</span>
                 </>
               )}
             </div>

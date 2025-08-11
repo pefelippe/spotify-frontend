@@ -3,7 +3,9 @@ import { TrackInfo } from './TrackInfo';
 import { ProgressBar } from './ProgressBar';
 import { PlayerControls } from './PlayerControls';
 import { DevicesModal } from './DevicesModal';
-import { FullscreenIcon, DevicesIcon, VolumeIcon, VolumeMuteIcon } from '../../../app/components/SpotifyIcons';
+import { FullscreenIcon, DevicesIcon, VolumeIcon, VolumeMuteIcon, PlayIcon, PauseIcon } from '../../../app/components/SpotifyIcons';
+import { useSwipeGesture } from './useSwipeGesture';
+// Removed dynamic background color
 
 interface CompactMusicPlayerProps {
   currentTrack: SpotifyTrack;
@@ -67,12 +69,23 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
   isCurrentTrackLiked,
   onToggleLike,
 }) => {
+  const isBelowLg = typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 1023px)').matches;
+  const swipeHandlers = useSwipeGesture<HTMLDivElement>({
+    onSwipeUp: () => onExpand(),
+    onSwipeLeft: () => onNext(),
+    onSwipeRight: () => onPrevious(),
+  }, { enabled: isBelowLg });
+  // Static background per spec
+  const bgStyle = {
+    backgroundColor: '#000000',
+  } as React.CSSProperties;
   return (
     <div
-      className={`fixed bottom-[70px] border border-gray-300/20 rounded-2xl bg-[#000000] max-lg:mx-2  
+      className={`fixed bottom-[70px] border-2 border-gray-300/20 rounded-2xl max-lg:mx-2  
         lg:bottom-0 left-0 lg:left-[250px] right-0 lg:border-t lg:border-gray-700/30 z-50 
         shadow-2xl transform transition-transform duration-300 ease-out 
         ${isEntering ? 'translate-y-0' : 'translate-y-full'}`}
+      data-swipe-ignore
       onClick={(e) => {
         const isBelowLg = typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(max-width: 1023px)').matches;
         if (isBelowLg) {
@@ -83,6 +96,8 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
           onExpand();
         }
       }}
+      {...swipeHandlers}
+      style={bgStyle}
     >
       <div className="flex flex-col">
         <div className="flex items-center justify-between px-3 lg:px-5 py-2 lg:py-3 hover:bg-gray-900/20 transition-colors duration-200">
@@ -112,6 +127,7 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
               onSeekStart={onSeekStart}
               onSeekChange={onSeekChange}
               onSeekCommit={onSeekCommit}
+              accentColor="#22c55e"
             />
           </div>
 
@@ -153,6 +169,14 @@ export const CompactMusicPlayer: React.FC<CompactMusicPlayerProps> = ({
                 }}
               />
             </div>
+            {/* Mobile play/pause on the right */}
+            <button
+              onClick={onPlayPause}
+              className="inline-flex lg:hidden p-2 mr-1 text-white bg-green-500 hover:bg-green-400 rounded-full transition-colors cursor-pointer"
+              aria-label={isPlaying ? 'Pause' : 'Play'}
+            >
+              {isPlaying ? <PauseIcon size={18} /> : <PlayIcon size={18} />}
+            </button>
             <button
               onClick={onExpand}
               className="hidden lg:inline-flex p-1.5 text-gray-300 hover:text-white hover:bg-white/10 rounded-md transition-colors cursor-pointer"

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLockBodyScroll } from './useExpandedMusicPlayerEffects';
+import { useSwipeGesture } from './useSwipeGesture';
 import TextMarquee from './TextMarquee';
 import { ProgressBar } from './ProgressBar';
 import { PlayerControls } from './PlayerControls';
@@ -44,6 +45,13 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
   onToggleLike,
 }) => {
   useLockBodyScroll();
+  const isBelowLg = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 1023px)').matches;
+  const swipeHandlers = useSwipeGesture<HTMLDivElement>({
+    onSwipeDown: () => onClose(),
+    onSwipeLeft: () => onNext(),
+    onSwipeRight: () => onPrevious(),
+  }, { enabled: isBelowLg });
+  // No dynamic theming in expanded player per spec; keep default green accents
   return (
     <div
       className={`fixed inset-0 bg-gradient-to-b from-gray-900 via-black to-black z-[100] ${
@@ -51,7 +59,12 @@ export const ExpandedMusicPlayer: React.FC<ExpandedMusicPlayerProps> = ({
       }`}
       onClick={onClose}
     >
-      <div className={`${isClosing ? 'animate-fade-out-scale' : 'animate-fade-in-scale'} h-full flex flex-col`} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`${isClosing ? 'animate-fade-out-scale' : 'animate-fade-in-scale'} h-full flex flex-col`}
+        onClick={(e) => e.stopPropagation()}
+        data-swipe-ignore
+        {...swipeHandlers}
+      >
         
         {/* Header: 10vh */}
         <div className="h-[10vh] relative flex items-center justify-center px-4">

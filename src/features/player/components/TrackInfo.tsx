@@ -1,3 +1,4 @@
+import { extractIdFromUri } from '../../../utils/spotify/extractIdFromUri';
 import React from 'react';
 import { HeartIcon } from '../../../app/components/SpotifyIcons';
 
@@ -40,7 +41,7 @@ export const TrackInfo: React.FC<TrackInfoProps> = ({
     <span key={artist.uri || index}>
       <span
         className="hover:underline hover:text-white cursor-pointer transition-colors duration-200"
-        onClick={() => onArtistClick?.(artist.uri?.split(':')[2] || '')}
+        onClick={() => onArtistClick?.(extractIdFromUri(artist.uri))}
       >
         {artist.name}
       </span>

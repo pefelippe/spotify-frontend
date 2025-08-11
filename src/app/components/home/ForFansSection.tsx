@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { CustomHomeSection, CustomHomeSectionItem } from './CustomHomeSection';
-import { HeartIcon } from '../SpotifyIcons';
 
 interface ForFansSectionProps {
   topArtists: Array<{ id: string; name: string; images?: { url: string }[] }>;

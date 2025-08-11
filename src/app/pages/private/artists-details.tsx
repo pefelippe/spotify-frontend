@@ -211,6 +211,7 @@ const ArtistaDetalhes = () => {
               data={{ pages: [{ items: topTracks }] }}
               isPlaylist={false}
               contextUri={`spotify:artist:${artistId}`}
+              showIndex={false}
             />
           </div>
         )}

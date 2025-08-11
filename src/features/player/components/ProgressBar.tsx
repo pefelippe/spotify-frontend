@@ -1,10 +1,5 @@
 import React from 'react';
-
-const formatTime = (ms: number) => {
-  const minutes = Math.floor(ms / 60000);
-  const seconds = Math.floor((ms % 60000) / 1000);
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-};
+import { formatTime } from '../../../utils/formatTime';
 
 interface ProgressBarProps {
   currentPosition: number;
@@ -16,6 +11,7 @@ interface ProgressBarProps {
   // Called when user releases thumb (commit)
   onSeekCommit?: (valueMs: number) => void;
   size?: 'small' | 'large';
+  accentColor?: string;
 }
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -25,6 +21,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   onSeekStart,
   onSeekCommit,
   size = 'small',
+  accentColor = '#22c55e',
 }) => {
   const progressPercent = duration > 0 ? (currentPosition / duration) * 100 : 0;
   const remaining = Math.max(duration - currentPosition, 0);
@@ -51,7 +48,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           onTouchEnd={(e) => onSeekCommit && onSeekCommit(Number((e.currentTarget as HTMLInputElement).value))}
           className={`flex-1 appearance-none bg-gray-600/60 hover:bg-gray-500/60 rounded-full cursor-pointer ${barHeight} progress-slider`}
           style={{
-            background: `linear-gradient(to right, #22c55e 0%, #22c55e ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`,
+            background: `linear-gradient(to right, ${accentColor} 0%, ${accentColor} ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`,
           }}
         />
         <span className={`${size === 'small' ? 'text-[10px] lg:text-xs' : 'text-sm lg:text-base'} text-gray-400 w-10 text-right`}>
@@ -72,7 +69,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           onTouchEnd={(e) => onSeekCommit && onSeekCommit(Number((e.currentTarget as HTMLInputElement).value))}
           className={`w-full appearance-none bg-gray-600/60 hover:bg-gray-500/60 rounded-full cursor-pointer ${barHeight} progress-slider`}
           style={{
-            background: `linear-gradient(to right, #22c55e 0%, #22c55e ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`,
+            background: `linear-gradient(to right, ${accentColor} 0%, ${accentColor} ${progressPercent}%, #4b5563 ${progressPercent}%, #4b5563 100%)`,
           }}
         />
         <div className="flex items-center justify-between">

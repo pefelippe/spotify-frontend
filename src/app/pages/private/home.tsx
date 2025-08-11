@@ -79,7 +79,7 @@ const Home = () => {
     <DefaultPage
       className="mb-24"
     >
-      <div className="space-y-10 ">
+      <div className="space-y-10">
         {!isLoading && hasContent && (
           <>
             {(likedSongsCount > 0 || userPlaylists.length > 0) && (
@@ -97,7 +97,7 @@ const Home = () => {
                   ...userPlaylists.slice(0, 7).map((pl: any) => ({
                     id: pl.id,
                     name: pl.name,
-                    image: pl.images?.[0]?.url || 'https://via.placeholder.com/96x96/333/fff?text=♪',
+                    image: pl.images?.[0]?.url || '',
                     onClick: () => navigate(`/playlist/${pl.id}`),
                   })),
                 ]}
@@ -158,7 +158,7 @@ const Home = () => {
                     id: playlist.id,
                     title: playlist.name,
                     subtitle: playlist.owner?.display_name,
-                    imageSrc: playlist.images?.[0]?.url || 'https://via.placeholder.com/200x200/333/fff?text=♪',
+                    imageSrc: playlist.images?.[0]?.url || '',
                     playback: { contextUri: `spotify:playlist:${playlist.id}` },
                   }))}
                   onClickData={(playlistId) => navigate(`/playlist/${playlistId}`)}

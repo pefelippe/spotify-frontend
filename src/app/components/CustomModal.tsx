@@ -32,22 +32,18 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black bg-opacity-50"
         onClick={onClose}
       />
 
-      {/* Modal Content */}
-      <div className="relative bg-gray-900 rounded-lg p-8 w-full max-w-md mx-4 shadow-2xl">
-        {/* Header */}
+      <div className="relative bg-[#303030] rounded-lg p-8 w-full max-w-md mx-4 shadow-2xl">
         {title && (
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-white-text">{title}</h2>
+            <h2 className="text-2xl font-bold text-white-text">{title}</h2>
           </div>
         )}
 
-        {/* Content */}
         <div className="text-white-text">
           {children}
         </div>

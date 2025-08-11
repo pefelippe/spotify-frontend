@@ -9,8 +9,8 @@ interface SectionHeaderProps {
 
 export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, onAction, actionText = 'Ver tudo', className }) => {
   return (
-    <div className={`ml-4 mb-2 flex items-center justify-between ${className || ''}`}>
-      <h2 onClick={onAction} className={` text-white text-2xl font-bold tracking-tight ${actionText ? "cursor-pointer hover:underline" : ''}`}>{title}</h2>
+    <div className={`lg:ml-4 mb-2 flex items-center justify-between ${className || ''}`}>
+      <h2 onClick={onAction} className={` text-white text-xl lg:text-2xl font-bold tracking-tight ${actionText ? "cursor-pointer hover:underline" : ''}`}>{title}</h2>
       {onAction && (
         <button
           onClick={onAction}

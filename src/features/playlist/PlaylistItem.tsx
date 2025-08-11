@@ -1,3 +1,6 @@
+import type { MouseEvent } from 'react';
+import { TextMarquee } from '../player/components/TextMarquee';
+
 interface PlaylistItemProps {
   name: string;
   imageUrl?: string;
@@ -10,7 +13,7 @@ interface PlaylistItemProps {
 const defaultImage = 'https://i.scdn.co/image/ab67616d0000b2738863bc11d2aa12b54f5aeb36';
 
 const PlaylistItem = ({ name, imageUrl, ownerName, onClick, onPlay, playlistId }: PlaylistItemProps) => {
-  const handlePlayClick = (e: React.MouseEvent) => {
+  const handlePlayClick = (e: MouseEvent) => {
     e.stopPropagation();
     if (onPlay) {
       onPlay();
@@ -19,11 +22,11 @@ const PlaylistItem = ({ name, imageUrl, ownerName, onClick, onPlay, playlistId }
 
   return (
     <div
-      className="group flex items-center space-x-3 cursor-pointer w-full transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-lg"
+      className="group flex items-center gap-3 cursor-pointer w-full transition-all duration-200 hover:bg-gray-800/50 p-3 rounded-lg"
       onClick={onClick}
     >
       {/* Playlist Cover */}
-      <div className="relative">
+      <div className="relative w-[72px] h-[72px] flex-shrink-0">
         <img
           src={imageUrl || defaultImage}
           alt={name}
@@ -41,13 +44,9 @@ const PlaylistItem = ({ name, imageUrl, ownerName, onClick, onPlay, playlistId }
       </div>
 
       {/* Playlist Info */}
-      <div className="flex flex-col">
-        <h3 className="text-white-text font-semibold text-sm truncate">
-          {name}
-        </h3>
-        <h3 className="text-gray-400 text-xs">
-          {ownerName}
-        </h3>
+      <div className="flex flex-col flex-1 min-w-0">
+        <TextMarquee text={name} className="text-white-text font-semibold text-sm" />
+        <TextMarquee text={ownerName} className="text-gray-400 text-xs" />
       </div>
     </div>
   );

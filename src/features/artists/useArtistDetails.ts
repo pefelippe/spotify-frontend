@@ -9,7 +9,7 @@ export const useArtistDetails = (artistId: string) => {
     queryKey: ['artistDetails', artistId],
     queryFn: () => fetchArtistDetails(artistId, accessToken!),
     enabled: !!accessToken && !!artistId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
   });
 };

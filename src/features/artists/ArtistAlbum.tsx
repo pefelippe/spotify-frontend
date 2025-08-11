@@ -1,3 +1,6 @@
+import { formatYear } from '../../utils/formatYear';
+import { formatAlbumType } from '../../utils/formatAlbumType';
+
 interface ArtistAlbumProps {
   name: string;
   imageUrl?: string;
@@ -11,22 +14,7 @@ interface ArtistAlbumProps {
 const defaultImage = 'https://via.placeholder.com/300x300/1DB954/FFFFFF?text=Album';
 
 export const ArtistAlbum = ({ name, imageUrl, releaseDate, albumType, onClick, onPlay, albumId }: ArtistAlbumProps) => {
-  const formatYear = (dateString: string) => {
-    return new Date(dateString).getFullYear();
-  };
-
-  const formatAlbumType = (type: string) => {
-    switch (type) {
-      case 'album':
-        return 'Álbum';
-      case 'single':
-        return 'Single';
-      case 'compilation':
-        return 'Compilação';
-      default:
-        return 'Álbum';
-    }
-  };
+  
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -9,6 +9,7 @@ import { PageHeader } from '../../layout/PageHeader';
 import { PlusIcon } from '../../components/SpotifyIcons';
 import { usePlayer } from '../../../features/player';
 import PlaylistItem from '../../../features/playlist/PlaylistItem';
+//
 
 const Playlists = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +32,8 @@ const Playlists = () => {
     return data?.pages.flatMap(page => page.items) || [];
   }, [data]);
 
+  // Filtering removed per request; show all playlists
+
   const handleCreatePlaylist = () => {
     setIsModalOpen(true);
   };
@@ -51,6 +54,9 @@ const Playlists = () => {
 
       console.log('Playlist created successfully:', result);
       handleCloseModal();
+      if (result?.id) {
+        navigate(`/playlist/${result.id}`);
+      }
     } catch (error) {
       console.error('Failed to create playlist:', error);
     }
@@ -96,6 +102,7 @@ const Playlists = () => {
           </button>
         </PageHeader>
 
+
         <InfiniteScrollList
           items={allPlaylists}
           renderItem={renderPlaylistItem}
@@ -117,8 +124,7 @@ const Playlists = () => {
         onClose={handleCloseModal}
         title=""
       >
-        <div className="space-y-6">
-          {/* Header with X button */}
+        <div className="space-y-4">
           <div className="flex justify-end">
             <button
               onClick={handleCloseModal}
@@ -130,7 +136,7 @@ const Playlists = () => {
 
           {/* Title */}
           <div className="text-center">
-            <span className="text-white text-xl font-semibold">
+            <span className="text-white text-lg font-semibold">
               Dê um nome a sua playlist
             </span>
           </div>
@@ -145,7 +151,8 @@ const Playlists = () => {
                 setPlaylistName(e.target.value);
               }}
               placeholder="Digite o nome da playlist..."
-              className="w-full px-0 py-3 bg-transparent border-b-2 border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-white transition-colors text-lg"
+              className="w-full px-0 py-3 bg-transparent border-b-2 border-gray-600 text-white justify-center text-center
+              placeholder-gray-400 focus:outline-none focus:border-white transition-colors text-lg font-bold"
               maxLength={100}
               autoFocus
             />

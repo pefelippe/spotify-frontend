@@ -9,7 +9,7 @@ export const useArtistTopTracks = (artistId: string) => {
     queryKey: ['artistTopTracks', artistId],
     queryFn: () => fetchArtistTopTracks(artistId, accessToken!),
     enabled: !!accessToken && !!artistId,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
   });
 };

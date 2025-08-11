@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { PlayIcon, PauseIcon, HeartIcon } from '../SpotifyIcons';
 import { usePlayer } from '../../../features/player/usePlayer';
+import TextMarquee from '../../../features/player/components/TextMarquee';
 
 interface QuickPlaylistItem {
   id: string;
@@ -11,7 +12,7 @@ interface QuickPlaylistItem {
 }
 
 interface QuickPlaylistsProps {
-  items: QuickPlaylistItem[]; // expects first to be liked songs, followed by 7 playlists
+  items: QuickPlaylistItem[];
 }
 
 export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
@@ -34,8 +35,8 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
   };
 
   return (
-    <section className="">
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ">
+    <section className="w-full flex max-w-[100%] overflow-hidden ">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 max-lg:hidden">
         {items.map((pl) => (
           <div key={pl.id} className="group">
             <div
@@ -48,11 +49,15 @@ export const QuickPlaylists: React.FC<QuickPlaylistsProps> = ({ items }) => {
                     <HeartIcon size={18} className="text-white" filled />
                   </div>
                 ) : (
-                  <img src={pl.image} alt={pl.name} className="w-12 h-12 rounded-md object-cover" loading="lazy" />
+                  pl.image ? (
+                    <img src={pl.image} alt={pl.name} className="w-12 h-12 rounded-md object-cover" loading="lazy" />
+                  ) : (
+                    <div aria-hidden className="w-12 h-12 rounded-md bg-black" />
+                  )
                 )}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-white text-sm font-medium truncate" title={pl.name}>{pl.name}</p>
+                <TextMarquee text={pl.name} />
               </div>
               <button
                 className="ml-auto bg-green-500 text-black rounded-full p-1.5 shadow opacity-0 group-hover:opacity-100 transition-opacity"

@@ -69,7 +69,7 @@ export const CustomCard: React.FC<CustomCardProps> = ({
 
   return (
     <div
-      className={`group w-full text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 rounded-xl p-3 md:p-4 transition-colors duration-200 hover:bg-[rgb(30,30,30)] ${className || ''}`}
+      className={`group w-full text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20 rounded-xl p-1 lg:p-4 transition-colors duration-200 hover:bg-[rgb(30,30,30)] ${className || ''}`}
       role="button"
       tabIndex={0}
       onClick={handleNavigate}
@@ -77,12 +77,19 @@ export const CustomCard: React.FC<CustomCardProps> = ({
       data-card-id={id}
     >
       <div className="relative mb-2">
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          className="w-full aspect-square rounded-md object-cover"
-          loading="lazy"
-        />
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className="w-full aspect-square rounded-md object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div
+            aria-hidden
+            className="w-full aspect-square rounded-md bg-black"
+          />
+        )}
         {playback && (
           <button
             aria-label={(isControlled ? isActive : isSelfPlaying) ? 'Pause' : 'Play'}
