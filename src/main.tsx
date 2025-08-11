@@ -59,4 +59,11 @@ createRoot(document.getElementById('root') as HTMLElement).render(
   </React.StrictMode>,
 );
 
-// PWA registration disabled for now due to iOS Safari install issues
+import { registerSW } from 'virtual:pwa-register';
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const updateSW = registerSW({ immediate: true, onNeedRefresh() {}, onOfflineReady() {} });
+    (window as any).__pwa_update = updateSW;
+  });
+}

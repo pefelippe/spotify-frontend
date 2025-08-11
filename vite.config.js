@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   test: {
@@ -10,6 +11,83 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    VitePWA({
+      registerType: 'prompt',
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\.spotify\.com\/v1\/.*/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'spotify-api',
+              networkTimeoutSeconds: 3,
+              expiration: {
+                maxEntries: 200,
+                maxAgeSeconds: 60 * 60 * 24,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/i\.scdn\.co\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'spotify-images',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/images\.unsplash\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'unsplash-images',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 7,
+              },
+            },
+          },
+        ],
+      },
+      includeAssets: ['icon.svg'],
+      manifest: {
+        name: 'Spotify Clone',
+        short_name: 'Spotify',
+        description: 'A Spotify clone built with React and Vite',
+        theme_color: '#1DB954',
+        background_color: '#000000',
+        display: 'standalone',
+        orientation: 'portrait',
+        scope: '/',
+        start_url: '/',
+        categories: ['music', 'entertainment'],
+        lang: 'pt-BR',
+        icons: [
+          {
+            src: 'icon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable',
+          },
+          {
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any maskable',
+          },
+        ],
+      },
+    }),
   ],
   server: {
     host: true,
