@@ -1,5 +1,16 @@
 ## Spotify – Frontend
 
+# 🚧🚧🚧 AVISO IMPORTANTE 🚧🚧🚧🚧
+
+O app está registrado como "development mode".
+
+ Isso quer dizer que qualquer conta pode se autenticar com a Spotify API, porém todas as requests serão bloqueadas. Para resolver isso, eu preciso manualmente adicionar o seu spotify e-email no dashboard do app. 
+
+Para isso, por favor me envie uma mensagem com o seu-email para 📧 pedfelippe@gmail.com.
+
+Além disso, o app fica muito mais interessante se você usar uma conta premium :)
+
+
 ## Descrição
 
 Interface web inspirada no Spotify, construída com React + Vite + TailwindCSS e integrada à Spotify Web API e ao Web Playback SDK. Permite autenticação, navegação por artistas/álbuns/playlists, busca, gerenciamento de playlists e reprodução de faixas diretamente no navegador.
