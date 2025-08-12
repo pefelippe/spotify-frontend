@@ -1,24 +1,22 @@
 ## Spotify – Frontend
 
+## Descrição
+
+Interface web inspirada no Spotify, construída com React + Vite + TailwindCSS e integrada à Spotify Web API e ao Web Playback SDK. Permite autenticação, navegação por artistas/álbuns/playlists, busca, gerenciamento de playlists e reprodução de faixas diretamente no navegador (para contas premium).
+
 # 🚧🚧🚧 AVISO IMPORTANTE 🚧🚧🚧🚧
 
 O app está registrado como "development mode".
 
- Isso quer dizer que qualquer conta pode se autenticar com a Spotify API, porém todas as requests serão bloqueadas. Para resolver isso, eu preciso manualmente adicionar o seu spotify e-email no dashboard do app. 
+Isso quer dizer que qualquer conta pode se autenticar com a Spotify API, porém todas as requests serão bloqueadas. Para resolver isso, eu preciso manualmente adicionar o seu spotify e-email no dashboard do app.
 
 Para isso, por favor me envie uma mensagem com o seu-email para 📧 pedfelippe@gmail.com.
 
 Além disso, o app fica muito mais interessante se você usar uma conta premium :)
 
-
-## Descrição
-
-Interface web inspirada no Spotify, construída com React + Vite + TailwindCSS e integrada à Spotify Web API e ao Web Playback SDK. Permite autenticação, navegação por artistas/álbuns/playlists, busca, gerenciamento de playlists e reprodução de faixas diretamente no navegador.
-
 ## Deploy
 
 https://spotify-frontend-zeta-blue.vercel.app/login
-
 
 ## Sonar
 
@@ -97,12 +95,14 @@ https://sonarcloud.io/project/overview?id=pefelippe_spotify-frontend
 
 ---
 
-### Como começar
+### Executando localmente
 
 #### Pré-requisitos
 
 - Node.js 18+ e Yarn
-- Credenciais da API do Spotify (Client ID/Secret) e uma Redirect URI configurada no Spotify Developer Dashboard
+- Backend rodando e acessível (padrão: `http://localhost:3001`)
+- `ngrok` (o Spotify não aceita `localhost` como Redirect URI)
+- Um app criado no [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 
 #### 1) Instalar dependências
 
@@ -110,80 +110,73 @@ https://sonarcloud.io/project/overview?id=pefelippe_spotify-frontend
 yarn
 ```
 
-#### 2) Variáveis de ambiente
+#### 2) Variáveis de ambiente (frontend)
 
-Crie um arquivo `.env.local` (ou utilize seu fluxo de env preferido) e defina os valores. Exemplo:
+Crie um arquivo `.env.local` com:
 
 ```bash
-VITE_API_URL=<url do backend>
+VITE_API_URL=http://localhost:3001
 ```
 
-#### 3) Executar em desenvolvimento
+Observação: se não informar, o frontend usará `http://localhost:3001` por padrão.
+
+#### 3) Subir o frontend
 
 ```bash
 yarn dev
 ```
 
-Aplicação disponível em:
+Aplicação disponível em `http://localhost:5173`.
+
+#### 4) Expor o frontend via HTTPS (ngrok)
+
+Em outra aba/terminal:
+
+```bash
+ngrok http 5173
+```
+
+Copie a URL de Forwarding (ex.: `https://abcd-1234.ngrok-free.app`).
+
+![ngrok)](screens/ngrok.jpg)
+
+#### 5) Configurar Redirect URI no app do Spotify
+
+No Dashboard, adicione a Redirect URI apontando para o seu frontend:
+
+- `https://SEU_SUBDOMINIO.ngrok-free.app/callback`
+
+![redirect)](screens/redirecturl.jpg)
+![save)](screens/save.jpg)
+
+#### 6) Backend
+
+- Garanta que o backend esteja configurado com as credenciais do Spotify e as URLs corretas.
+- Inicie o backend.
+
+#### 7) Fazer login
+
+Abra a URL pública do ngrok e vá para `/login`, por exemplo:
 
 ```
-http://localhost:5173
+https://SEU_SUBDOMINIO.ngrok-free.app/login
 ```
 
-#### 4) Build e Preview
+### Build e Preview
 
 ```bash
 yarn build
 yarn preview
 ```
 
-#### 5) Testes e Lint
+### Testes
 
 ```bash
-# Testes unitários (Vitest)
 yarn test
-
-# Testes E2E (Playwright)
 yarn test:e2e
-# UI dos testes E2E (opcional)
 yarn test:e2e:ui
-# Relatório HTML do Playwright
 yarn test:e2e:report
 
 # Lint
 yarn lint
 ```
-
----
-
-### Scripts úteis
-
-- `yarn dev`: inicia o servidor de desenvolvimento (Vite)
-- `yarn build`: compila o app para produção
-- `yarn preview`: pré-visualiza o build de produção
-- `yarn test`: executa os testes unitários (Vitest)
-- `yarn test:e2e`: executa os testes end-to-end (Playwright)
-- `yarn test:e2e:ui`: abre a interface do Playwright Test
-- `yarn test:e2e:report`: abre o relatório HTML mais recente
-- `yarn lint`: roda o ESLint
-
----
-
-### Notas de desenvolvimento
-
-- Reprodução (Playback): utiliza Spotify Web Playback SDK + Web API. É necessária uma conta Spotify Premium para controlar a reprodução via Web SDK.
-- HTTPS (opcional): alguns navegadores/dispositivos exigem HTTPS para determinados recursos.
-  - Caminho mais simples: `vite-plugin-mkcert` ou túnel (ex.: `ngrok`).
-- PWA: o app registra um Service Worker quando servido em HTTPS (ou localhost) para oferecer experiência instalável/offline básica.
-
-### Solução de problemas
-
-- A reprodução não inicia:
-  - Garanta que você está autenticado, possui um dispositivo ativo e que a conta é Premium.
-  - Abra o aplicativo Spotify em qualquer dispositivo para “ativar” um device e, então, selecione-o no app (se aplicável).
-
----
-
-### Licença
-
-Projeto para fins educacionais/demonstração. Verifique os Termos de Desenvolvedor do Spotify antes de ir para produção.
